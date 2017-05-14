@@ -1,9 +1,15 @@
 {
-  "title": "My project",
+  "title": "zeven",
   "authors": [
-    "Your demoscene handle"
+    "capitalism",
+    "cristea",
+    "iverjo",
+    "lulle",
+    "run",
+    "sigveseb",
+    "stiaje"
   ],
-  "description": "This is my project",
+  "description": "Ninjadevs contribution to Solskogen 2017",
   "previewImage": "https://raw.githubusercontent.com/ninjadev/nin/master/nin/frontend/app/images/nin-dark.png",
   "music": {
     "path": "res/music.mp3",
@@ -11,5 +17,5 @@
     "subdivision": 4,
     "BEANOffset": 0
   },
-  "googleAnalyticsID": "Your GA ID"
+  "googleAnalyticsID": "UA-97441881-2"
 }
