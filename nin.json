@@ -1,0 +1,15 @@
+{
+  "title": "My project",
+  "authors": [
+    "Your demoscene handle"
+  ],
+  "description": "This is my project",
+  "previewImage": "https://raw.githubusercontent.com/ninjadev/nin/master/nin/frontend/app/images/nin-dark.png",
+  "music": {
+    "path": "res/music.mp3",
+    "bpm": 125,
+    "subdivision": 4,
+    "BEANOffset": 0
+  },
+  "googleAnalyticsID": "Your GA ID"
+}

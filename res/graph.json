@@ -1,0 +1,21 @@
+[
+  {
+    "id": "root",
+    "type": "NIN.RootNode",
+    "connected": {
+      "screen": "sceneSwitcherNode.render"
+    }
+  },
+  {
+    "id": "sceneSwitcherNode",
+    "type": "SceneSwitcherNode",
+    "connected": {
+      "A": "SpinningCube.render",
+      "B": "SpinningCube.render"
+    }
+  },
+  {
+    "id": "SpinningCube",
+    "type": "spinningCube"
+  }
+]
