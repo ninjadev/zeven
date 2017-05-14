@@ -11,11 +11,15 @@
     "type": "SceneSwitcherNode",
     "connected": {
       "A": "SpinningCube.render",
-      "B": "SpinningCube.render"
+      "B": "TempleScene.render"
     }
   },
   {
     "id": "SpinningCube",
     "type": "spinningCube"
+  },
+  {
+    "id": "TempleScene",
+    "type": "templeScene"
   }
 ]
