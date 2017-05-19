@@ -5,6 +5,7 @@
         inputs: {
           A: new NIN.TextureInput(),
           B: new NIN.TextureInput(),
+          C: new NIN.TextureInput()
         },
         outputs: {
           render: new NIN.TextureOutput(),
@@ -19,8 +20,10 @@
       let selectedScene;
       if (BEAN < 48 * 4) {
         selectedScene = this.inputs.A;
-      } else {
+      } else if (BEAN < 64 * 4) {
         selectedScene = this.inputs.B;
+      } else {
+        selectedScene = this.inputs.C;
       }
 
       selectedScene.enabled = true;
