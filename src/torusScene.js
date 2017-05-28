@@ -6,11 +6,30 @@
           render: new NIN.TextureOutput()
         }
       });
+      
+      var light = new THREE.PointLight(0xffffff, 1, 100);
+      light.position.set(10, 10, 10);
+      this.scene.add(light);
 
-      var geometry = this.generateTorusGeom(6, 3, 16, 16);
 
-      this.cube = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ color: 0x000fff }));
-      this.scene.add(this.cube);
+      var light2 = new THREE.PointLight(0xffffff, 1, 100);
+      light2.position.set(-10, -10, -10);
+      this.scene.add(light2);
+
+      var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+      this.scene.add(ambientLight);
+
+      var geometry = this.generateTorusGeom(6, 3, 56, 56);
+
+      //var torus_material = new THREE.MeshPhongMaterial({color: 0x7777ff});
+      var torus_material = new THREE.MeshStandardMaterial({color: 0x7777ff});
+      //  var torus_material = new THREE.MeshBasicMaterial({color: 0x000fff});
+      this.torus = new THREE.Mesh(geometry, torus_material);
+      this.scene.add(this.torus);
+
+
+      var tmp_cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), torus_material);
+      this.scene.add(tmp_cube);
 
       this.camera.position.z = 100;
     }
@@ -19,45 +38,52 @@
       var geometry = new THREE.Geometry();
 
       var vertices = [];
+      this.uv_map_vertices = [];
 
       for (var i = 0; i < sections; i++) {
+        // Find the position of the center of the torus (a cirle).
         var subsection_center_vect = new THREE.Vector3(Math.sin(i * Math.PI * 2 / sections), 0, Math.cos(i * Math.PI * 2 / sections));
-        //subsection_center_vect.normalize();
         for (var j = 0; j < subsections; j++) {
+          // Find the vector from the center of the torus to the outer perimiter.
           var subsection_surface_vect = new THREE.Vector3(subsection_center_vect.x * Math.sin(j * Math.PI * 2 / subsections), 
                                                           Math.cos(j * Math.PI * 2 / subsections),
                                                           subsection_center_vect.z * Math.sin(j * Math.PI * 2 / subsections)
                                                          );
-          //subsection_surface_vect.normalize();
           subsection_surface_vect.multiplyScalar(tunnel_radi);
-          //subsection_center_vect.normalize();
-          //subsection_center_vect.multiplyScalar(center_tunnel_radi);
 
-          //subsection_center_vect.add(subsection_surface_vect);
-
+          // Add the new point.
           vertices.push(new THREE.Vector3(subsection_center_vect.x * center_tunnel_radi + subsection_surface_vect.x,
                                           subsection_center_vect.y + subsection_surface_vect.y,
                                           subsection_center_vect.z * center_tunnel_radi + subsection_surface_vect.z,
                                           ));
-
           geometry.vertices.push(vertices[vertices.length - 1]);
 
-          //console.log(geometry.vertices[geometry.vertices.length - 1]);
+          this.uv_map_vertices.push(new THREE.Vector2(i / sections, j / subsections));
         }
       }
 
       for (var i = 0; i < sections; i++) {
         for (var j = 0; j < subsections; j++) {
-          geometry.faces.push( new THREE.Face3(i * sections + j,
-                                               i * sections + ((j + 1) % (subsections)),
-                                               ((i + 1) % sections) * sections + j
-                                               ));
-          geometry.faces.push( new THREE.Face3(i * sections + ((j + 1) % (subsections)),
-                                               ((i + 1) % sections) * sections + ((j + 1) % (subsections)),
-                                               ((i + 1) % sections) * sections + j
-                                               ));
+          // Add faces to the geometry
+          var x1 = i * sections + j;
+          var y1 = i * sections + ((j + 1) % (subsections));
+          var z1 = ((i + 1) % sections) * sections + j;
+          var x2 = i * sections + ((j + 1) % (subsections));
+          var y2 = ((i + 1) % sections) * sections + ((j + 1) % (subsections));
+          var z2 = ((i + 1) % sections) * sections + j;
+
+          geometry.faces.push( new THREE.Face3(x1, y1, z1));
+          geometry.faces.push( new THREE.Face3(x2, y2, z2));
+
+          geometry.faceVertexUvs[0][(i * subsections + j) * 2] = [this.uv_map_vertices[x1], this.uv_map_vertices[y1], this.uv_map_vertices[z1]];
+          geometry.faceVertexUvs[0][(i * subsections + j) * 2 + 1] = [this.uv_map_vertices[x2], this.uv_map_vertices[y2], this.uv_map_vertices[z2]];
         }
       }
+
+      geometry.computeFaceNormals();
+
+      console.log(geometry.faceVertexUvs[0]);
+
 /*
       var geometry = new THREE.Geometry(); 
       
@@ -111,9 +137,6 @@
 
     update(frame) {
       super.update(frame);
-
-      //this.cube.rotation.x = Math.sin(frame / 10);
-      //this.cube.rotation.y = Math.cos(frame / 10);
 
       this.camera.position.x = 30 * Math.sin( frame / 100);
       this.camera.position.y = 30 * Math.sin( frame / 90);
