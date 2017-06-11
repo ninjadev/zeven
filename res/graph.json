@@ -18,7 +18,8 @@
       "F": "KaleidroScope.render",
       "G": "twistershades.render",
       "H": "TorusScene.render",
-      "I": "texty.render"
+      "I": "texty.render",
+      "J": "mntn.render"
     }
   },
   {
@@ -216,5 +217,13 @@
   {
     "id": "texty",
     "type": "texty"
+  },
+  {
+    "id": "mntn",
+    "type": "mntn",
+    "options": {
+      "camera": "res/mntn.camera.json",
+      "shader": "PerlinMntn"
+    }
   }
 ]
