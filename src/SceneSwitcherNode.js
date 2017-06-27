@@ -27,8 +27,6 @@
         selectedScene = this.inputs.C;
       }
 
-      selectedScene = this.inputs.C;
-
       selectedScene.enabled = true;
       this.outputs.render.setValue(selectedScene.getValue());
     }

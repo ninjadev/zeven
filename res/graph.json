@@ -10,7 +10,7 @@
     "id": "sceneSwitcherNode",
     "type": "SceneSwitcherNode",
     "connected": {
-      "A": "SpinningCube.render",
+      "A": "twistershades.render",
       "B": "TempleScene.render",
       "C": "map.render"
     }
@@ -112,7 +112,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-        "image": "image.render"
+      "image": "image.render"
     }
   },
   {
@@ -145,6 +145,23 @@
     "connected": {
       "A": "sceneSwitcherNode.render",
       "B": "blurX.render"
+    }
+  },
+  {
+    "id": "cartoontwister",
+    "type": "cartoontwisterNode",
+    "options": {
+      "shader": "cartoontwister"
+    }
+  },
+  {
+    "id": "twistershades",
+    "type": "twistershadesNode",
+    "options": {
+      "shader": "twistershades"
+    },
+    "connected": {
+        "tDiffuse": "cartoontwister.render"
     }
   }
 ]
