@@ -12,7 +12,8 @@
     "connected": {
       "A": "twistershades.render",
       "B": "TempleScene.render",
-      "C": "map.render"
+      "C": "map.render",
+      "D": "TorusScene.render"
     }
   },
   {
@@ -22,6 +23,10 @@
   {
     "id": "TempleScene",
     "type": "templeScene"
+  },
+  {
+    "id": "TorusScene",
+    "type": "torusScene"
   },
   {
     "id": "map",
