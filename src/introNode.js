@@ -48,7 +48,48 @@
         toDraw = '7';
       }
 
-      this.ctx.fillStyle = 'red';
+      this.ctx.fillStyle = '#837B6B';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      // Draw grid
+      this.ctx.fillStyle = 'black';
+      this.ctx.fillRect(0, this.canvas.height / 2, this.canvas.width, 1.5);
+      this.ctx.fillRect(this.canvas.width / 2, 0, 1.5, this.canvas.height);
+
+      // Circle outlines
+      this.ctx.strokeStyle = '#CFCDC5';
+      this.ctx.beginPath();
+      this.ctx.lineWidth = 1.5;
+      this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 167, 0, 2 * Math.PI, false);
+      this.ctx.stroke();
+
+      this.ctx.beginPath();
+      this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 150, 0, 2 * Math.PI, false);
+      this.ctx.stroke();
+
+      // Gray fill
+      const base = - Math.PI / 2;
+      let radians;
+      if (bean < 48 * 6) {
+        radians = 2 * Math.PI * ((bean / 48) % 1);
+      } else {
+        radians = 2 * Math.PI * ((bean * 2 / 48) % 1);
+      }
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.canvas.width / 2, this.canvas.height / 2);
+      this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 500, base, base + radians, false);
+      this.ctx.lineTo(this.canvas.width / 2, this.canvas.height / 2);
+
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      this.ctx.fill();
+
+      this.ctx.lineWidth = 3.0;
+      this.ctx.strokeStyle = 'black';
+      this.ctx.stroke();
+
+      // Draw number
+      this.ctx.fillStyle = 'black';
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = 'middle';
       this.ctx.font = '250px Arial';
