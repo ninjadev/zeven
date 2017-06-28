@@ -10,10 +10,11 @@
     "id": "sceneSwitcherNode",
     "type": "SceneSwitcherNode",
     "connected": {
-      "A": "twistershades.render",
-      "B": "TempleScene.render",
-      "C": "map.render",
-      "D": "TorusScene.render"
+      "A": "IntroNode.render",
+      "B": "twistershades.render",
+      "C": "TempleScene.render",
+      "D": "map.render",
+      "E": "TorusScene.render"
     }
   },
   {
@@ -166,7 +167,11 @@
       "shader": "twistershades"
     },
     "connected": {
-        "tDiffuse": "cartoontwister.render"
+      "tDiffuse": "cartoontwister.render"
     }
+  },
+  {
+    "id": "IntroNode",
+    "type": "introNode"
   }
 ]
