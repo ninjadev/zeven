@@ -3,16 +3,17 @@
     "id": "root",
     "type": "NIN.RootNode",
     "connected": {
-      "screen": "sceneSwitcherNode.render"
+      "screen": "add.render"
     }
   },
   {
     "id": "sceneSwitcherNode",
     "type": "SceneSwitcherNode",
     "connected": {
-      "A": "SpinningCube.render",
+      "A": "twistershades.render",
       "B": "TempleScene.render",
-      "C": "TorusScene.render"
+      "C": "map.render",
+      "D": "TorusScene.render"
     }
   },
   {
@@ -26,5 +27,146 @@
   {
     "id": "TorusScene",
     "type": "torusScene"
+  },
+  {
+    "id": "map",
+    "type": "map",
+    "connected": {
+      "T0": "threshold0.render",
+      "T1": "threshold1.render",
+      "T2": "threshold2.render",
+      "T3": "threshold3.render",
+      "T4": "threshold4.render",
+      "T5": "threshold5.render"
+    }
+  },
+  {
+    "id": "threshold0",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.14285714285
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "threshold1",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.28571428571
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "threshold2",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.42857142857
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "threshold3",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.57142857142
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "threshold4",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.71428571428
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "threshold5",
+    "type": "thresholdNode",
+    "options": {
+      "shader": "threshold",
+      "thresholdValue": 0.85714285714
+    },
+    "connected": {
+      "image": "panner.render"
+    }
+  },
+  {
+    "id": "image",
+    "type": "image",
+    "options": {
+      "path": "res/Heightmap.png"
+    }
+  },
+  {
+    "id": "panner",
+    "type": "panner",
+    "connected": {
+      "image": "image.render"
+    }
+  },
+  {
+    "id": "blurX",
+    "type": "BlurPassNode",
+    "options": {
+      "direction": "x"
+    },
+    "connected": {
+      "tDiffuse": "blurY.render"
+    }
+  },
+  {
+    "id": "blurY",
+    "type": "BlurPassNode",
+    "options": {
+      "direction": "y"
+    },
+    "connected": {
+      "tDiffuse": "sceneSwitcherNode.render"
+    }
+  },
+  {
+    "id": "add",
+    "type": "AddNode",
+    "options": {
+      "opacity": 0.5,
+      "shader": "Add"
+    },
+    "connected": {
+      "A": "sceneSwitcherNode.render",
+      "B": "blurX.render"
+    }
+  },
+  {
+    "id": "cartoontwister",
+    "type": "cartoontwisterNode",
+    "options": {
+      "shader": "cartoontwister"
+    }
+  },
+  {
+    "id": "twistershades",
+    "type": "twistershadesNode",
+    "options": {
+      "shader": "twistershades"
+    },
+    "connected": {
+        "tDiffuse": "cartoontwister.render"
+    }
   }
 ]
