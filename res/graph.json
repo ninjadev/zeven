@@ -11,10 +11,11 @@
     "type": "SceneSwitcherNode",
     "connected": {
       "A": "IntroNode.render",
-      "B": "twistershades.render",
+      "B": "tunnel.render",
       "C": "TempleScene.render",
       "D": "map.render",
-      "E": "TorusScene.render"
+      "E": "TorusScene.render",
+      "F": "twistershades.render"
     }
   },
   {
@@ -173,5 +174,9 @@
   {
     "id": "IntroNode",
     "type": "introNode"
+  },
+  {
+    "id": "tunnel",
+    "type": "tunnel"
   }
 ]

@@ -1,4 +1,13 @@
 (function(global) {
+
+  function song(bars, beats) {
+    bars = bars || 0;
+    beats = beats || 0;
+    return 48 + bars * 48 + 12 * beats;
+  }
+
+  global.song = song;
+
   class SceneSwitcherNode extends NIN.Node {
     constructor(id) {
       super(id, {
@@ -8,6 +17,7 @@
           C: new NIN.TextureInput(),
           D: new NIN.TextureInput(),
           E: new NIN.TextureInput(),
+          F: new NIN.TextureInput(),
         },
         outputs: {
           render: new NIN.TextureOutput(),
@@ -21,18 +31,21 @@
       this.inputs.C.enabled = false;
       this.inputs.D.enabled = false;
       this.inputs.E.enabled = false;
+      this.inputs.F.enabled = false;
 
       let selectedScene;
-      if (BEAN < 432) {
+      if (BEAN < song(8)) {
         selectedScene = this.inputs.A;
-      } else if (BEAN < 120 * 8) {
+      } else if (BEAN < song(16)) {
         selectedScene = this.inputs.B;
-      } else if (BEAN < 130 * 8) {
+      } else if (BEAN < song(24)) {
         selectedScene = this.inputs.C;
-      } else if (BEAN < 300 * 4) {
+      } else if (BEAN < song(32)) {
         selectedScene = this.inputs.D;
-      } else {
+      } else if (BEAN < song(40)) {
         selectedScene = this.inputs.E;
+      } else {
+        selectedScene = this.inputs.F;
       }
 
       selectedScene.enabled = true;
