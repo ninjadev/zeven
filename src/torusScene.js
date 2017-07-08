@@ -21,21 +21,18 @@
       this.scene.add(ambientLight);
 
       this.center_tunnel_radi = 6;
-      this.tunnel_radi = 3;
+      this.tunnel_radi = 2;
       this.sections = 100;
       this.subsections = 100;
       this.torus_geometry = this.generateTorusGeom(this.center_tunnel_radi, this.tunnel_radi, this.sections, this.subsections);
 
       let skyboxmap = Loader.loadTexture('res/gradient.jpg');
       //var torus_material = new THREE.MeshPhongMaterial({color: 0x7777ff});
-      var torus_material = new THREE.MeshPhysicalMaterial({color: 0x7777ff, map: skyboxmap, shading: THREE.SmoothShading});
+      var torus_material = new THREE.MeshPhysicalMaterial({color: 0xffffff, map: skyboxmap, shading: THREE.SmoothShading});
       //  var torus_material = new THREE.MeshBasicMaterial({color: 0x000fff});
       this.torus = new THREE.Mesh(this.torus_geometry, torus_material);
       this.scene.add(this.torus);
 
-
-      var tmp_cube = new THREE.Mesh(new THREE.BoxGeometry(1,1,1), torus_material);
-      this.scene.add(tmp_cube);
 
       this.camera.position.z = 20;
     }
@@ -95,6 +92,8 @@
     update(frame) {
       super.update(frame);
 
+      //demo.nm.nodes.add.opacity = 1;
+
       this.camera.position.x = 20 * Math.sin( frame / 100);
       this.camera.position.y = 20 * Math.sin( frame / 90);
       this.camera.position.z = 20 * Math.sin( frame / 60);
@@ -119,10 +118,14 @@
           this.torus_geometry.vertices[i * this.subsections + j].y = subsection_center_vect.y + subsection_surface_vect.y;
           this.torus_geometry.vertices[i * this.subsections + j].z = subsection_center_vect.z * this.center_tunnel_radi + subsection_surface_vect.z;
 
-          this.uv_map_vertices[i * this.subsections + j].set(0.5 + Math.sin(intensity * Math.PI * 2 + (i / this.sections * Math.PI * 2))  / 2, 0.5 + Math.cos(intensity * Math.PI * 2 + (j / this.subsections * Math.PI * 2)) / 2);
+          this.uv_map_vertices[i * this.subsections + j].set(
+            0.5 + (Math.sin(i / this.sections * Math.PI * 2) / 2) * intensity,
+            0.5 + (Math.cos(i / this.sections * Math.PI * 2) / 2) * intensity
+          );
+          //this.uv_map_vertices[i * this.subsections + j].set(i/this.sections, j/this.subsections);
         }
       }
-      for (var i = 0; i < this.sections; i++) {  
+      for (var i = 0; i < this.sections; i++) {
         for (var j = 0; j < this.subsections; j++) {
           var x1 = i * this.sections + j;
           var y1 = i * this.sections + ((j + 1) % (this.subsections));
