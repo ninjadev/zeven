@@ -15,7 +15,8 @@
       "C": "TempleScene.render",
       "D": "map.render",
       "E": "TorusScene.render",
-      "F": "twistershades.render"
+      "F": "KaleidroScope.render",
+      "G": "twistershades.render"
     }
   },
   {
@@ -116,6 +117,13 @@
     }
   },
   {
+    "id": "indianrose",
+    "type": "image",
+    "options": {
+      "path": "res/indianrose.jpg"
+    }
+  },
+  {
     "id": "panner",
     "type": "panner",
     "connected": {
@@ -178,5 +186,15 @@
   {
     "id": "tunnel",
     "type": "tunnel"
+  },
+  {
+    "id": "KaleidroScope",
+    "type": "KaleidroScopeNode",
+    "options": {
+      "shader": "KaleidroScope"
+    },
+    "connected": {
+      "image": "indianrose.render"
+    }
   }
 ]
