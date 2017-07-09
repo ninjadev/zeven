@@ -141,7 +141,6 @@
       this.torus_geometry.verticesNeedUpdate = true;
       this.torus_geometry.uvsNeedUpdate = true;
       this.torus_geometry.colorsNeedUpdate = true;
-      // Enable on cool computers only :)
       this.torus_geometry.groupsNeedsUpdate = true;
       this.torus_geometry.normalsNeedsUpdate = true;
     }
