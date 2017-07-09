@@ -19,6 +19,8 @@
       super.update(frame);
       this.canvas.width += 0;
 
+      this.frame = frame;
+
       const bean = BEAN_FOR_FRAME(frame);
       //const index = bean / 48 | 0;
       let toDraw;
@@ -61,10 +63,6 @@
       this.ctx.fillRect(0, 4.5 - 0.025, 16, 0.05);
       this.ctx.fillRect(8 - 0.025, 0, 0.05, 9);
 
-      if (!toDraw) {
-        return this.ctx.restore();
-      }
-
       // Circle outlines
       this.ctx.strokeStyle = '#CFCDC5';
       this.ctx.beginPath();
@@ -76,13 +74,18 @@
       this.ctx.arc(8, 4.5, 3.7, 0, 2 * Math.PI, false);
       this.ctx.stroke();
 
+      if (!toDraw) {
+        return this.ctx.restore();
+      }
+
       // Gray fill
       const base = - Math.PI / 2;
       let radians;
+      const discrete = (frame / 4 | 0) * 4;
       if (bean < 48 * 8 - 12) {
-        radians = 2 * Math.PI * (((bean + 12) / 48) % 1);
+        radians = ((2 * Math.PI * discrete / 60 / 60 * 105 / 4 + Math.PI / 2) % (Math.PI * 2));
       } else {
-        radians = 2 * Math.PI * (((bean + 12) * 4 / 48) % 1);
+        radians = ((2 * Math.PI * discrete / 60 / 60 * 105 / 2 + Math.PI / 2) % (Math.PI * 2));
       }
 
       this.ctx.beginPath();
