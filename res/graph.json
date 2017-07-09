@@ -17,7 +17,8 @@
       "E": "ball.render",
       "F": "KaleidroScope.render",
       "G": "twistershades.render",
-      "H": "TorusScene.render"
+      "H": "TorusScene.render",
+      "I": "texty.render"
     }
   },
   {
@@ -205,11 +206,15 @@
       "shader": "filmfx"
     },
     "connected": {
-        "image": "IntroNode.render"
+      "image": "IntroNode.render"
     }
   },
   {
     "id": "ball",
     "type": "ball"
+  },
+  {
+    "id": "texty",
+    "type": "texty"
   }
 ]
