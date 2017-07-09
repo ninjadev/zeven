@@ -10,6 +10,14 @@
       this.camera.fov = 25;
       this.camera.updateProjectionMatrix();
 
+      this.throbbies = [];
+      for(let i = 0; i < 32; i++) {
+        this.throbbies[i] = [];
+        for(let j = 0; j < 256; j++) {
+          this.throbbies[i][j] = 0;
+        }
+      }
+
       const circumference = 32;
       const radius = circumference / 2 / Math.PI;
       var geometry = new THREE.CylinderGeometry(
@@ -40,7 +48,7 @@
       this.canvasTexture = new THREE.Texture(this.canvas);
 
       this.item = new THREE.Mesh(
-          new THREE.CubeGeometry(radius / 2, radius / 2, radius / 2),
+          new THREE.CubeGeometry(radius / 3, radius / 3, radius / 3),
           new THREE.MeshStandardMaterial({
             color: 0xffd530 
           }));
@@ -64,43 +72,93 @@
 
       this.camera.position.z = 50;
 
+      this.throb = 0;
+      this.resize();
+      this.drawCanvas();
+    }
+
+    resize() {
       this.canvas.width = 1024;
-      this.canvas.height = 4096 * 4;
+      this.canvas.height = 4096 * 2;
+      super.resize();
+    }
+
+    drawCanvas() {
+      this.ctx.globalCompositeOperation = 'source-over';
       this.ctx.fillStyle = 'black';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.ctx.strokeStyle = 'white';
-      this.ctx.shadowBlur = 10;
-      this.ctx.shadowColor = 'rgb(60, 132, 252)';
+      this.ctx.fillStyle = 'white';
       this.ctx.lineWidth = 1;
+      this.ctx.globalCompositeOperation = 'lighter';
       for(let i = 0; i < 32; i++) {
-        for(let j = 0; j < 512; j++) {
+        for(let j = 0; j < 256; j++) {
           this.ctx.strokeRect(
               i / 32 * this.canvas.width,
-              j / 512 * this.canvas.height,
+              j / 256 * this.canvas.height,
               this.canvas.width / 32,
-              this.canvas.height / 512);
+              this.canvas.height / 256);
+          if(this.throbbies[i][j] > 1 / 256) {
+            this.ctx.globalAlpha = this.throbbies[i][j];
+            this.ctx.fillRect(
+                i / 32 * this.canvas.width,
+                j / 256 * this.canvas.height,
+                this.canvas.width / 32,
+                this.canvas.height / 256);
+            this.ctx.globalAlpha = 1;
+          }
         }
       }
       this.canvasTexture.needsUpdate = true;
-
-      this.throb = 0;
     }
 
     update(frame) {
       super.update(frame);
 
       this.throb *= 0.95;
-      if(BEAT && BEAN % 12 == 0) {
-        this.throb = 1;
+
+      for(let i = 0; i < 32; i++) {
+        for(let j = 0; j < 256; j++) {
+          this.throbbies[i][j] *= 0.9;
+        }
+      }
+
+      if(BEAT) {
+        switch((BEAN - 48) % 96) {
+          case 0:
+          case 9:
+          case 18:
+          case 27:
+          case 36:
+          case 42:
+          case 48:
+          case 57:
+          case 66:
+          case 84:
+          this.throb = 1;
+          for(let i = 0; i < 32; i++) {
+            let a = Math.random() * 256 | 0;
+            for(let j = 0; j < 32; j++) {
+              this.throbbies[j][a] = 1;
+            }
+          }
+        }
       }
       this.cylinder.material.emissiveIntensity = Math.max(this.throb, 0.5);
 
       this.cylinder.rotation.x = Math.PI / 2;
-      this.camera.position.z = -(frame - 1233) / 20;
+      this.camera.position.z = easeOut(250, -120, ((frame - 1233) / 60 / 60 * 105) % 4) - (frame - 1233) / 10;
+      this.camera.fov = easeOut(85, 25, ((frame - 1233) / 60 / 60 * 105) % 4);
+      demo.nm.nodes.add.opacity = easeOut(2.5, 1.5, ((frame - 1233) / 60 / 60 * 105) % 4);
+      this.camera.updateProjectionMatrix();
+      this.camera.position.x = 4 * Math.sin(frame / 100);
+      this.camera.position.y = 4 * Math.cos(frame / 100);
 
-      this.item.position.z = this.camera.position.z - 50;
-      this.item.position.x = this.camera.position.x;
-      this.item.position.y = this.camera.position.y;
+      this.item.position.z = this.camera.position.z - 20;
+      this.item.position.x = 0;
+      this.item.position.y = 0;
+
+      this.camera.lookAt(this.item.position);
 
       this.item.rotation.x = frame / 33;
       this.item.rotation.y = frame / 42;
@@ -109,11 +167,12 @@
       const scale = 0.5 + this.throb;
       this.item.scale.set(scale, scale, scale);
 
-
-      this.camera.rotation.z = frame / 100;
-      this.camera.rotation.y = Math.sin(frame / 300) * 0.3;
-      this.camera.rotation.y = Math.cos(frame / 300) * 0.3;
       this.light.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+    }
+
+    render(renderer) {
+      this.drawCanvas();
+      super.render(renderer);
     }
   }
 
