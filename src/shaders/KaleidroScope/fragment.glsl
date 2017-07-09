@@ -14,12 +14,12 @@ vec2 rotate(vec2 uv, float radians) {
 
 
 vec2 kaleidoscope(vec2 uv, vec2 point) {
-    for(int i = 0; i < 12; i++) {
-  		uv = rotate(uv, PI * 2. / 12.);
-  		uv.x = abs(uv.x);
-	}
-	uv -= point;
-	return uv;
+    for(int i = 0; i < 14; i++) {
+        uv = rotate(uv, PI * 2. / 14.);
+        uv.x = abs(uv.x);
+    }
+    uv -= point;
+    return uv;
 }
 
 void main() {
