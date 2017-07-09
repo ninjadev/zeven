@@ -10,7 +10,7 @@
     "id": "sceneSwitcherNode",
     "type": "SceneSwitcherNode",
     "connected": {
-      "A": "IntroNode.render",
+      "A": "filmfx.render",
       "B": "tunnel.render",
       "C": "TempleScene.render",
       "D": "map.render",
@@ -195,6 +195,16 @@
     },
     "connected": {
       "image": "indianrose.render"
+    }
+  },
+  {
+    "id": "filmfx",
+    "type": "filmfxNode",
+    "options": {
+      "shader": "filmfx"
+    },
+    "connected": {
+        "image": "IntroNode.render"
     }
   }
 ]
