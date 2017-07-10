@@ -7,6 +7,8 @@
         }
       });
       
+      this.camera.position.z = 20;
+
       var light = new THREE.PointLight(0xffffff, 1, 100);
       light.position.set(10, 10, 10);
       this.scene.add(light);
@@ -16,12 +18,11 @@
       light2.position.set(-10, -10, -10);
       this.scene.add(light2);
 
-      //var ambientLight = new THREE.AmbientLight(0x606060);
       var ambientLight = new THREE.AmbientLight(0xFFFFFF);
       this.scene.add(ambientLight);
 
-      this.center_tunnel_radi = 6;
-      this.tunnel_radi = 2;
+      this.center_tunnel_radi = 3;
+      this.tunnel_radi = 1;
       this.sections = 40;
       this.subsections = 40;
       this.torus_geometry = this.generateTorusGeom(this.center_tunnel_radi, this.tunnel_radi, this.sections, this.subsections);
@@ -36,9 +37,114 @@
       this.scene.add(this.torus);
       this.scene.add(this.greets);
 
-      //this.greets.position.y = 5;
+      var prefix = 'res/silo/';
+      this.base = [];
+      this.base.push(new THREE.Object3D());
 
-      this.camera.position.z = 20;
+      this.lamp = [];
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+      this.lamp.push(new THREE.Object3D());
+
+      var loadObject = function(objPath, material, three_object, num_instances) {
+        var objLoader = new THREE.OBJLoader();
+        Loader.loadAjax(objPath, function(text) {
+          var object = [];
+          for (var i = 0; i < num_instances; i++)
+          {
+            object.push(objLoader.parse(text));
+            object[i].traverse(function(child) {
+              if (child instanceof THREE.Mesh) {
+                  child.material = material;
+              }
+            });
+          }
+          for (var i = 0; i < num_instances; i++)
+          {
+            three_object[i].add(object[i]);
+          }
+        });
+      };
+      loadObject(prefix + 'base.obj',
+        new THREE.MeshStandardMaterial({
+          color: 0x444454,
+          side: THREE.DoubleSide,
+          roughness: 1
+        }),
+        this.base, 1);
+      loadObject(prefix + 'lamp.obj',
+        new THREE.MeshStandardMaterial({
+          color: 0x444454,
+          side: THREE.DoubleSide,
+          roughness: 1
+        }),
+        this.lamp, 7);
+
+      this.scene.add(this.base[0]);
+
+      for (var i = 0; i < 7; i++)
+      {
+        this.lamp[i].rotation.set(0,i * Math.PI * 2 / 7,0);
+      }
+
+      this.scene.add(this.lamp[0]);
+      this.scene.add(this.lamp[1]);
+      this.scene.add(this.lamp[2]);
+      this.scene.add(this.lamp[3]);
+      this.scene.add(this.lamp[4]);
+      this.scene.add(this.lamp[5]);
+      this.scene.add(this.lamp[6]);
+
+      var ring_diam = 5.1;
+      var multiplyer = 1.1;
+      var height_difference = -0.4;
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam, 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 6 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 1), 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 5 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 2), 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 4 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 3), 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 3 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 4), 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 2 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 5), 0.1, 16, 100 ),
+                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 1 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
+      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 6), 0.1, 16, 100 ),
+                           new THREE.MeshBasicMaterial({ color: 0x444454 }));
+      this.ring1.position.y = 1 * height_difference;
+      this.ring1.rotation.x = Math.PI/2;
+      this.scene.add(this.ring1);
+
     }
 
     generateTorusGeom(center_tunnel_radi, tunnel_radi, sections, subsections) {
