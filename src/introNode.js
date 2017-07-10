@@ -18,7 +18,7 @@
     update(frame) {
       super.update(frame);
       this.canvas.width += 0;
-      demo.nm.nodes.add.opacity = .5;
+      demo.nm.nodes.bloom.opacity = .5;
 
       this.frame = frame;
 

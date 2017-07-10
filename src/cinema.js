@@ -212,7 +212,7 @@
     update(frame) {
       super.update(frame);
       this.rectLight.intensity = 2 * ( 0.8 + 0.2 * (frame % 2));
-      demo.nm.nodes.add.opacity = .8;
+      demo.nm.nodes.bloom.opacity = .8;
       this.screen.material.map = this.inputs.image.getValue();
       this.screen.material.needsUpdate = true;
       let step = (frame - 376) / (513 - 376);

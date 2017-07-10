@@ -149,7 +149,7 @@
       this.cylinder.rotation.x = Math.PI / 2;
       this.camera.position.z = easeOut(250, -120, ((frame - 1233) / 60 / 60 * 105) % 4) - (frame - 1233) / 10;
       this.camera.fov = easeOut(85, 25, ((frame - 1233) / 60 / 60 * 105) % 4);
-      demo.nm.nodes.add.opacity = easeOut(2.5, 1.5, ((frame - 1233) / 60 / 60 * 105) % 4);
+      demo.nm.nodes.bloom.opacity = easeOut(2.5, 1.5, ((frame - 1233) / 60 / 60 * 105) % 4);
       this.camera.updateProjectionMatrix();
       this.camera.position.x = 4 * Math.sin(frame / 100);
       this.camera.position.y = 4 * Math.cos(frame / 100);

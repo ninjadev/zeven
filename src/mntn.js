@@ -52,6 +52,7 @@
 
     update(frame) {
       super.update(frame);
+      demo.nm.nodes.bloom.opacity = 1.0;
 
       if(!this.initialized && this.inputs.mntnmesh.getValue()){
         console.log("mntn init ");
