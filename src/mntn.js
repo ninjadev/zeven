@@ -5,78 +5,24 @@
         camera: options.camera,
         outputs: {
           render: new NIN.TextureOutput()
+        },
+        inputs: {
+          mntnmesh: new NIN.Input()
         }
       });
-
-      console.log("Mountain time!");
-
-      //Support for different resolution on heightmap than mesh
+      //TODO: get from input
       this.mntnWidth = 512;
       this.mntnHeight = 512;
-      var meshWidth = 256;
-      var widthFactor = this.mntnWidth / meshWidth;
-      var meshHeight = 256;
-      var heightFactor = this.mntnHeight / meshHeight;
-
-      var startFreq = 1.0/512.0;
-      var persistence = 0.42;
-      var startAmpl = 1300.0;
-      var noiseLevels = 8;
-
-      console.log("Generate height map");
-      /////////////
-      // Generate height map for the mountains
-      ////////////
-
-      var noise = NIN.ImprovedNoise().noise;
-
-      this.heightmap = new Array(this.mntnWidth);
-      for(var x = 0; x < this.mntnWidth; x++ ){
-        this.heightmap[x] = new Array(this.mntnHeight);
-        for(var y = 0; y < this.mntnHeight; y++ ){
-          var h = 0;
-          var ampl = startAmpl;
-          var freq = startFreq;
-          for(var i = 0; i < noiseLevels; i++){
-            h += ampl * noise(x * freq , y * freq ,0);
-            freq *= 2;
-            ampl *= persistence;
-          }
-          this.heightmap[x][y] = 1000.0 - Math.abs(h);
-        }
-      }
-
-      console.log("Elevate geometry ");
-      /////////////////
-      // Elevate the geometry
-      ////////////////
       this.mntnSizeX = 2000;
       this.mntnSizeY = 2000;
-      var mntnGeom = new THREE.PlaneGeometry(this.mntnSizeX, this.mntnSizeY, meshWidth-1, meshHeight-1);
-      for(var x = 0; x < meshWidth; x++ ){
-        for(var y = 0; y < meshHeight; y++ ){
-          mntnGeom.vertices[x*meshWidth+y].z 
-            = this.heightmap[x*widthFactor][y*heightFactor];
-        }
-      }
 
-      mntnGeom.computeFaceNormals();
-      mntnGeom.computeVertexNormals();
-      mntnGeom.normalsNeedUpdate = true;
+      this.initialized = false;
+    }
 
-      var shaderMat = new THREE.ShaderMaterial(SHADERS["PerlinMntn"]).clone();
-      var tCliff  = new THREE.TextureLoader().load("project/res/rock_cliffs.jpg");
-      tCliff.wrapS = THREE.RepeatWrapping;
-      tCliff.wrapT = THREE.RepeatWrapping;
+    delayedInit() {
 
-      shaderMat.uniforms.tCliff.value = tCliff;
-
-      this.mntn = new THREE.Mesh( mntnGeom,
-         // material);
-          //new THREE.MeshPhongMaterial({ map:mapTexture}));
-          //new THREE.MeshPhongMaterial({ wireframe:true}));
-         // new THREE.MeshNormalMaterial());
-       shaderMat);
+      this.mntn = this.inputs.mntnmesh.getValue();
+      console.log(this.mntn);
 
       this.mntn.castShadow = true;
       this.mntn.receiveShadow = true;
@@ -106,13 +52,25 @@
 
     update(frame) {
       super.update(frame);
+
+      if(!this.initialized && this.inputs.mntnmesh.getValue()){
+        console.log("mntn init ");
+        this.delayedInit();
+        this.initialized = true;
+        console.log("mntn initialized");
+      }
+      if(!this.initialized){
+        return;
+      }
+
+
       //Temp hack to play with quad camera dynamics. Refactor incomming
       var maxSpeed = 160/ 3.6; //m/s
       var maxAccel = 90; // m/s^2  (Realistic for an aggressive quad. Should be between 2-12g
 
       var dragCoeff = maxAccel/(maxSpeed*maxSpeed);
 
-      var accel = function(speed){return Math.max(maxAccel - (dragCoeff * speed * speed),0);}
+      var accel = function(speed){return Math.max(maxAccel - (dragCoeff * speed * speed),0);};
 
       var camz = 950;
       var camx = 300;
@@ -121,7 +79,7 @@
 
 
       var startX = camx;
-      var startY = this.heightmap[y-1][x-1]+4;
+      var startY = 750.0;//this.heightmap[y-1][x-1]+4;
       var startZ = camz;
       if(frame < 3453){ // still
         this.camera.position.x = startX;

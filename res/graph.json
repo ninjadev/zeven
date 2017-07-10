@@ -127,7 +127,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-      "image": "image.render"
+      "image": "heightmapNode.texture"
     }
   },
   {
@@ -219,8 +219,10 @@
     "id": "mntn",
     "type": "mntn",
     "options": {
-      "camera": "res/mntn.camera.json",
       "shader": "PerlinMntn"
+    },
+    "connected": {
+      "mntnmesh": "heightmapNode.mntnmesh"
     }
   },
   {
@@ -236,5 +238,9 @@
     "options": {
       "shader": "grading"
     }
+  },
+  {
+    "id": "heightmapNode",
+    "type": "heightmapNode"
   }
 ]
