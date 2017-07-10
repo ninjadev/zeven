@@ -3,7 +3,7 @@
     "id": "root",
     "type": "NIN.RootNode",
     "connected": {
-      "screen": "add.render"
+      "screen": "bloom.render"
     }
   },
   {
@@ -151,7 +151,7 @@
     }
   },
   {
-    "id": "add",
+    "id": "bloom",
     "type": "AddNode",
     "options": {
       "opacity": 0.5,

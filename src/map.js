@@ -216,7 +216,7 @@
       this.camera.position.y = 0.75;
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-      demo.nm.nodes.add.opacity = .5; 
+      demo.nm.nodes.bloom.opacity = .5; 
 
     }
 
