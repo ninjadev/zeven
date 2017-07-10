@@ -31,7 +31,7 @@ vec3 scene(vec2 uv) {
     color = 0.5 * color + color * 0.5 * randomLines(uv, 28., 0.7, 33., 58.);
     color = color * 0.8 + color * 0.2 * randomLines(uv, 47., 0.78, 61., 27.);
     color = color * 0.7 + color * 0.3 * randomLines(uv, 31., 0.28, 79., 43.);
-    color = pow(color, vec3(1.5));
+    color = pow(max(vec3(0.),color), vec3(1.5));
     color *= 0.8 + 0.4 * rand(vec2(floor(frame / 4.), 0.2));
     return color;
 }
