@@ -227,7 +227,14 @@
     "id": "cinema",
     "type": "cinema",
     "connected": {
-        "image": "filmfx.render"
+      "image": "filmfx.render"
+    }
+  },
+  {
+    "id": "grading",
+    "type": "gradingNode",
+    "options": {
+      "shader": "grading"
     }
   }
 ]

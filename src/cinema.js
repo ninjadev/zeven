@@ -3,12 +3,26 @@
     constructor(id) {
       super(id, {
         outputs: {
-          render: new NIN.TextureOutput()
+          render: new NIN.TextureOutput(),
         },
         inputs: {
           image: new NIN.TextureInput()
         }
       });
+
+      this.cubeCamera = new THREE.CubeCamera(0.01, 100, 2048);
+      this.cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
+      this.scene.add(this.cubeCamera);
+
+      this.floor = new THREE.Mesh(
+          new THREE.PlaneGeometry(10, 10),
+          new THREE.MeshStandardMaterial({
+            color: 0x111111,
+          }));
+      this.scene.add(this.floor);
+      this.floor.position.y = -2.19;
+      this.floor.rotation.x = -2 * Math.PI / 4;
+      //this.floor.position.z = 10 / 2 - 0.01;
 
       this.keys = {};
       const whiteKeyGeometry = new THREE.BoxGeometry(0.02, 0.03, 0.30);
@@ -48,9 +62,7 @@
 
       this.screen = new THREE.Mesh(
           new THREE.PlaneGeometry(16 / 3, 9 / 3),
-          new THREE.MeshBasicMaterial({
-            map: this.inputs.image.getValue(),
-          }));
+          new THREE.MeshBasicMaterial());
       this.screen.position.z = 0.01;
       this.scene.add(this.screen);
       this.screenBorder = new THREE.Mesh(
@@ -61,13 +73,23 @@
       this.scene.add(this.screenBorder);
       this.camera.position.z = 6.77;
       this.camera.fov = 25;
+      this.camera.near = 0.01;
       this.camera.updateProjectionMatrix();
       this.lookAt = new THREE.Vector3(0, 0, 0);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      canvas.getContext('2d').fillRect(0, 0, 1, 1);
+      const blackMap = new THREE.Texture(canvas);
 
       this.piano = new THREE.Mesh(
           new THREE.BoxGeometry(1.5, 1.1, 0.6),
           new THREE.MeshStandardMaterial({
-            color: 0xffffff,  
+            color: 0x111111,  
+            envMap: this.cubeCamera.renderTarget.texture,
+            roughness: 0.2,
+            metalness: 0.1,
           }));
       this.scene.add(this.piano);
       this.piano.position.x = -3.5;
@@ -82,19 +104,20 @@
       this.walls = new THREE.Mesh(
           new THREE.BoxGeometry(10, 5, 10),
           new THREE.MeshStandardMaterial({
-            color: 0x666666,
+            color: 0x222222,
+            map: Loader.loadTexture('res/rock_cliffs.jpg'),
             side: THREE.BackSide,
           }));
       this.scene.add(this.walls);
-      this.walls.position.z = 10 / 2 - 0.001;
+      this.walls.position.z = 10 / 2 - 0.01;
       this.walls.position.y = 5 / 2 - 3 / 2 - 0.7;
 
       this.rectLight = new THREE.RectAreaLight( 0xffffff, 1, 16 / 3, 9 / 3);
       this.rectLight.color.setHex(0xede0a3);
       this.rectLight.position.set( 0, 0, 0.0001 );
-      this.scene.add(this.rectLight);
+      //this.scene.add(this.rectLight);
 
-      this.scene.add(new THREE.AmbientLight(0xffffff, 0.05));
+      this.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
       this.topLight = new THREE.DirectionalLight();
       this.topLight.position.set(0, 10, -1);
@@ -111,19 +134,24 @@
       this.rectLight.intensity = 2 * ( 0.8 + 0.2 * (frame % 2));
       demo.nm.nodes.add.opacity = .8;
       this.screen.material.map = this.inputs.image.getValue();
+      this.screen.material.needsUpdate = true;
       let step = (frame - 376) / (513 - 376);
       this.camera.position.x = smoothstep(0, -1.1, step);
       this.camera.position.y = smoothstep(0, -0.6, step);
       this.camera.position.z = smoothstep(6.77, 12, step);
 
-      step = (frame - 616) / (822 - 616);
-      this.camera.position.x = smoothstep(this.camera.position.x, -1.5, step);
-      this.camera.position.y = smoothstep(this.camera.position.y, -1.2, step);
-      this.camera.position.z = smoothstep(this.camera.position.z, 2, step);
+      step = (frame - 616) / (1096 - 616);
+      this.camera.position.x = smoothstep(this.camera.position.x, -3.17, step);
+      this.camera.position.y = smoothstep(this.camera.position.y, -1.59, step);
+      this.camera.position.z = smoothstep(this.camera.position.z, 1.28, step);
 
-      this.lookAt.x = smoothstep(this.camera.position.x, -5.5, step);
-      this.lookAt.y = smoothstep(this.camera.position.y, -1.8, step);
-      this.lookAt.z = 0;
+      this.camera.fov = smoothstep(25, 75, step);
+      this.camera.roll = smoothstep(0, 0.14, step);
+      this.camera.updateProjectionMatrix();
+
+      this.lookAt.x = smoothstep(this.camera.position.x, -3.24, step);
+      this.lookAt.y = smoothstep(this.camera.position.y, -1.61, step);
+      this.lookAt.z = smoothstep(0, 1.16, step);
 
       this.camera.lookAt(this.lookAt);
 
@@ -509,6 +537,16 @@
         key.rotation.x = lerp(key.rotation.x, key._noteRotationTarget,
             key._noteRotationTarget > key.rotation.x ? 0.8 : 0.3);
       }
+    }
+
+    render(renderer) {
+      this.piano.visible = false;
+      this.keygroup.visible = false;
+      this.cubeCamera.position.copy(this.piano.position);
+      this.cubeCamera.updateCubeMap(renderer, this.scene);
+      this.keygroup.visible = true;
+      this.piano.visible = true;
+      super.render(renderer);
     }
   }
 
