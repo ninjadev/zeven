@@ -1,19 +1,30 @@
 uniform float frame;
 uniform sampler2D tDiffuse;
+uniform sampler2D lookup;
 
 varying vec2 vUv;
 
+
+vec4 sampleAs3DTexture(sampler2D tex, vec3 uv, float width) {
+    uv.y = 1. - uv.y;
+    float sliceSize = 1.0 / width;
+    float slicePixelSize = sliceSize / width;
+    float sliceInnerSize = slicePixelSize * (width - 1.0);
+    float zSlice0 = min(floor(uv.z * width), width - 1.0);
+    float zSlice1 = min(zSlice0 + 1.0, width - 1.0);
+    float xOffset = slicePixelSize * 0.5 + uv.x * sliceInnerSize;
+    float s0 = xOffset + (zSlice0 * sliceSize);
+    float s1 = xOffset + (zSlice1 * sliceSize);
+    vec4 slice0Color = texture2D(tex, vec2(s0, uv.y));
+    vec4 slice1Color = texture2D(tex, vec2(s1, uv.y));
+    float zOffset = mod(uv.z * width, 1.0);
+    vec4 result = mix(slice0Color, slice1Color, zOffset);
+    return result;
+}
+ 
 void main() {
-    vec3 originalColor = texture2D(tDiffuse, vUv).rgb;
-    vec3 color = originalColor;
-    float intensity = .2126 * color.r + .7152 * color.g + .0722 * color.b;
-    vec3 blue = vec3(0.10196078431372549, 0.16470588235294117, 0.4235294117647059);
-    vec3 red = vec3(0.6980392156862745, 0.12156862745098039, 0.12156862745098039);
-    vec3 yellow = vec3(0.9921568627450981, 0.7333333333333333, 0.16862745098039217);
-    if(intensity < 0.5) { 
-        color = mix(blue, red, vec3(intensity * 2.));
-    } else {
-        color = mix(red, yellow, vec3((intensity - .5) * 2.));
-    }
-    gl_FragColor = vec4(color * 0.5 + originalColor * 0.5, 1.);
+    vec4 color = texture2D(tDiffuse, vUv);
+    vec4 gradedColor = sampleAs3DTexture(lookup, color.rgb, 16.);
+    gradedColor.a = color.a;
+    gl_FragColor = vec4(gradedColor.rgb, 1.);
 }

@@ -3,7 +3,7 @@
     "id": "root",
     "type": "NIN.RootNode",
     "connected": {
-      "screen": "bloom.render"
+      "screen": "grading.render"
     }
   },
   {
@@ -242,5 +242,15 @@
   {
     "id": "heightmapNode",
     "type": "heightmapNode"
+  },
+  {
+    "id": "grading",
+    "type": "gradingNode",
+    "options": {
+      "shader": "grading"
+    },
+    "connected": {
+        "tDiffuse": "bloom.render"
+    }
   }
 ]
