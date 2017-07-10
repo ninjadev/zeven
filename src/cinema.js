@@ -28,10 +28,10 @@
       const whiteKeyGeometry = new THREE.BoxGeometry(0.02, 0.03, 0.30);
       const blackKeyGeometry = new THREE.BoxGeometry(0.01, 0.03, 0.25);
       const whiteKeyMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
+        color: 0xaaaaaa,
       });
       const blackKeyMaterial = new THREE.MeshStandardMaterial({
-        color: 0x000000,
+        color: 0x111111,
       });
       this.keygroup = new THREE.Object3D();
       let whites = 0;
@@ -46,6 +46,7 @@
           white = false;
         }
         whites += white;
+        /*
         const key = this.keys[(21 + i) + ''] = new THREE.Mesh(
             white ? whiteKeyGeometry : blackKeyGeometry,
             white ? whiteKeyMaterial : blackKeyMaterial);
@@ -57,6 +58,7 @@
         key._noteOn = false;
         key._noteRotation = 0;
         this.keygroup.add(key);
+        */
       }
       this.scene.add(this.keygroup);
 
@@ -83,19 +85,97 @@
       canvas.getContext('2d').fillRect(0, 0, 1, 1);
       const blackMap = new THREE.Texture(canvas);
 
-      this.piano = new THREE.Mesh(
-          new THREE.BoxGeometry(1.5, 1.1, 0.6),
-          new THREE.MeshStandardMaterial({
-            color: 0x111111,  
-            envMap: this.cubeCamera.renderTarget.texture,
-            roughness: 0.2,
-            metalness: 0.1,
-          }));
+      const pianoMaterial = new THREE.MeshStandardMaterial({
+        color: 0x111111,  
+        envMap: this.cubeCamera.renderTarget.texture,
+        roughness: 0.2,
+        metalness: 0.1,
+      });
+
+      this.piano = new THREE.Object3D();
+      this.piano.scale.set(2, 2, 2);
+      Loader.loadAjax('res/piano.obj', text => {
+        const loader = new THREE.OBJLoader();
+        const object = loader.parse(text);
+        const scale = 0.01;
+        object.scale.set(scale, scale, scale);
+        this.piano.add(object);
+        object.traverse(item => {
+          if(item instanceof THREE.Mesh) {
+            item.material = pianoMaterial;
+            if(item.name == 'Keyboard_Cover') {
+                item.rotation.z = -1.8;
+                item.position.x = -40.5;
+                item.position.y = 26;
+            }
+            console.log(item.name, item);
+            if(item.name.slice(0, 9) == 'Black_Key') {
+              item.material = blackKeyMaterial; 
+              const blackKeyNumber = parseInt(item.name.slice(9), 10) || 0;
+              let finalNumber = (blackKeyNumber / 5 | 0) * 12;
+              switch(blackKeyNumber % 5) {
+                case 0:
+                  finalNumber += 1;
+                  break;
+                case 1:
+                  finalNumber += 4;
+                  break;
+                case 2:
+                  finalNumber += 6;
+                  break;
+                case 3:
+                  finalNumber += 9;
+                  break;
+                case 4:
+                  finalNumber += 11;
+                  break;
+              }
+              finalNumber += 21;
+              const key = this.keys[finalNumber] = item;
+              key._noteOn = false;
+              key._noteRotation = 0;
+            }
+            if(item.name.slice(0, 10) == 'White_Keys') {
+              item.material = whiteKeyMaterial; 
+              const whiteKeyNumber = parseInt(item.name.slice(10), 10);
+              let finalNumber = (whiteKeyNumber / 8 | 0) * 12;
+              switch(whiteKeyNumber % 7) {
+              case 0:
+                finalNumber += 0;
+                break;
+              case 1:
+                finalNumber += 2;
+                break;
+              case 2:
+                finalNumber += 3;
+                break;
+              case 3:
+                finalNumber += 5;
+                break;
+              case 4:
+                finalNumber += 7;
+                break;
+              case 5:
+                finalNumber += 8;
+                break;
+              case 6:
+                finalNumber += 10;
+                break;
+              }
+              finalNumber += 21;
+              const key = this.keys[finalNumber] = item;
+              key._noteOn = false;
+              key._noteRotation = 0;
+            }
+          }
+        });
+      });
+
       this.scene.add(this.piano);
       this.piano.position.x = -3.5;
-      this.piano.position.y = -1.5 + 1.1 / 2 - 0.7;
+      this.piano.position.y = -2.2;
       this.piano.position.z = 1;
-      this.piano.rotation.y = 1.2;
+      this.piano.rotation.y = 2.2;
       this.keygroup.position.copy(this.piano.position);
       this.keygroup.position.x = -3.3;
       this.keygroup.position.z = 1.1;
@@ -530,12 +610,13 @@
       for(let noteNumber in this.keys) {
         const key = this.keys[noteNumber];
         if(key._noteOn) {
-          key._noteRotationTarget = 0.05;
+          key._noteRotationTarget = -.3;
         } else {
           key._noteRotationTarget = 0;
         }
-        key.rotation.x = lerp(key.rotation.x, key._noteRotationTarget,
-            key._noteRotationTarget > key.rotation.x ? 0.8 : 0.3);
+        /* yeah, its position now */
+        key.position.y = lerp(key.position.y, key._noteRotationTarget,
+            key._noteRotationTarget < key.position.y ? 0.8 : 0.3);
       }
     }
 
