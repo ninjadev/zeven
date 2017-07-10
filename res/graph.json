@@ -10,7 +10,7 @@
     "id": "sceneSwitcherNode",
     "type": "SceneSwitcherNode",
     "connected": {
-      "A": "filmfx.render",
+      "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
       "D": "TempleScene.render",
@@ -22,10 +22,6 @@
       "J": "TorusScene.render",
       "K": "TempleScene.render"
     }
-  },
-  {
-    "id": "SpinningCube",
-    "type": "spinningCube"
   },
   {
     "id": "TempleScene",
@@ -225,6 +221,13 @@
     "options": {
       "camera": "res/mntn.camera.json",
       "shader": "PerlinMntn"
+    }
+  },
+  {
+    "id": "cinema",
+    "type": "cinema",
+    "connected": {
+        "image": "filmfx.render"
     }
   }
 ]
