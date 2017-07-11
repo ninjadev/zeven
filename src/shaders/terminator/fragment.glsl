@@ -44,7 +44,10 @@ float stripes(vec2 uv) {
 
 void main() {
     vec3 uvz = mix(vec3(vUv, 1.), fisheye(vUv), amount);
-    vec3 color = texture2D(tDiffuse, uvz.xy).rgb;
+    vec2 pixelatedUv = vec2(
+        floor(uvz.x * 160. * 5.) / 160. / 5.,
+        floor(uvz.y * 90. * 5.) / 90. / 5.);
+    vec3 color = texture2D(tDiffuse, mix(uvz.xy, pixelatedUv, amount)).rgb;
     vec3 overlayColor = texture2D(overlay, uvz.xy).rgb;
     if(uvz.z < 0.5) {
         color = vec3(.0);
