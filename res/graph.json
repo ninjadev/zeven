@@ -15,7 +15,7 @@
       "C": "texty.render",
       "D": "TempleScene.render",
       "E": "map.render",
-      "F": "mntn.render",
+      "F": "terminator.render",
       "G": "ball.render",
       "H": "twistershades.render",
       "I": "KaleidroScope.render",
@@ -250,7 +250,17 @@
       "shader": "grading"
     },
     "connected": {
-        "tDiffuse": "bloom.render"
+      "tDiffuse": "bloom.render"
+    }
+  },
+  {
+    "id": "terminator",
+    "type": "terminator",
+    "connected": {
+        "image": "mntn.render"
+    },
+    "options": {
+      "shader": "terminator"
     }
   }
 ]
