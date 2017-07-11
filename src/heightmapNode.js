@@ -4,7 +4,7 @@
       super(id, {
         outputs: {
           texture: new NIN.TextureOutput(),
-          mntnmesh: new NIN.Output()
+          mntngeom: new NIN.Output()
         }
       });
 
@@ -94,21 +94,8 @@
       mntnGeom.computeVertexNormals();
       mntnGeom.normalsNeedUpdate = true;
 
-      var shaderMat = new THREE.ShaderMaterial(SHADERS['PerlinMntn']).clone();
-      var tCliff  = new THREE.TextureLoader().load('project/res/rock_cliffs.jpg');
-      tCliff.wrapS = THREE.RepeatWrapping;
-      tCliff.wrapT = THREE.RepeatWrapping;
 
-      shaderMat.uniforms.tCliff.value = tCliff;
-
-      this.mntn = new THREE.Mesh( mntnGeom, 
-         // material);
-          //new THREE.MeshPhongMaterial({ map:mapTexture}));
-          //new THREE.MeshPhongMaterial({ wireframe:true}));
-         // new THREE.MeshNormalMaterial());
-       shaderMat);
-
-      this.outputs.mntnmesh.setValue(this.mntn);
+      this.outputs.mntngeom.setValue(mntnGeom);
       console.log('heightmap done');
     }
   }

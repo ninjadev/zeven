@@ -7,7 +7,7 @@
           render: new NIN.TextureOutput()
         },
         inputs: {
-          mntnmesh: new NIN.Input()
+          mntngeom: new NIN.Input()
         }
       });
       //TODO: get from input
@@ -21,7 +21,19 @@
 
     delayedInit() {
 
-      this.mntn = this.inputs.mntnmesh.getValue();
+      var shaderMat = new THREE.ShaderMaterial(SHADERS['PerlinMntn']).clone();
+      var tCliff  = new THREE.TextureLoader().load('project/res/rock_cliffs.jpg');
+      tCliff.wrapS = THREE.RepeatWrapping;
+      tCliff.wrapT = THREE.RepeatWrapping;
+
+      shaderMat.uniforms.tCliff.value = tCliff;
+
+      this.mntn = new THREE.Mesh( this.inputs.mntngeom.getValue(),
+         // material);
+          //new THREE.MeshPhongMaterial({ map:mapTexture}));
+          //new THREE.MeshPhongMaterial({ wireframe:true}));
+         // new THREE.MeshNormalMaterial());
+       shaderMat);
       console.log(this.mntn);
 
       this.mntn.castShadow = true;
@@ -52,9 +64,9 @@
 
     update(frame) {
       super.update(frame);
-      demo.nm.nodes.bloom.opacity = 1.0;
+      demo.nm.nodes.bloom.opacity = 0.1;
 
-      if(!this.initialized && this.inputs.mntnmesh.getValue()){
+      if(!this.initialized && this.inputs.mntngeom.getValue()){
         console.log("mntn init ");
         this.delayedInit();
         this.initialized = true;

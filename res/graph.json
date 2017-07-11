@@ -222,7 +222,7 @@
       "shader": "PerlinMntn"
     },
     "connected": {
-      "mntnmesh": "heightmapNode.mntnmesh"
+      "mntngeom": "heightmapNode.mntngeom"
     }
   },
   {
