@@ -256,12 +256,34 @@
       this.camera.position.x = smoothstep(0, -1.1, step);
       this.camera.position.y = smoothstep(0, -0.6, step);
       this.camera.position.z = smoothstep(6.77, 12, step);
+      this.camera.rotation.set(0, 0, 0);
 
-      step = (frame - 616) / (1096 - 616);
-      this.camera.position.x = smoothstep(this.camera.position.x, -3.17, step);
-      this.camera.position.y = smoothstep(this.camera.position.y, -1.59, step);
-      this.camera.position.z = smoothstep(this.camera.position.z, 1.28, step);
+      step = (frame - 650) / (753 - 650);
+      if(step >= 0) {
+        this.camera.position.x = lerp(
+          -3.4202983306191923,
+          -3.2969297516868843,
+          step);
+        this.camera.position.y = lerp(
+          -1.3541237569151234,
+          -1.331814208516113,
+          step);
+        this.camera.position.z = lerp(
+          1.2514192756095541,
+          1.181688445760317,
+          step);
+        this.camera.rotation.set(-0.018991165709276385, 0.5117720844703467, 0.16547044128842525);
+      }
 
+      step = (frame - 685) / (753 - 685);
+      if(step >= 0) {
+        this.camera.position.set(-1.1, -1.2, 4);
+        this.lookAt.copy(this.pianoWrapper.position);
+        this.lookAt.y += 0.65;
+        this.camera.lookAt(this.lookAt);
+      }
+
+      /*
       this.camera.fov = smoothstep(25, 75, step);
       this.camera.roll = smoothstep(0, 0.14, step);
       this.camera.updateProjectionMatrix();
@@ -270,8 +292,6 @@
       this.lookAt.y = smoothstep(this.camera.position.y, -1.61, step);
       this.lookAt.z = smoothstep(0, 1.16, step);
 
-      this.camera.lookAt(this.lookAt);
-      /*
       */
 
       const bar = 48;
