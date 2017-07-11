@@ -34,6 +34,8 @@ vec4 sampleAs3DTexture(sampler2D tex, vec3 uv, float width) {
  
 void main() {
     vec4 originalColor = texture2D(tDiffuse, vUv);
+    originalColor = vec4(pow(originalColor.rgb, vec3(1.0/2.2)), 1.); //Gamma correction!
+
     vec4 gradedColor = sampleAs3DTexture(lookup, originalColor.rgb, 16.);
     float noise = rand(vUv + vec2(frame / 100., 0.324324));
     vec3 color = gradedColor.rgb + (noise - 0.5) * 0.08;
