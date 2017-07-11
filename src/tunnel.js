@@ -203,6 +203,9 @@
       this.camera.position.z = +20 -20 * ((frame - 1233) / 60 / 60 * 105 / 4 | 0);
       this.camera.position.z += -(frame - 1233) / 20;
       demo.nm.nodes.bloom.opacity = easeOut(5, .5, ((frame - 1233) / 60 / 60 * 105) % 4);
+      if(frame >= 2295) {
+        demo.nm.nodes.bloom.opacity += easeOut(.25, 0, (frame - 2295) / 60);
+      }
       this.camera.updateProjectionMatrix();
       this.camera.position.x = 3 * Math.sin(frame / 100);
       this.camera.position.y = 3 * Math.cos(frame / 100);
