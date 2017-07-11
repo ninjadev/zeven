@@ -60,7 +60,7 @@
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
       // Draw grid
-      this.ctx.fillStyle = 'black';
+      this.ctx.fillStyle = '#111';
       this.ctx.fillRect(0, 4.5 - 0.025, 16, 0.05);
       this.ctx.fillRect(8 - 0.025, 0, 0.05, 9);
 
@@ -98,13 +98,13 @@
       this.ctx.fill();
 
       this.ctx.lineWidth = 0.1;
-      this.ctx.strokeStyle = 'black';
+      this.ctx.strokeStyle = '#111';
       this.ctx.stroke();
 
       this.ctx.restore();
 
       // Draw number
-      this.ctx.fillStyle = 'black';
+      this.ctx.fillStyle = '#111';
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = 'middle';
       this.ctx.font = `${6 * GU}px Arial`;

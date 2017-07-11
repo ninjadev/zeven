@@ -4,6 +4,16 @@ uniform sampler2D lookup;
 
 varying vec2 vUv;
 
+float rand(vec2 co){
+        return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float vignette(vec2 uv) {
+    uv = (uv - 0.5) * 2.;
+    uv *= 0.75;
+    uv = uv / 2. + 0.5;
+    return min(1., 20. * (uv.x * uv.y * (1. - uv.x) * (1. - uv.y) - pow(.2, 4.)));
+}
 
 vec4 sampleAs3DTexture(sampler2D tex, vec3 uv, float width) {
     uv.y = 1. - uv.y;
@@ -23,8 +33,12 @@ vec4 sampleAs3DTexture(sampler2D tex, vec3 uv, float width) {
 }
  
 void main() {
-    vec4 color = texture2D(tDiffuse, vUv);
-    vec4 gradedColor = sampleAs3DTexture(lookup, color.rgb, 16.);
-    gradedColor.a = color.a;
-    gl_FragColor = vec4(gradedColor.rgb, 1.);
+    vec4 originalColor = texture2D(tDiffuse, vUv);
+    vec4 gradedColor = sampleAs3DTexture(lookup, originalColor.rgb, 16.);
+    float noise = rand(vUv + vec2(frame / 100., 0.324324));
+    vec3 color = gradedColor.rgb + (noise - 0.5) * 0.08;
+    color *= vignette(vUv);
+    color = min(vec3(1.), color);
+    color = max(vec3(0.), color);
+    gl_FragColor = vec4(color, 1.);
 }
