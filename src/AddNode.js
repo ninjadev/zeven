@@ -11,7 +11,7 @@
 
     render(renderer){
       //Expect input to be linear space. Gamma correct output.
-      renderer.gammaInput = true;
+      renderer.gammaInput = false;
       renderer.gammaOutput = true;
 
       super.render(renderer);
