@@ -21,6 +21,25 @@
 
     delayedInit() {
 
+      //Skybox
+      var materialArray = [];
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/1.bmp' ) })); //right
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/4.bmp' ) })); //left
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/3.bmp' ) })); //top
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/6.bmp' ) })); //bottom
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/5.bmp' ) }));
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/2.bmp' ) }));
+
+      for (var i = 0; i < 6; i++)
+        materialArray[i].side = THREE.BackSide;
+      var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
+
+      var skyboxMesh  = new THREE.Mesh( 
+          new THREE.BoxGeometry( 7777, 7777, 7777 ),
+          skyboxMaterial );
+
+      this.scene.add(skyboxMesh);
+
       var shaderMat = new THREE.ShaderMaterial(SHADERS['PerlinMntn']).clone();
       var tCliff  = new THREE.TextureLoader().load('project/res/rock_cliffs.jpg');
       tCliff.wrapS = THREE.RepeatWrapping;
@@ -34,24 +53,12 @@
           //new THREE.MeshPhongMaterial({ wireframe:true}));
          // new THREE.MeshNormalMaterial());
        shaderMat);
-      console.log(this.mntn);
 
       this.mntn.castShadow = true;
       this.mntn.receiveShadow = true;
 
       this.mntn.rotation.x = -3.1415/2.0;
       this.scene.add(this.mntn);
-
-
-      var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
-      directionalLight.position.z = 2;
-      directionalLight.position.x = 2;
-      directionalLight.castShadow = true;
-      this.scene.add( directionalLight );
-
-      var light = new THREE.PointLight(0xffffff, 1, 10000);
-      light.position.set(5, 1, 10);
-      //this.scene.add(light);
 
       //GoPro HERO5  FOV :)
       this.camera = new THREE.PerspectiveCamera(118.2, 16/9, 1, 50000);
