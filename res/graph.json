@@ -213,7 +213,10 @@
   },
   {
     "id": "texty",
-    "type": "texty"
+    "type": "texty",
+    "connected": {
+        "image": "tunnel.render"
+    }
   },
   {
     "id": "mntn",
