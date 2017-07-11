@@ -14,6 +14,16 @@
       this.cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
       this.scene.add(this.cubeCamera);
 
+      this.sheetMusic = new THREE.Mesh(
+          new THREE.CubeGeometry(0.001, 0.297, 0.21),
+          new THREE.MeshStandardMaterial({
+            color: 0x222222,
+            map: Loader.loadTexture('res/sheet-music.jpg'),
+            roughness: 1,
+            metalness: 0,
+          }));
+
+
       this.floor = new THREE.Mesh(
           new THREE.PlaneGeometry(10, 10),
           new THREE.MeshStandardMaterial({
@@ -103,6 +113,13 @@
         roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
       });
 
+      this.pianoWrapper = new THREE.Object3D();
+      this.pianoWrapper.add(this.sheetMusic);
+      this.pianoWrapper.add(this.piano);
+      this.scene.add(this.pianoWrapper);
+      this.sheetMusic.position.y = 0.745;
+      this.sheetMusic.position.x = -0.1555;
+      this.sheetMusic.rotation.z = -0.12;
       this.piano = new THREE.Object3D();
       this.piano.scale.set(2, 2, 2);
       Loader.loadAjax('res/piano.obj', text => {
@@ -115,13 +132,14 @@
           if(item instanceof THREE.Mesh) {
             item.material = pianoMaterial;
             if(item.name == 'Keyboard_Cover') {
-                item.rotation.z = -1.8;
-                item.position.x = -40.5;
-                item.position.y = 26;
+                item.rotation.z = -2;
+                item.position.x = -38.4;
+                item.position.y = 34;
             }
             console.log(item.name, item);
             if(item.name.slice(0, 9) == 'Black_Key') {
               item.material = blackKeyMaterial.clone(); 
+              item.isWhite = false;
               const blackKeyNumber = parseInt(item.name.slice(9), 10) || 0;
               let finalNumber = (blackKeyNumber / 5 | 0) * 12;
               switch(blackKeyNumber % 5) {
@@ -148,6 +166,7 @@
             }
             if(item.name.slice(0, 10) == 'White_Keys') {
               item.material = whiteKeyMaterial.clone();
+              item.isWhite = true;
               const whiteKeyNumber = parseInt(item.name.slice(10), 10);
               let finalNumber = (whiteKeyNumber / 8 | 0) * 12;
               switch(whiteKeyNumber % 7) {
@@ -182,15 +201,16 @@
         });
       });
 
-      this.scene.add(this.piano);
-      this.piano.position.x = -3.5;
-      this.piano.position.y = -2.2;
-      this.piano.position.z = 1;
-      this.piano.rotation.y = 2.2;
+      this.pianoWrapper.add(this.piano);
+      this.pianoWrapper.position.x = -3.5;
+      this.pianoWrapper.position.y = -2.2;
+      this.pianoWrapper.position.z = 1;
+      this.pianoWrapper.rotation.y = 2.2;
       this.keygroup.position.copy(this.piano.position);
       this.keygroup.position.x = -3.3;
       this.keygroup.position.z = 1.1;
       this.keygroup.rotation.copy(this.piano.rotation);
+
 
       this.walls = new THREE.Mesh(
           new THREE.BoxGeometry(10, 5, 10),
@@ -251,6 +271,8 @@
       this.lookAt.z = smoothstep(0, 1.16, step);
 
       this.camera.lookAt(this.lookAt);
+      /*
+      */
 
       const bar = 48;
       const beat = 12;
@@ -627,7 +649,7 @@
       for(let noteNumber in this.keys) {
         const key = this.keys[noteNumber];
         if(key._noteOn) {
-          key._noteRotationTarget = -.5;
+          key._noteRotationTarget = key.isWhite ? -.5 : -0.3;
         } else {
           key._noteRotationTarget = 0;
         }
