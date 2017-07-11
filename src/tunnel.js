@@ -97,6 +97,7 @@
         emissiveMap: this.canvasTexture,
         emissive: 0xffffff,
         emissiveIntensity: 0.1,
+        rougness: 0.8,
       });
       this.cylinder = new THREE.Mesh( geometry, material );
       this.scene.add(this.cylinder);
@@ -231,7 +232,7 @@
       const scale = 0.5 + this.throb * 1.5;
       this.item.scale.set(scale, scale, scale);
       this.item.material.emissiveIntensity = this.throb * this.throb;
-      this.pointLight.intensity = 0.04 * this.throb * this.throb;
+      this.pointLight.intensity = 0.05 * this.throb * this.throb;
 
       this.light.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
     }
