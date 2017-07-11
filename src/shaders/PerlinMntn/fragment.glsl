@@ -26,21 +26,33 @@ void main() {
 
     //Sun light
     vec3 sunDir = normalize(vec3(0.0, 1.0, 0.0));
-    vec3 sunColor = vec3(1.0,1.0,0.7);
-    float sunIntensity = 5.5;
-    color += material * sunIntensity * sunColor * dot(sunDir,normal);
+    vec3 sunColor = vec3(1.64,1.27,0.99);
+    float sunIntensity = clamp( dot(sunDir, normal), 0.0, 1.0);
 
     //Sky light
     vec3 skyDir = normalize(vec3(0.0, 0.0, 1.0));
-    vec3 skyColor = vec3(0.9,0.9,1.0);
-    float skyIntensity = 3.5;
-    color += material * skyIntensity * skyColor * dot(skyDir,normal);
+    vec3 skyColor = vec3(0.16,0.20,0.28);
+    float skyIntensity = clamp( dot(skyDir, normal), 0.0, 1.0);
 
     //Fake indirect sun light
     vec3 indSunDir = normalize(vec3(0.0, -1.0, 0.0));
-    vec3 indSunColor = vec3(1.0,1.0,0.9);
-    float indSunIntensity = 2.0;
-    color += material * indSunIntensity * indSunColor * dot(indSunDir,normal);
+    vec3 indSunColor = vec3(0.40,0.28,0.20);
+    float indSunIntensity = clamp( dot(indSunDir, normal), 0.0, 1.0);
 
-    gl_FragColor = vec4(max(vec3(0.0), min(vec3(1.0), color)), 1.0);
+    color +=  sunIntensity * sunColor;
+    color +=  skyIntensity * skyColor;
+    color +=  indSunIntensity * indSunColor;
+
+    color *= material;
+
+
+    //Fog
+    float z = gl_FragCoord.z / gl_FragCoord.w;
+    vec3 fogColor = vec3(0.5,0.6,0.7);
+    float fogAmount =  1. - exp(-z*0.0007);
+
+    color = mix(color, fogColor, fogAmount);
+
+    //color = pow(color, vec3(1.0/2.2));
+    gl_FragColor = vec4(color, 1.0);
 }

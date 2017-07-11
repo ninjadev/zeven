@@ -16,7 +16,7 @@
     }
 
     update(frame) {
-      demo.nm.nodes.bloom.opacity = 1.0;
+      demo.nm.nodes.bloom.opacity = 0.3;
       this.frame = frame;
       this.uniforms.frame.value = frame;
     }
