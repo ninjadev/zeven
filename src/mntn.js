@@ -57,7 +57,6 @@
       this.mntn.castShadow = true;
       this.mntn.receiveShadow = true;
 
-      this.mntn.rotation.x = -3.1415/2.0;
       this.scene.add(this.mntn);
 
       //GoPro HERO5  FOV :)

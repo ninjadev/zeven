@@ -90,6 +90,8 @@
         }
       }
 
+      mntnGeom.rotateX(-3.1415/2.0);
+
       mntnGeom.computeFaceNormals();
       mntnGeom.computeVertexNormals();
       mntnGeom.normalsNeedUpdate = true;
