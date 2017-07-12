@@ -19,6 +19,11 @@
       this.initialized = false;
     }
 
+    render(renderer) {
+      demo.nm.nodes.grading.gammaCorrection = true;
+      super.render(renderer);
+    }
+
     delayedInit() {
 
       //Skybox

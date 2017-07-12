@@ -1,4 +1,5 @@
 uniform float frame;
+uniform float gammaCorrection;
 uniform sampler2D tDiffuse;
 uniform sampler2D lookup;
 
@@ -34,7 +35,10 @@ vec4 sampleAs3DTexture(sampler2D tex, vec3 uv, float width) {
  
 void main() {
     vec4 originalColor = texture2D(tDiffuse, vUv);
-    originalColor = vec4(pow(originalColor.rgb, vec3(1.0/2.2)), 1.); //Gamma correction!
+    originalColor = mix(
+        originalColor,
+        vec4(pow(originalColor.rgb, vec3(1.0/2.2)), 1.),
+        gammaCorrection); //Gamma correction!
 
     vec4 gradedColor = sampleAs3DTexture(lookup, originalColor.rgb, 16.);
     float noise = rand(vUv + vec2(frame / 100., 0.324324));

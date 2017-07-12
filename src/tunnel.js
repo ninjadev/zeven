@@ -238,6 +238,7 @@
     }
 
     render(renderer) {
+      demo.nm.nodes.grading.gammaCorrection = false;
       this.drawCanvas();
       this.cubeCamera.position.copy(this.item.position);
       this.item.visible = false;
