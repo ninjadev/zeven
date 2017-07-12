@@ -44,11 +44,11 @@
       this.inputs.K.enabled = false;
 
       let selectedScene;
-      if (BEAN < song(8)) {
+      if (BEAN < song(7, 3)) {
         selectedScene = this.inputs.A;
       } else if (BEAN < song(15)) {
         selectedScene = this.inputs.B;
-      } else if (BEAN < song(16)) {
+      } else if (BEAN < song(18)) {
         selectedScene = this.inputs.C;
       } else if (BEAN < song(22)) {
         selectedScene = this.inputs.D;

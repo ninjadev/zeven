@@ -3,7 +3,8 @@
     constructor(id, options) {
       super(id, {
         inputs: {
-          image: new NIN.TextureInput(),
+          imageA: new NIN.TextureInput(),
+          imageB: new NIN.TextureInput(),
         },
         outputs: {
           render: new NIN.TextureOutput()
@@ -100,7 +101,7 @@
     update(frame) {
       this.frame = frame;
       this.uniforms.opacity.value = 1;
-      this.uniforms.A.value = this.inputs.image.getValue();
+      this.uniforms.A.value = BEAN < 816 ? this.inputs.imageA.getValue() : this.inputs.imageB.getValue();
       this.uniforms.B.value = this.canvasTexture;
     }
 
@@ -125,6 +126,7 @@
       this.ctx.fillStyle = 'white';
       this.ctx.trokeStyle = 'black';
       this.ctx.globalAlpha = BEAN >= 804 ? 1 : 0;
+      this.ctx.globalAlpha *= easeOut(1, 0, (this.frame - 2570) / 15);
 
       const step = 5 / 11;
 
@@ -200,6 +202,7 @@
 
       this.ctx.fill();
       this.ctx.lineWidth = 0.2;
+      this.ctx.lineCap = 'square';
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
 
