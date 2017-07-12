@@ -215,7 +215,8 @@
     "id": "texty",
     "type": "texty",
     "connected": {
-        "image": "tunnel.render"
+        "imageA": "tunnel.render",
+        "imageB": "TempleScene.render"
     }
   },
   {

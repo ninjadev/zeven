@@ -27,7 +27,7 @@
           new THREE.PlaneGeometry(10, 10),
           new THREE.MeshStandardMaterial({
             color: 0x111111,
-            roughness: 0.05,
+            roughness: 1,
             metalness: 0,
           }));
       this.floor.receiveShadow = true;
@@ -277,9 +277,22 @@
           new THREE.BoxGeometry(10, 5, 10),
           new THREE.MeshStandardMaterial({
             color: 0x222222,
-            map: Loader.loadTexture('res/rock_cliffs.jpg'),
+            map: Loader.loadTexture('res/BrownWood_S.jpg'),
+            normalMap: Loader.loadTexture('res/BrownWood_S.jpg'),
+            roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
             side: THREE.BackSide,
+            metalness: 0,
+            roughness: .5,
           }));
+      this.walls.material.map.wrapS = THREE.RepeatWrapping;
+      this.walls.material.map.wrapT = THREE.RepeatWrapping;
+      this.walls.material.map.repeat.set(8, 8);
+      this.walls.material.normalMap.wrapS = THREE.RepeatWrapping;
+      this.walls.material.normalMap.wrapT = THREE.RepeatWrapping;
+      this.walls.material.normalMap.repeat.set(8, 8);
+      this.walls.material.roughnessMap.wrapS = THREE.RepeatWrapping;
+      this.walls.material.roughnessMap.wrapT = THREE.RepeatWrapping;
+      this.walls.material.roughnessMap.repeat.set(4, 4);
       this.walls.receiveShadow = true;
       this.scene.add(this.walls);
       this.walls.position.z = 10 / 2 - 0.01;
