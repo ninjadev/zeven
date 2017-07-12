@@ -17,12 +17,11 @@
       this.sheetMusic = new THREE.Mesh(
           new THREE.CubeGeometry(0.001, 0.297, 0.21),
           new THREE.MeshStandardMaterial({
-            color: 0x222222,
+            color: 0x373737,
             map: Loader.loadTexture('res/sheet-music.jpg'),
             roughness: 1,
             metalness: 0,
           }));
-
 
       this.floor = new THREE.Mesh(
           new THREE.PlaneGeometry(10, 10),
@@ -31,12 +30,16 @@
             roughness: 0.05,
             metalness: 0,
           }));
+      this.floor.receiveShadow = true;
       this.scene.add(this.floor);
       this.floor.position.y = -2.19;
       this.floor.rotation.x = -2 * Math.PI / 4;
       //this.floor.position.z = 10 / 2 - 0.01;
 
       this.keys = {};
+      for(let i = 0; i < 88; i++) {
+        this.keys['' + i] = new THREE.Mesh();
+      }
       const whiteKeyGeometry = new THREE.BoxGeometry(0.02, 0.03, 0.30);
       const blackKeyGeometry = new THREE.BoxGeometry(0.01, 0.03, 0.25);
       const whiteKeyMaterial = new THREE.MeshStandardMaterial({
@@ -84,7 +87,10 @@
 
       this.screen = new THREE.Mesh(
           new THREE.PlaneGeometry(16 / 3, 9 / 3),
-          new THREE.MeshBasicMaterial());
+          new THREE.MeshStandardMaterial({
+            roughness: 1,
+            metalness: 0,
+          }));
       this.screen.position.z = 0.01;
       this.scene.add(this.screen);
       this.screenBorder = new THREE.Mesh(
@@ -120,6 +126,57 @@
       this.sheetMusic.position.y = 0.745;
       this.sheetMusic.position.x = -0.1555;
       this.sheetMusic.rotation.z = -0.12;
+
+      this.candle = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.008, 0.008, .1, 32),
+          new THREE.MeshStandardMaterial({
+            color: 0x333333,            
+            roughness: 1,
+            metalness: 0,
+          }));
+
+      this.wick = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.0008, 0.0008, .05, 32),
+          new THREE.MeshStandardMaterial({
+            color: 0x000000,            
+            roughness: 1,
+            metalness: 0,
+            roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+          }));
+
+      this.wick.castShadow = true;
+      this.wick.receiveShadow = true;
+
+      this.candle.position.set(-0.3, .65, -0.555);
+      this.wick.position.set(-0.3, .682, -0.555);
+      this.pianoWrapper.add(this.candle);
+      this.pianoWrapper.add(this.wick);
+
+      this.candleFlame = new THREE.Mesh(
+          new THREE.BoxGeometry(0.009, 0.009, 0.009),
+          new THREE.MeshStandardMaterial({
+            color: 0x444444,
+            metalness: 0.98,
+            roughness: 0.4,
+            emissive: 0xffbb1e,
+            emissiveIntensity: 0.5,
+          }));
+
+      this.candleLight = new THREE.PointLight(0xffbb1e, 1, 0, 2);
+      this.candleLight.physicallyCorrectLights = true;
+      this.candleLight.castShadow = true;
+      this.candleLight.intensity = 2;
+      this.candleLight.shadow.mapSize.width = 512;
+      this.candleLight.shadow.mapSize.height = 512;
+      this.candleLight.shadow.camera.near = 0.01;
+      this.candleLight.shadow.camera.far = 5;
+      this.candleLight.shadow.bias = 0.01;
+
+      this.pianoWrapper.add(this.candleFlame);
+      this.candleFlame.position.set(-0.3, .72, -0.555);
+      this.pianoWrapper.add(this.candleLight);
+      this.candleLight.position.copy(this.candleFlame.position);
+
       this.piano = new THREE.Object3D();
       this.piano.scale.set(2, 2, 2);
       Loader.loadAjax('res/piano.obj', text => {
@@ -130,6 +187,8 @@
         this.piano.add(object);
         object.traverse(item => {
           if(item instanceof THREE.Mesh) {
+            item.receiveShadow = true;
+            item.castShadow = true;
             item.material = pianoMaterial;
             if(item.name == 'Keyboard_Cover') {
                 item.rotation.z = -2;
@@ -139,6 +198,7 @@
             console.log(item.name, item);
             if(item.name.slice(0, 9) == 'Black_Key') {
               item.material = blackKeyMaterial.clone(); 
+              item.castShadow = false;
               item.isWhite = false;
               const blackKeyNumber = parseInt(item.name.slice(9), 10) || 0;
               let finalNumber = (blackKeyNumber / 5 | 0) * 12;
@@ -166,6 +226,7 @@
             }
             if(item.name.slice(0, 10) == 'White_Keys') {
               item.material = whiteKeyMaterial.clone();
+              item.castShadow = false;
               item.isWhite = true;
               const whiteKeyNumber = parseInt(item.name.slice(10), 10);
               let finalNumber = (whiteKeyNumber / 8 | 0) * 12;
@@ -219,6 +280,7 @@
             map: Loader.loadTexture('res/rock_cliffs.jpg'),
             side: THREE.BackSide,
           }));
+      this.walls.receiveShadow = true;
       this.scene.add(this.walls);
       this.walls.position.z = 10 / 2 - 0.01;
       this.walls.position.y = 5 / 2 - 3 / 2 - 0.7;
@@ -247,10 +309,16 @@
 
     update(frame) {
       super.update(frame);
+
+      this.candleFlame.rotation.x = frame / 33;
+      this.candleFlame.rotation.y = frame / 42;
+      this.candleFlame.rotation.z = frame / 52;
+
       this.rectLight.intensity = 2 * ( 0.8 + 0.2 * (frame % 2));
       this.pointLight.intensity = 2 * ( 0.8 + 0.2 * (frame % 2));
       demo.nm.nodes.bloom.opacity = .8;
       this.screen.material.map = this.inputs.image.getValue();
+      //this.screen.material.emissiveMap = this.inputs.image.getValue();
       this.screen.material.needsUpdate = true;
       let step = (frame - 376) / (513 - 376);
       this.camera.position.x = smoothstep(0, -1.1, step);
@@ -681,12 +749,16 @@
     }
 
     render(renderer) {
-      //this.piano.visible = false;
-      //this.keygroup.visible = false;
+
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      this.piano.visible = false;
+      this.keygroup.visible = false;
       this.cubeCamera.position.copy(this.piano.position);
       this.cubeCamera.updateCubeMap(renderer, this.scene);
-      //this.keygroup.visible = true;
-      //this.piano.visible = true;
+      this.keygroup.visible = true;
+      this.piano.visible = true;
       super.render(renderer);
     }
   }
