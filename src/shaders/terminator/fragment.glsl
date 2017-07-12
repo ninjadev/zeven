@@ -29,7 +29,7 @@ vec3 fisheye(vec2 uv) {
   if(d < 2. - maxFactor) {
     uvz.z = 1.;
   }
-  return uvz;
+  return clamp(uvz, 0., 1.);
 }
 
 float ramp(float y, float start, float end) {
@@ -48,6 +48,7 @@ void main() {
         floor(uvz.x * 160. * 5.) / 160. / 5.,
         floor(uvz.y * 90. * 5.) / 90. / 5.);
     vec3 color = texture2D(tDiffuse, mix(uvz.xy, pixelatedUv, amount)).rgb;
+    color = pow(color, vec3(2.2));//remove gamma correction
     vec3 overlayColor = texture2D(overlay, uvz.xy).rgb;
     if(uvz.z < 0.5) {
         color = vec3(.0);
