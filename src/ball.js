@@ -7,89 +7,61 @@
         }
       });
 
-      const texture = new THREE.CanvasTexture(this.createBackground());
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(16, 1);
+      this.previousPosition = new THREE.Vector3();
 
-      const wall = new THREE.Mesh(
-        new THREE.CylinderGeometry(50, 50, 100, 50),
-        new THREE.MeshBasicMaterial({
-          side: THREE.BackSide,
-          map: texture,
-        })
-      );
-      this.scene.add(wall);
+      this.camera.near = 0.001;
+      this.camera.fov = 25;
+      this.camera.updateProjectionMatrix();
 
-      this.ball = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32),
-                                 new THREE.MeshStandardMaterial({ color: 0x000fff }));
+      this.skybox = new THREE.Mesh(
+          new THREE.BoxGeometry(50, 50, 50),
+          new THREE.MeshBasicMaterial({
+            color: 0x3860a0,
+            side: THREE.BackSide,
+          }));
+      this.scene.add(this.skybox);
+
+      this.ballRadius = 0.025;
+      this.ball = new THREE.Mesh(
+        new THREE.SphereGeometry(this.ballRadius, 64, 64),
+        new THREE.MeshStandardMaterial({
+          metalness: 0.9,
+          roughness: 0.2,
+          map: Loader.loadTexture('res/checkered-skybox.png'),
+          roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+        }));
       this.scene.add(this.ball);
 
-      this.track = new THREE.Mesh(
-        new THREE.ParametricGeometry((u, v) => {
-          return new THREE.Vector3(
-            Math.sin(u * 20) * (5 + v),
-            20 - u * 20,
-            Math.cos(u * 20) * (5 + v)
-          );
-        }, 200, 200),
-        new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide })
-      );
-      this.scene.add(this.track);
+      this.scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
+      this.scene.fog.color.setHSL( 0.6, 0, 1 );
 
-      var light = new THREE.PointLight(0xffffff, 1, 100);
-      light.position.set(0, 50, 0);
-      this.scene.add(light);
+      const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1);
+      hemiLight.color.setHSL( 0.6, 1, 0.6 );
+      hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+      hemiLight.position.set( 0, 500, 0 );
+      this.scene.add(hemiLight);
+
+      const dirLight = new THREE.DirectionalLight( 0xffffff, 1);
+      dirLight.color.setHSL( 0.1, 1, 0.95 );
+      dirLight.position.set( -1, 1.75, 1 );
+      dirLight.position.multiplyScalar( 50 );
+      this.scene.add(dirLight);
     }
 
     update(frame) {
       super.update(frame);
+      this.camera.position.set(0, .5, 0);
 
-      if (BEAN < 34 * 12 * 4) {
-        const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
-        const t = (frame - startFrame) / 60;
 
-        this.ball.position.set(
-          0,
-          30.5 - 10 * t,
-          5.5
-        );
-      } else if (BEAN < 40 * 12 * 4) {
-        const startFrame = FRAME_FOR_BEAN(34 * 12 * 4);
-        const t = (frame - startFrame) / 60;
+      this.ball.position.x = 0.05 * Math.sin(frame / 20);
+      this.ball.position.y = 0;
+      this.ball.position.z = 0.05 * Math.cos(frame / 20);
+      this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-        this.ball.position.set(
-          Math.sin(t) * 5.5,
-          20.5 - t,
-          Math.cos(t) * 5.5
-        );
-
-        if (!this.camera.isOverriddenByFlyControls) {
-          const cameraT = t - 1;
-          this.camera.position.set(
-            Math.sin(cameraT) * 5.5,
-            21 - cameraT,
-            Math.cos(cameraT) * 5.5
-          );
-          this.camera.lookAt(new THREE.Vector3(
-            Math.sin(t) * 5.5,
-            20.5 - t,
-            Math.cos(t) * 5.5
-          ));
-        }
-      }
-    }
-
-    createBackground() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 512;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#aaffaa';
-      ctx.fillRect(0, 0, 256, 512);
-      ctx.fillStyle = '#aaaaff';
-      ctx.fillRect(256, 0, 512, 512);
-      return canvas;
+      this.previousPosition.negate().add(this.ball.position).length();
+      this.ball.rotation.z -= 2 * this.previousPosition.x / this.ballRadius / Math.PI;
+      this.ball.rotation.x += 2 * this.previousPosition.z / this.ballRadius / Math.PI;
+      this.previousPosition.copy(this.ball.position);
     }
   }
 
