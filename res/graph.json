@@ -20,7 +20,7 @@
       "H": "twistershades.render",
       "I": "KaleidroScope.render",
       "J": "TorusScene.render",
-      "K": "TempleScene.render"
+      "K": "diamonds.render"
     }
   },
   {
@@ -266,5 +266,9 @@
     "options": {
       "shader": "terminator"
     }
+  },
+  {
+    "id": "diamonds",
+    "type": "diamonds"
   }
 ]
