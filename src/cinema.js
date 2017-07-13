@@ -165,7 +165,7 @@
       this.candleLight = new THREE.PointLight(0xffbb1e, 1, 0, 2);
       this.candleLight.physicallyCorrectLights = true;
       this.candleLight.castShadow = true;
-      this.candleLight.intensity = 2;
+      this.candleLight.intensity = 0.75;
       this.candleLight.shadow.mapSize.width = 512;
       this.candleLight.shadow.mapSize.height = 512;
       this.candleLight.shadow.camera.near = 0.01;
@@ -278,8 +278,8 @@
           new THREE.MeshStandardMaterial({
             color: 0x222222,
             map: Loader.loadTexture('res/BrownWood_S.jpg'),
-            normalMap: Loader.loadTexture('res/BrownWood_S.jpg'),
-            roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+            normalMap: Loader.loadTexture('res/BrownWood_N.jpg'),
+            roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
             side: THREE.BackSide,
             metalness: 0,
             roughness: .5,
