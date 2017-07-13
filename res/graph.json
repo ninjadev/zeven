@@ -20,7 +20,7 @@
       "H": "twistershades.render",
       "I": "KaleidroScope.render",
       "J": "TorusScene.render",
-      "K": "diamonds.render"
+      "K": "MyMarch.render"
     }
   },
   {
@@ -215,8 +215,8 @@
     "id": "texty",
     "type": "texty",
     "connected": {
-        "imageA": "tunnel.render",
-        "imageB": "TempleScene.render"
+      "imageA": "tunnel.render",
+      "imageB": "TempleScene.render"
     }
   },
   {
@@ -261,7 +261,7 @@
     "id": "terminator",
     "type": "terminator",
     "connected": {
-        "image": "mntn.render"
+      "image": "mntn.render"
     },
     "options": {
       "shader": "terminator"
@@ -270,5 +270,12 @@
   {
     "id": "diamonds",
     "type": "diamonds"
+  },
+  {
+    "id": "MyMarch",
+    "type": "MyMarchNode",
+    "options": {
+      "shader": "MyMarch"
+    }
   }
 ]
