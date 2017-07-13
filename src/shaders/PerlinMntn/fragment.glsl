@@ -5,6 +5,34 @@ uniform sampler2D tCliff;
 varying vec3 vUv;
 varying float vHeight;
 varying vec3 vNormal;
+varying vec3 vPos;
+
+vec3 addFog( in vec3 color, in float distance
+           , in vec3 sunDir, in vec3 rayDir, in vec3 camPos){
+
+    rayDir = normalize(rayDir);
+    sunDir = normalize(sunDir);
+    float sunAmount = max( dot( rayDir, sunDir ), 0.0 );
+    vec3  fogColor  = mix( vec3(0.5,0.6,0.7), // bluish
+            vec3(1.0,0.9,0.7), // yellowish
+            clamp(pow(sunAmount,8.0)*100., 0., 1.) );
+
+/*   DEACTIVATED
+    //Fancy fog model with "extinction" and "inscattering"
+    vec3 be = 0.001 * vec3(1.0,1.0,1.0);
+    vec3 bi = 0.001 * vec3(1.0,1.0,1.0);
+    vec3 extColor = vec3( exp(-distance*be.x), exp(-distance*be.y), exp(-distance*be.z) );
+    vec3 insColor = vec3( exp(-distance*bi.x), exp(-distance*bi.y), exp(-distance*bi.z) );
+    color  = color*(1.0-extColor) + fogColor*insColor;
+    TO HERE*/
+
+    //Extra fog in valleys
+    float c = 0.12;
+    float b = 0.000005177;
+    float fogAmount = c * exp(-camPos.y*b/1000.) * (1.0-exp( -distance*rayDir.y*b/100. ))/(b*rayDir.y);
+    color = mix( color, fogColor, clamp(fogAmount, 0.0, 1.0));
+    return color;
+}
 
 void main() {
 
@@ -49,12 +77,12 @@ void main() {
 
 
     //Fog
-    float z = gl_FragCoord.z / gl_FragCoord.w;
-    vec3 fogColor = vec3(0.5,0.6,0.7);
-    float fogAmount =  1. - exp(-z*0.0007);
-
-    color = mix(color, fogColor, fogAmount);
+    float z = gl_FragCoord.z/gl_FragCoord.w;
+    vec3 camRay =  vPos;
+    color = addFog(color, z, sunDir, camRay, cameraPosition.xyz);
 
     color = pow(color, vec3(1.0/2.2));
     gl_FragColor = vec4(color, 1.0);
 }
+
+

@@ -89,6 +89,19 @@
             emissiveIntensity: 0,
           }));
 
+      this.smallItemsGroup = new THREE.Object3D();
+      this.smallItems = [];
+      for(let i = 0; i < 8; i++) {
+        this.smallItems[i] = this.item.clone();
+        const height = i > 3 ? radius : -radius;
+        this.smallItems[i].position.set(
+          radius / 4 * Math.sin(Math.PI / 4 + (i % 4) / 4 * Math.PI * 2),
+          radius / 4 * Math.sin(Math.PI / 4 + (i / 4 | 0) / 2 * Math.PI * 2),
+          radius / 4 * Math.cos(Math.PI / 4 + (i % 4) / 4 * Math.PI * 2));
+        this.smallItems[i].originalPosition = this.smallItems[i].position.clone();
+        this.smallItemsGroup.add(this.smallItems[i]);
+      }
+      this.scene.add(this.smallItemsGroup);
       this.scene.add(this.item);
 
       var material = new THREE.MeshStandardMaterial({
@@ -111,6 +124,7 @@
       this.camera.position.z = 50;
 
       this.throb = 0;
+      this.snareThrob = 0;
       this.resize();
       this.drawCanvas();
     }
@@ -153,14 +167,29 @@
     update(frame) {
       super.update(frame);
 
-
+      this.scene.remove(this.smallItemsGroup);
+      this.scene.remove(this.item);
+      if(BEAN < 612) {
+        this.scene.add(this.item);
+      } else {
+        this.scene.add(this.smallItemsGroup);
+      }
 
       this.throb *= 0.95;
+      if(BEAN < 624) {
+        this.snareThrob *= 0.95;
+      } else {
+        this.snareThrob *= 0.91;
+      }
 
       for(let i = 0; i < 32; i++) {
         for(let j = 0; j < 256; j++) {
           this.throbbies[i][j] *= 0.9;
         }
+      }
+
+      if(BEAT && BEAN % 24 == 12) {
+        this.snareThrob = 1;
       }
 
       if(BEAT) {
@@ -215,6 +244,7 @@
       this.item.position.z = -(frame - 1233) / 5;
       this.item.position.x = 0;
       this.item.position.y = 0;
+      this.smallItemsGroup.position.copy(this.item.position);
       this.pointLight.position.copy(this.item.position);
       this.pointLight.position.z -= 30;
 
@@ -225,12 +255,25 @@
 
       this.camera.lookAt(this.lookAt);
 
+      const speedBonus = easeOut(0, Math.PI * 2, (frame - 1748) / (1816 - 1748));
       this.item.rotation.x = frame / 33;
       this.item.rotation.y = frame / 42;
-      this.item.rotation.z = frame / 52;
+      this.item.rotation.z = frame / 52 - speedBonus;
+
+      this.smallItemsGroup.rotation.copy(this.item.rotation);
 
       const scale = 0.5 + this.throb * 1.5;
       this.item.scale.set(scale, scale, scale);
+      this.smallItemsGroup.scale.set(0.5, 0.5, 0.5);
+      if(BEAN > 624) {
+        this.smallItemsGroup.scale.set(scale * 0.5, scale * 0.5, scale * 0.5);
+      }
+      for(let i = 0; i < this.smallItems.length; i++) {
+        this.smallItems[i].position.copy(this.smallItems[i].originalPosition);
+        this.smallItems[i].position.multiplyScalar(1 + this.snareThrob * 2.5);
+        this.smallItems[i].scale.set(1 -this.snareThrob * 0.5, 1 -this.snareThrob * 0.5, 1 - this.snareThrob * 0.5);
+      }
+
       this.item.material.emissiveIntensity = this.throb * this.throb;
       this.pointLight.intensity = 0.05 * this.throb * this.throb;
 
@@ -242,8 +285,10 @@
       this.drawCanvas();
       this.cubeCamera.position.copy(this.item.position);
       this.item.visible = false;
+      this.smallItemsGroup.visible = false;
       this.cubeCamera.updateCubeMap(renderer, this.scene);
       this.item.visible = true;
+      this.smallItemsGroup.visible = true;
       super.render(renderer);
     }
   }

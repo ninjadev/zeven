@@ -103,7 +103,7 @@
 
 
       var startX = camx;
-      var startY = 750.0;//this.heightmap[y-1][x-1]+4;
+      var startY = 650.0;//this.heightmap[y-1][x-1]+4;
       var startZ = camz;
       if(frame < 3453){ // still
         this.camera.position.x = startX;
