@@ -298,6 +298,20 @@
       this.walls.position.z = 10 / 2 - 0.01;
       this.walls.position.y = 5 / 2 - 3 / 2 - 0.7;
 
+      this.painting = new THREE.Mesh(
+          new THREE.BoxGeometry(1, 1, 1),
+          new THREE.MeshStandardMaterial({
+            map: Loader.loadTexture('res/nn7preview.png'),
+            roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
+            metalness: 0,
+            roughness: .5,
+          }));
+      this.painting.receiveShadow = true;
+      this.scene.add(this.painting);
+      this.painting.position.x = -5.46;
+      this.painting.position.z = 0.5;
+      this.painting.position.y = -0.5;
+
       this.rectLight = new THREE.RectAreaLight( 0xffffff, 1, 16 / 3, 9 / 3);
       this.rectLight.color.setHex(0xede0a3);
       this.rectLight.position.set( 0, 0, 0.0001 );
