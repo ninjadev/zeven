@@ -13,7 +13,7 @@
       "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
-      "D": "TempleScene.render",
+      "D": "InfiniZoom.render",
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
@@ -183,6 +183,10 @@
   {
     "id": "IntroNode",
     "type": "introNode"
+  },
+  {
+    "id": "InfiniZoom",
+    "type": "infinizoom"
   },
   {
     "id": "tunnel",
