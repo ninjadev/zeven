@@ -1,4 +1,7 @@
 {
     "tDiffuse": { "type": "t", "value": null },
-    "frame": { "type": "f", "value": 0.0 }
+    "frame": { "type": "f", "value": 0.0 },
+    "sunX": { "type": "f", "value": 0.0 },
+    "sunY": { "type": "f", "value": 0.0 },
+    "amount": { "type": "f", "value": 0.0 }
 }
