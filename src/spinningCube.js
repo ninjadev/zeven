@@ -66,7 +66,7 @@
       // this.scene.add(this.spotlightOverheadForAmbientLight);
 
       // The light that casts shadow.
-      this.spotLightInside = new THREE.SpotLight( 0xffffff );
+      this.spotLightInside = new THREE.SpotLight( 0xFF8A17 ); // Spicy mustard
       this.spotLightInside.castShadow = true;
       this.spotLightInside.position.set(0,0.4,0);
       this.spotLightInside.shadow.mapSize.width = 1024;
@@ -75,7 +75,7 @@
       this.scene.add(this.spotLightInside);
 
 
-      this.firstColoredSpotlight = new THREE.SpotLight( 0xff0000 );
+      this.firstColoredSpotlight = new THREE.SpotLight( 0xFFCC4C ); // faded yellow tinted designer white
       this.firstColoredSpotlight.castShadow = true;
       this.firstColoredSpotlight.position.set(0,0.3,0);
       this.firstColoredSpotlight.shadow.mapSize.width = 1024;
@@ -83,7 +83,7 @@
       this.firstColoredSpotlight.target = this.floorCube;
       this.scene.add(this.firstColoredSpotlight);
 
-      this.secondColoredSpotlight = new THREE.SpotLight( 0x808000 );
+      this.secondColoredSpotlight = new THREE.SpotLight( 0x0294FF ); // Pale bluberry
       this.secondColoredSpotlight.castShadow = true;
       this.secondColoredSpotlight.position.set(0.5,0.5,-0.2);
       this.secondColoredSpotlight.shadow.mapSize.width = 1024;
