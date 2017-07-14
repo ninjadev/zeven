@@ -41,14 +41,10 @@
       var floorCubeGeometry = new THREE.BoxGeometry(200,1,200);
       var floorGeometry = new THREE.PlaneBufferGeometry( 20, 20 );
       this.floorCube = new THREE.Mesh(
-        // floorGeometry,
         floorCubeGeometry,
-
         floorMat
-        // new THREE.MeshPhysicalMaterial({ color: 0xff0000, shading: THREE.SmoothShading })
       );
       this.floorCube.receiveShadow = true;
-      // this.floorCube.x = -Math.PI / 2.0;
       this.floorCube.position.set(0,-2,0);
       this.scene.add(this.floorCube);
 
@@ -70,7 +66,7 @@
       // this.scene.add(this.spotlightOverheadForAmbientLight);
 
       // The light that casts shadow.
-      this.spotLightInside = new THREE.SpotLight( 0xffffff );
+      this.spotLightInside = new THREE.SpotLight( 0xFF8A17 ); // Spicy mustard
       this.spotLightInside.castShadow = true;
       this.spotLightInside.position.set(0,0.4,0);
       this.spotLightInside.shadow.mapSize.width = 1024;
@@ -79,7 +75,7 @@
       this.scene.add(this.spotLightInside);
 
 
-      this.firstColoredSpotlight = new THREE.SpotLight( 0xff0000 );
+      this.firstColoredSpotlight = new THREE.SpotLight( 0xFFCC4C ); // faded yellow tinted designer white
       this.firstColoredSpotlight.castShadow = true;
       this.firstColoredSpotlight.position.set(0,0.3,0);
       this.firstColoredSpotlight.shadow.mapSize.width = 1024;
@@ -87,7 +83,7 @@
       this.firstColoredSpotlight.target = this.floorCube;
       this.scene.add(this.firstColoredSpotlight);
 
-      this.secondColoredSpotlight = new THREE.SpotLight( 0x808000 );
+      this.secondColoredSpotlight = new THREE.SpotLight( 0x0294FF ); // Pale bluberry
       this.secondColoredSpotlight.castShadow = true;
       this.secondColoredSpotlight.position.set(0.5,0.5,-0.2);
       this.secondColoredSpotlight.shadow.mapSize.width = 1024;
@@ -95,7 +91,7 @@
       this.secondColoredSpotlight.target = this.floorCube;
       this.scene.add(this.secondColoredSpotlight);
 
-      this.camera.position.z = 10;
+      this.camera.position.set(10.4,20.58,-11.65);
     }
 
     render(renderer){
@@ -107,6 +103,14 @@
 
     update(frame) {
       super.update(frame);
+
+
+      this.camera.position.x = 20 * Math.sin( frame / 100);
+      this.camera.position.y = 20 * Math.abs(Math.sin( frame / 90));
+      this.camera.position.z = 20 * Math.sin( frame / 60);
+      this.camera.lookAt(new THREE.Vector3(0,0,0));
+
+
       // this.lampModel.rotation.x = Math.cos(frame / 20);
       // Math.PI/5 ~ 0.628
       this.floorCube.needsUpdate = true;
