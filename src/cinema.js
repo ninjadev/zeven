@@ -376,14 +376,14 @@
       this.screen.material.needsUpdate = true;
       this.camera.fov = 25;
       if(frame < 650) {
-        const step = (frame - 376) / (513 - 376);
+        const step = (frame - 376) / (513 - 376) / 2;
         this.camera.position.x = smoothstep(0, -1.1, step);
         this.camera.position.y = smoothstep(0, -0.6, step);
         this.camera.position.z = smoothstep(6.77, 12, step);
         this.camera.rotation.set(0, 0, 0);
         this.shakeAmount = lerp(0, 0.001, step);
       } else if(frame < 796) {
-        const step = (frame - 650) / (796 - 650);
+        const step = (frame - 650) / (796 - 650) * 0.85;
         this.camera.position.x = lerp(-3.4047676675534095, -3.260913266141462, step);
         this.camera.position.y = lerp(-1.3492077211211249, -1.3411366515637337, step);
         this.camera.position.z = lerp(1.2864457553393909, 1.1898702376363435, step);

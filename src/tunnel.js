@@ -246,7 +246,11 @@
         BEAN = 432;
       }
       demo.nm.nodes.bloom.opacity = easeOut(5, .5, ((frame - 1233) / 60 / 60 * 105) % 4);
-      this.shakeAmount = easeOut(0.1, 0, ((frame - 1233) / 60 / 60 * 105) % 4);
+      //this.shakeAmount = easeOut(0.1, 0, ((frame - 1233) / 60 / 60 * 105) % 4);
+        this.shakeAmount = 0;
+      if(BEAT && BEAN % 24 == 12) {
+        this.shakeAmount = .5;
+      }
 
       if(frame >= 2295) {
         demo.nm.nodes.bloom.opacity += easeOut(10, 0, (frame - 2295) / 60);
@@ -260,7 +264,7 @@
           -this.camera.shakePosition.y / 16 + (this.camrand() - 0.5) * this.shakeAmount,
           -this.camera.shakePosition.z / 16 + (this.camrand() - 0.5) * this.shakeAmount);
       this.camera.shakeVelocity.add(this.camera.shakeAcceleration);
-      this.camera.shakeVelocity.multiplyScalar(0.85);
+      this.camera.shakeVelocity.multiplyScalar(0.8);
       this.camera.shakePosition.add(this.camera.shakeVelocity);
       this.camera.position.add(this.camera.shakePosition);
 
