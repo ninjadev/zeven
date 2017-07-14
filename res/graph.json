@@ -13,14 +13,16 @@
       "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
-      "D": "TempleScene.render",
+      "D": "InfiniZoom.render",
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
-      "H": "twistershades.render",
-      "I": "KaleidroScope.render",
-      "J": "TorusScene.render",
-      "K": "MyMarch.render"
+      "H": "NeonSevenNode.render",
+      "I": "spinningCube.render",
+      "J": "dweet.render",
+      "K": "KaleidroScope.render",
+      "L": "TorusScene.render",
+      "M": "MyMarch.render"
     }
   },
   {
@@ -110,7 +112,7 @@
     }
   },
   {
-    "id": "image",
+    "id": "fakeheightmap",
     "type": "image",
     "options": {
       "path": "res/Heightmap.png"
@@ -127,7 +129,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-      "image": "heightmapNode.texture"
+      "image": "fakeheightmap.render"
     }
   },
   {
@@ -182,6 +184,10 @@
   {
     "id": "IntroNode",
     "type": "introNode"
+  },
+  {
+    "id": "InfiniZoom",
+    "type": "infinizoom"
   },
   {
     "id": "tunnel",
@@ -248,6 +254,10 @@
     "type": "heightmapNode"
   },
   {
+    "id": "spinningCube",
+    "type": "spinningCube"
+  },
+  {
     "id": "grading",
     "type": "gradingNode",
     "options": {
@@ -261,10 +271,20 @@
     "id": "terminator",
     "type": "terminator",
     "connected": {
-      "image": "mntn.render"
+      "image": "LensFlare.render"
     },
     "options": {
       "shader": "terminator"
+    }
+  },
+  {
+    "id": "LensFlare",
+    "type": "LensFlareNode",
+    "options": {
+      "shader": "LensFlare"
+    },
+    "connected": {
+      "image": "mntn.render"
     }
   },
   {
@@ -277,5 +297,13 @@
     "options": {
       "shader": "MyMarch"
     }
+  },
+  {
+    "id": "dweet",
+    "type": "dweet"
+  },
+  {
+    "id": "NeonSevenNode",
+    "type": "neonSevenNode"
   }
 ]

@@ -319,6 +319,11 @@
       this.smallItemsGroup.visible = true;
       super.render(renderer);
     }
+
+    warmup(renderer) {
+      this.update(1233);
+      this.render(renderer);
+    }
   }
 
   global.tunnel = tunnel;

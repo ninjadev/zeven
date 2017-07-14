@@ -254,6 +254,8 @@
     update(frame) {
       super.update(frame);
 
+      const beanOffset = 48 * 8;
+
       //demo.nm.nodes.add.opacity = 1;
 
       this.camera.position.x = 20 * Math.sin( frame / 100);
@@ -279,7 +281,7 @@
           this.torus_geometry.vertices[i * this.subsections + j].y = subsection_center_vect.y + subsection_surface_vect.y;
           this.torus_geometry.vertices[i * this.subsections + j].z = subsection_center_vect.z * this.center_tunnel_radi + subsection_surface_vect.z;
 
-          if (frame < FRAME_FOR_BEAN(1780)) {
+          if (frame < FRAME_FOR_BEAN(1780 + beanOffset)) {
             subsection_surface_vect.multiplyScalar((1 + Math.sin(frame / 2.5 + i * 1) / 3) * 1);
           } else {
             subsection_surface_vect.multiplyScalar((1 + Math.sin((frame / 2.5 + i * 0.8)) / 5) * (1 - 0.8 * Math.sin((frame + i) / this.sections * Math.PI * 2) ));
