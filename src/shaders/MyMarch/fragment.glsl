@@ -165,18 +165,18 @@ float hue2rgb(float p, float q, float t) {
 }
 
 vec3 hsl2rgb(float h, float s, float l) {
-        float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
-        float p = 2.0 * l - q;
-        float r = hue2rgb(p, q, h + 1.0/3.0);
-        float g = hue2rgb(p, q, h);
-        float b = hue2rgb(p, q, h - 1.0/3.0);
-        return vec3(r, g, b);
+    float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
+    float p = 2.0 * l - q;
+    float r = hue2rgb(p, q, h + 1.0/3.0);
+    float g = hue2rgb(p, q, h);
+    float b = hue2rgb(p, q, h - 1.0/3.0);
+    return vec3(r, g, b);
 }
 
 
 void main() {
 
-    vec3 eye = vec3(frame/60., frame/60., 0.);
+    vec3 eye = vec3(frame/60., 8.*frame/60., 0.);
 
     vec3 dir = rayDir(60.0, vUv);
 
