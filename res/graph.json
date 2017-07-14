@@ -18,9 +18,10 @@
       "F": "terminator.render",
       "G": "ball.render",
       "H": "twistershades.render",
-      "I": "KaleidroScope.render",
-      "J": "TorusScene.render",
-      "K": "MyMarch.render"
+      "I": "dweet.render",
+      "J": "KaleidroScope.render",
+      "K": "TorusScene.render",
+      "L": "MyMarch.render"
     }
   },
   {
@@ -110,7 +111,7 @@
     }
   },
   {
-    "id": "image",
+    "id": "fakeheightmap",
     "type": "image",
     "options": {
       "path": "res/Heightmap.png"
@@ -127,7 +128,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-      "image": "heightmapNode.texture"
+      "image": "fakeheightmap.render"
     }
   },
   {
@@ -287,5 +288,9 @@
     "options": {
       "shader": "MyMarch"
     }
+  },
+  {
+    "id": "dweet",
+    "type": "dweet"
   }
 ]
