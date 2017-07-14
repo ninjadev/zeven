@@ -92,7 +92,7 @@ vec3 cc(vec3 color, float factor,float factor2) // color modifier
 
 void main(void)
 {
-    float amount = 0.5;
+    float amount = 0.3;
     float sunX = 0.8;
     float sunY = 0.8;
 
