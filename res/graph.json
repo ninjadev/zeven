@@ -20,7 +20,7 @@
       "H": "spinningCube.render",
       "I": "KaleidroScope.render",
       "J": "TorusScene.render",
-      "K": "TempleScene.render"
+      "K": "MyMarch.render"
     }
   },
   {
@@ -215,8 +215,8 @@
     "id": "texty",
     "type": "texty",
     "connected": {
-        "imageA": "tunnel.render",
-        "imageB": "TempleScene.render"
+      "imageA": "tunnel.render",
+      "imageB": "TempleScene.render"
     }
   },
   {
@@ -265,10 +265,31 @@
     "id": "terminator",
     "type": "terminator",
     "connected": {
-        "image": "mntn.render"
+      "image": "LensFlare.render"
     },
     "options": {
       "shader": "terminator"
+    }
+  },
+  {
+    "id": "LensFlare",
+    "type": "LensFlareNode",
+    "options": {
+      "shader": "LensFlare"
+    },
+      "connected": {
+      "image": "mntn.render"
+    }
+  },
+   {
+    "id": "diamonds",
+    "type": "diamonds"
+  },
+  {
+    "id": "MyMarch",
+    "type": "MyMarchNode",
+    "options": {
+      "shader": "MyMarch"
     }
   }
 ]
