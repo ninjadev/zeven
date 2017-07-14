@@ -3,10 +3,11 @@ uniform sampler2D tDiffuse;
 
 varying vec2 vUv;
 
-const int MAX_MARCHING_STEPS = 255;
-const float EPSILON = 0.0001;
-const float END = 100.0;
+const int MAX_MARCHING_STEPS = 64;
+const float EPSILON = 0.001;
+const float END = 1000.0;
 const float START = 0.0;
+const vec3 REP = vec3(4.0, 4.0, 6.0);
 
 float uni(float d1, float d2) {
     return min(d1, d2);
@@ -45,7 +46,7 @@ float sdf(in vec3 p) {
     //float sphere2 = sphere(p, 2.0);
     //float box = box((p-vec3(0.0, -12.6, 0.0)), vec3(10000., 10., 10000.), 0.3);
     //return uni(sphere1, box);
-    float repBox1 = repBox(p, vec3(3.0, 3.0, 3.0));
+    float repBox1 = repBox(p, REP);
     return repBox1;
 }
 
@@ -130,37 +131,71 @@ vec3 phongIllumination(vec3 k_a, vec3 k_d, vec3 k_s, float alpha, vec3 p, vec3 e
     vec3 light1Intensity = vec3(0.4, 0.4, 0.4);
     
     vec3 phongContrib = phongContribForLight(k_d, k_s, alpha, p, eye, light1Pos, light1Intensity);
-    float shadow = softShadow(p, light1Pos - p, START, END, 8.);
+    //float shadow = softShadow(p, light1Pos - p, START, END, 8.);
     //color = mix(vec3(1.0, 0.0, 0.0), color + phongContrib, shadow);
-    color += phongContrib * (1.0-shadow);
+    color += phongContrib;
     
     vec3 light2Pos = vec3(2.0, 2.0, 2.0);
     vec3 light2Intensity = vec3(0.4, 0.4, 0.4);
     
     phongContrib = phongContribForLight(k_d, k_s, alpha, p, eye, light2Pos, light2Intensity);
-    shadow = softShadow(p, light2Pos - p, START, END, 8.);
+    //shadow = softShadow(p, light2Pos - p, START, END, 8.);
     //color += (1. - shadow) * phongContrib;
     return color;
+}
+
+float hue2rgb(float p, float q, float t) {
+    if (t < 0.0) {
+        t += 1.0;
+    }
+    if (t > 1.0) {
+        t -= 1.0;
+    }
+    if (t < 1.0/6.0) {
+        return p + (q - p) * 6.0 * t;
+    }
+    if (t < 1.0/2.0) {
+        return q;
+    }
+    if (t < 2.0/3.0) {
+        return p + (q - p) * (2.0/3.0 - t) * 6.0;
+    }
+    return p;
+}
+
+vec3 hsl2rgb(float h, float s, float l) {
+        float q = l < 0.5 ? l * (1.0 + s) : l + s - l * s;
+        float p = 2.0 * l - q;
+        float r = hue2rgb(p, q, h + 1.0/3.0);
+        float g = hue2rgb(p, q, h);
+        float b = hue2rgb(p, q, h - 1.0/3.0);
+        return vec3(r, g, b);
 }
 
 
 void main() {
 
-    vec3 eye = vec3(0.0, 1.0*frame/100.0, 30.0*frame/2000.0);
+    vec3 eye = vec3(0.0, 4.0*frame/60.0/60.0 * 105.0, 1.0*frame/60.0/60.0 * 105.0);
     vec3 dir = rayDir(60.0, vUv);
 
     float dist = march(eye, dir, START, END);
 
     if (dist >= END-EPSILON) {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(0.0, 0.0, 0.2, 1.0);
         return;
     }
 
     vec3 p = eye + dir * dist;
-    vec3 color = vec3(vUv.x*sin(frame/60.0), vUv.y, vUv.y*cos(frame/60.0));
+    vec3 boxCoord = floor(p / REP);
+    vec3 color = vec3(0., 0., 1.);
+
+    float radius = mod((frame - 9265.), 100.0) * 0.2;
+    vec3 rgb = hsl2rgb(mod(frame/20.0 + boxCoord.z/10.0, 1.0), 0.5, 0.5);
+    color = rgb;
+
+    //vec3 color = vec3(vUv.x*sin(frame/6.0), vUv.y, vUv.y*0.9*cos(frame/60.0));
     color = phongIllumination(color, color, vec3(1.0, 1.0, 1.0), 10.0, p, eye);
 
     gl_FragColor =vec4(color, 1.0);
 }
-
 

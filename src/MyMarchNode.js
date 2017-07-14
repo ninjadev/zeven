@@ -3,10 +3,16 @@
     constructor(id, options) {
       super(id, options);
       console.log("maaarch");
+      this.throb = 0;
     }
 
     update(frame) {
       this.uniforms.frame.value = frame;
+      this.throb *= 0.95;
+      if (BEAT && BEAN % 12 == 0) {
+        this.throb = 1;
+      }
+      demo.nm.nodes.bloom.opacity = this.throb;
     }
   }
 
