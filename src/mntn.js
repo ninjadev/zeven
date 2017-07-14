@@ -88,6 +88,8 @@
     update(frame) {
       super.update(frame);
       demo.nm.nodes.bloom.opacity = 0.1;
+      //this.camera.fov = easeOut(25, 118.2, (frame - 4008 + 12) / 24);
+      this.camera.updateProjectionMatrix();
 
       if(!this.initialized && this.inputs.mntngeom.getValue()){
         console.log("mntn init ");

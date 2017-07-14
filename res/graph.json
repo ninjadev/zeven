@@ -13,14 +13,15 @@
       "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
-      "D": "TempleScene.render",
+      "D": "InfiniZoom.render",
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
       "H": "spinningCube.render",
-      "I": "KaleidroScope.render",
-      "J": "TorusScene.render",
-      "K": "MyMarch.render"
+      "I": "dweet.render",
+      "J": "KaleidroScope.render",
+      "K": "TorusScene.render",
+      "L": "MyMarch.render"
     }
   },
   {
@@ -110,7 +111,7 @@
     }
   },
   {
-    "id": "image",
+    "id": "fakeheightmap",
     "type": "image",
     "options": {
       "path": "res/Heightmap.png"
@@ -127,7 +128,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-      "image": "heightmapNode.texture"
+      "image": "fakeheightmap.render"
     }
   },
   {
@@ -182,6 +183,10 @@
   {
     "id": "IntroNode",
     "type": "introNode"
+  },
+  {
+    "id": "InfiniZoom",
+    "type": "infinizoom"
   },
   {
     "id": "tunnel",
@@ -291,5 +296,9 @@
     "options": {
       "shader": "MyMarch"
     }
+  },
+  {
+    "id": "dweet",
+    "type": "dweet"
   }
 ]
