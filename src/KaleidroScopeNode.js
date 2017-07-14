@@ -9,36 +9,37 @@
     }
 
     update(frame) {
-      this.uniforms.frame.value = frame;
+      this.uniforms.frame.value = frame - 1096;
       this.uniforms.tDiffuse.value = this.inputs.image.getValue();
-      this.frame = frame;
+      this.frame = frame - 1096;
       this.throb *= 0.9;
       this.weakThrob *= 0.95;
+      const beanOffset = 48 * 8;
       if(this.frame == 7782) {
         this.throb = 1;
       }
-      if(BEAT && BEAN == 2388 + 3) {
+      if(BEAT && BEAN == beanOffset + 2388 + 3) {
         this.weakThrob = 1;
       }
-      if(BEAT && BEAN == 2388 + 12) {
+      if(BEAT && BEAN == beanOffset + 2388 + 12) {
         this.weakThrob = 1;
       }
-      if(BEAT && BEAN == 2448) {
+      if(BEAT && BEAN == beanOffset + 2448) {
         this.weakThrob = 0.3;
       }
-      if(BEAT && BEAN == 2448 + 18) {
+      if(BEAT && BEAN == beanOffset + 2448 + 18) {
         this.weakThrob = 0.3;
       }
-      if(BEAT && BEAN == 2448 + 36) {
+      if(BEAT && BEAN == beanOffset + 2448 + 36) {
         this.weakThrob = 0.3;
       }
-      if(BEAT && BEAN == 2544) {
+      if(BEAT && BEAN == beanOffset + 2544) {
         this.weakThrob = .5;
       }
-      if(BEAT && BEAN == 2580 + 3) {
+      if(BEAT && BEAN == beanOffset + 2580 + 3) {
         this.weakThrob = .3;
       }
-      if(BEAT && BEAN == 2580 + 12) {
+      if(BEAT && BEAN == beanOffset + 2580 + 12) {
         this.weakThrob = .3;
       }
     }

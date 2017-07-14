@@ -13,14 +13,15 @@
       "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
-      "D": "dweet.render",
+      "D": "TempleScene.render",
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
       "H": "twistershades.render",
-      "I": "KaleidroScope.render",
-      "J": "TorusScene.render",
-      "K": "MyMarch.render"
+      "I": "dweet.render",
+      "J": "KaleidroScope.render",
+      "K": "TorusScene.render",
+      "L": "MyMarch.render"
     }
   },
   {
