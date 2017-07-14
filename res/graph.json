@@ -261,10 +261,20 @@
     "id": "terminator",
     "type": "terminator",
     "connected": {
-        "image": "mntn.render"
+      "image": "LensFlare.render"
     },
     "options": {
       "shader": "terminator"
+    }
+  },
+  {
+    "id": "LensFlare",
+    "type": "LensFlareNode",
+    "options": {
+      "shader": "LensFlare"
+    },
+    "connected": {
+      "image": "mntn.render"
     }
   }
 ]
