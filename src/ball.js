@@ -119,6 +119,17 @@
           this.windmillContainer.add(this.windmill_blades);
         });
 
+      this.track = new THREE.Mesh(
+        new THREE.ParametricGeometry((u, v) => {
+          return new THREE.Vector3(
+            Math.sin(u * 20) * (.3 + v * .1),
+            2 - u * 2,
+            Math.cos(u * 20) * (.3 + v * .1)
+          );
+        }, 200, 200),
+        new THREE.MeshBasicMaterial({ color: 0xe67327, side: THREE.DoubleSide })
+      );
+      this.scene.add(this.track);
     }
 
     update(frame) {
@@ -128,103 +139,161 @@
       //this.camera.position.x = 0;
       //this.camera.position.y = 0.5 * (0.8 - 0.75 * smoothstep(.5, 1, (frame - 4525) / (4799 - 4525)) + 2. * easeIn(0, 1, (frame - 4662) / (4799 - 4662)));
 
-      if(frame < 4902) {
-        const step = (frame - 4245) / (4902 - 4245);
-        this.ball.position.x = easeIn(1.18, 0.84, step);
-        this.ball.position.y = lerp(0.143, 0.03, step);
-        this.ball.position.z = easeOut(.5, 0.13, step);
-        this.camera.position.x = Math.cos(frame / 50);
-        this.camera.position.y = 0.3;
-        this.camera.position.z = Math.sin(frame / 50);
-        this.camera.lookAt(this.ball.position);
-      } else if(frame < 4936) {
+      if (BEAN < 35 * 12 * 4 + 12) {
+        this.track.visible = true;
+        this.windmillContainer.visible = false;
+        for (const bumper of this.bumpers) {
+          bumper.visible = false;
+        }
+        if (BEAN < 33 * 12 * 4 + 12) {
+          const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
+          const t = (frame - startFrame) / (FRAME_FOR_BEAN(33 * 12 * 4 + 12) - startFrame);
 
-      }
-
-      if(frame == 4902) {
-        const back = 15;
-        this.ball.position.set(-0.0119 + 0.0004 * back, 0, -0.03 * back);
-        const speed = 0.75;
-        this.ball.velocity.set(-0.00004 * speed, 0, 0.03 * speed);
-      }
-
-      if(frame == 4936) {
-        this.ball.position.set(-0.0119, 0, -0.00);
-        this.ball.velocity.set(-0.00004, 0, 0.03);
-      }
-      if(frame == 4970) {
-        this.ball.position.set(-0.0119, 0, -0.00);
-        this.ball.velocity.set(-0.00004, 0, 0.03);
-      }
-      if(frame == 4988) {
-        this.ball.position.set(-0.0119, 0, -0.00);
-        this.ball.velocity.set(-0.00004, 0, 0.03);
-      }
-      if(frame >= 4936 && frame < 4970) {
-        this.camera.position.x = 0.4 * Math.cos(4245);
-        this.camera.position.y = 0.4;
-        this.camera.position.z = 0.4 * Math.sin(4245);
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-      }
-      if(frame >= 4970 && frame < 4988) {
-        this.camera.position.x = 0.4 * Math.cos(4973);
-        this.camera.position.y = 0.2;
-        this.camera.position.z = 0.4 * Math.sin(4973);
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-      }
-      if(frame >= 4988 && frame < 5016) {
-        this.camera.position.x = 0.4 * Math.cos(4988);
-        this.camera.position.y = 0.7;
-        this.camera.position.z = 0.4 * Math.sin(4988);
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-      }
-      if(frame == 5016) {
-        this.ball.position.set(
-            this.windmillContainer.position.x + 0.6,
+          this.ball.position.set(
             0,
-            this.windmillContainer.position.z);
-        this.ball.velocity.set(-0.025, 0, 0);
-      }
-      if(frame >= 5016 && frame < 5200) {
-        this.camera.position.set(
-          0.4057971617455087,
-          0.7945663960534218,
-          -0.13085577464572953);
-        this.camera.rotation.set(
-          -2.0465180443167004,
-           1.0442813920204983,
-           2.108188437918908);
-      }
+            2.525 - t * 0.5,
+            0.35
+          );
 
-      if(this.windmill_blades) {
-        this.windmill_blades.rotation.set(Math.PI/2 * frame / 100, 0, 0);
-      }
+          if (!this.camera.isOverriddenByFlyControls) {
+            this.camera.position.set(
+              0.5 - t * 0.5,
+              2.7 + t * 0.5,
+              0.75
+            );
+            this.camera.lookAt(new THREE.Vector3(
+              0,
+              2.525 - t * 0.5,
+              0.1
+            ));
+          }
+        } else {
+          const startFrame = FRAME_FOR_BEAN(33 * 12 * 4 + 12);
+          const t = (frame - startFrame) / 60;
 
-      if(this.ball) {
-        this.ball.position.add(this.ball.velocity);
-        this.ball.velocity.multiplyScalar(0.975);
-        for(let i = 0; i < this.bumpers.length; i++) {
-          const bumper = this.bumpers[i];
-          bumper.boom *= 0.9;
-          bumper.position.y = -0.02 * bumper.boom;
-          bumper.children[0].material.color.setRGB(
-            bumper.boom > 0.7 ? 1 : 0.9019607843137255,
-            bumper.boom > 0.7 ? 1 : 0.4470588235294118,
-            bumper.boom > 0.7 ? 1 : 0.15294117647058825);
-          const delta = this.ball.position.clone().add(bumper.position.clone().negate());
-          delta.y = 0;
-          const minimumDistance = this.ball.radius + bumper.radius;
-          const distance = delta.length();
-          if(distance < minimumDistance) {
-            bumper.boom = 1;
-            this.ball.position.add(delta.normalize().multiplyScalar((minimumDistance - distance) * 1.0001));
-            const normal = delta.normalize();
-            this.ball.velocity = this.ball.velocity.clone().add(normal.clone().multiplyScalar(normal.clone().dot(this.ball.velocity) * 2).negate());
-            //this.ball.velocity.negate();
-            if(frame < 4940) {
-              this.ball.velocity.add(normal).multiplyScalar(0.008);
-            } else {
-              this.ball.velocity.add(normal).multiplyScalar(0.02);
+          this.ball.position.set(
+            Math.sin(t * 2) * 0.35,
+            2.025 - t * 0.2,
+            Math.cos(t * 2) * 0.35
+          );
+
+          if (!this.camera.isOverriddenByFlyControls) {
+            this.camera.position.set(
+              0 - t * 0.25,
+              3.2 - t * 0.15,
+              0.75
+            );
+            this.camera.lookAt(new THREE.Vector3(
+              Math.sin(t * 2) * 0.1,
+              2.025 - t * 0.2,
+              Math.cos(t * 2) * 0.1
+            ));
+          }
+        }
+      } else {
+        this.track.visible = false;
+        this.windmillContainer.visible = true;
+        for (const bumper of this.bumpers) {
+          bumper.visible = true;
+        }
+        if(frame < 4902) {
+          const step = (frame - 4245) / (4902 - 4245);
+          this.ball.position.x = easeIn(1.18, 0.84, step);
+          this.ball.position.y = lerp(0.143, 0.03, step);
+          this.ball.position.z = easeOut(.5, 0.13, step);
+          this.camera.position.x = Math.cos(frame / 50);
+          this.camera.position.y = 0.3;
+          this.camera.position.z = Math.sin(frame / 50);
+          this.camera.lookAt(this.ball.position);
+        } else if(frame < 4936) {
+
+        }
+
+        if(frame == 4902) {
+          const back = 15;
+          this.ball.position.set(-0.0119 + 0.0004 * back, 0, -0.03 * back);
+          const speed = 0.75;
+          this.ball.velocity.set(-0.00004 * speed, 0, 0.03 * speed);
+        }
+
+        if(frame == 4936) {
+          this.ball.position.set(-0.0119, 0, -0.00);
+          this.ball.velocity.set(-0.00004, 0, 0.03);
+        }
+        if(frame == 4970) {
+          this.ball.position.set(-0.0119, 0, -0.00);
+          this.ball.velocity.set(-0.00004, 0, 0.03);
+        }
+        if(frame == 4988) {
+          this.ball.position.set(-0.0119, 0, -0.00);
+          this.ball.velocity.set(-0.00004, 0, 0.03);
+        }
+        if(frame >= 4936 && frame < 4970) {
+          this.camera.position.x = 0.4 * Math.cos(4245);
+          this.camera.position.y = 0.4;
+          this.camera.position.z = 0.4 * Math.sin(4245);
+          this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+        if(frame >= 4970 && frame < 4988) {
+          this.camera.position.x = 0.4 * Math.cos(4973);
+          this.camera.position.y = 0.2;
+          this.camera.position.z = 0.4 * Math.sin(4973);
+          this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+        if(frame >= 4988 && frame < 5016) {
+          this.camera.position.x = 0.4 * Math.cos(4988);
+          this.camera.position.y = 0.7;
+          this.camera.position.z = 0.4 * Math.sin(4988);
+          this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+        if(frame == 5016) {
+          this.ball.position.set(
+              this.windmillContainer.position.x + 0.6,
+              0,
+              this.windmillContainer.position.z);
+          this.ball.velocity.set(-0.025, 0, 0);
+        }
+        if(frame >= 5016 && frame < 5200) {
+          this.camera.position.set(
+            0.4057971617455087,
+            0.7945663960534218,
+            -0.13085577464572953);
+          this.camera.rotation.set(
+            -2.0465180443167004,
+             1.0442813920204983,
+             2.108188437918908);
+        }
+
+        if(this.windmill_blades) {
+          this.windmill_blades.rotation.set(Math.PI/2 * frame / 100, 0, 0);
+        }
+
+        if(this.ball) {
+          this.ball.position.add(this.ball.velocity);
+          this.ball.velocity.multiplyScalar(0.975);
+          for(let i = 0; i < this.bumpers.length; i++) {
+            const bumper = this.bumpers[i];
+            bumper.boom *= 0.9;
+            bumper.position.y = -0.02 * bumper.boom;
+            bumper.children[0].material.color.setRGB(
+              bumper.boom > 0.7 ? 1 : 0.9019607843137255,
+              bumper.boom > 0.7 ? 1 : 0.4470588235294118,
+              bumper.boom > 0.7 ? 1 : 0.15294117647058825);
+            const delta = this.ball.position.clone().add(bumper.position.clone().negate());
+            delta.y = 0;
+            const minimumDistance = this.ball.radius + bumper.radius;
+            const distance = delta.length();
+            if(distance < minimumDistance) {
+              bumper.boom = 1;
+              this.ball.position.add(delta.normalize().multiplyScalar((minimumDistance - distance) * 1.0001));
+              const normal = delta.normalize();
+              this.ball.velocity = this.ball.velocity.clone().add(normal.clone().multiplyScalar(normal.clone().dot(this.ball.velocity) * 2).negate());
+              //this.ball.velocity.negate();
+              if(frame < 4940) {
+                this.ball.velocity.add(normal).multiplyScalar(0.008);
+              } else {
+                this.ball.velocity.add(normal).multiplyScalar(0.02);
+              }
             }
           }
         }
