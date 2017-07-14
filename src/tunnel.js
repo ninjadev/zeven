@@ -16,6 +16,12 @@
           circumference,
           512);
 
+      this.camera.shakePosition = new THREE.Vector3(0, 0, 0);
+      this.camera.shakeVelocity = new THREE.Vector3(0, 0, 0);
+      this.camera.shakeAcceleration = new THREE.Vector3(0, 0, 0);
+      this.camrand = new Random('tnrndcam');
+      this.shakeAmount = 0;
+
       this.random = new Random('tnmlpf');
 
       this.pointLight = new THREE.PointLight(0xffbb1e, 1, 0, 2);
@@ -240,13 +246,23 @@
         BEAN = 432;
       }
       demo.nm.nodes.bloom.opacity = easeOut(5, .5, ((frame - 1233) / 60 / 60 * 105) % 4);
+      this.shakeAmount = easeOut(0.1, 0, ((frame - 1233) / 60 / 60 * 105) % 4);
 
       if(frame >= 2295) {
-        demo.nm.nodes.bloom.opacity += easeOut(.25, 0, (frame - 2295) / 60);
+        demo.nm.nodes.bloom.opacity += easeOut(10, 0, (frame - 2295) / 60);
       }
       this.camera.updateProjectionMatrix();
       this.camera.position.x = 3 * Math.sin(frame / 100);
       this.camera.position.y = 3 * Math.cos(frame / 100);
+
+      this.camera.shakeAcceleration.set(
+          -this.camera.shakePosition.x / 16 + (this.camrand() - 0.5) * this.shakeAmount,
+          -this.camera.shakePosition.y / 16 + (this.camrand() - 0.5) * this.shakeAmount,
+          -this.camera.shakePosition.z / 16 + (this.camrand() - 0.5) * this.shakeAmount);
+      this.camera.shakeVelocity.add(this.camera.shakeAcceleration);
+      this.camera.shakeVelocity.multiplyScalar(0.85);
+      this.camera.shakePosition.add(this.camera.shakeVelocity);
+      this.camera.position.add(this.camera.shakePosition);
 
       //this.item.position.z = this.camera.position.z - 30;
       this.item.position.z = -(frame - 1233) / 5;
