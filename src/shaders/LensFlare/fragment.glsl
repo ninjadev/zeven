@@ -11,9 +11,9 @@ void main() {
 
 
 uniform float frame;
-//uniform float amount;
-//uniform float sunX;
-//uniform float sunY;
+uniform float amount;
+uniform float sunX;
+uniform float sunY;
 uniform sampler2D tDiffuse;
 
 varying vec2 vUv;
@@ -33,7 +33,7 @@ float noise(float t)
     return 0.;
 }
 float noise(vec2 t)
-{
+{ 
     //return texture2D(iChannel0,t/iChannelResolution[0].xy).x;
     return 0.;
 }
@@ -92,10 +92,6 @@ vec3 cc(vec3 color, float factor,float factor2) // color modifier
 
 void main(void)
 {
-    float amount = 0.3;
-    float sunX = 0.8;
-    float sunY = 0.8;
-
     //vec2 uv = gl_FragCoord.xy / vec2(width,height) - 0.5;
     vec2 uv = vec2(vUv)-.5;
     //vec2 uv = gl_FragCoord.xy / iResolution.xy - 0.5;

@@ -13,8 +13,9 @@
       this.uniforms.frame.value = frame;
       this.uniforms.tDiffuse.value = this.inputs.image.getValue();
 
-      //this.uniforms.sunX.value = this.inputs.subpos.getValue()
-      //this.uniforms.sunY.value
+      /*this.uniforms.sunX.value = 0.8;
+      this.uniforms.sunY.value = 0.8;
+      this.uniforms.amount.value = 0.4;*/
 
     /*var relativeFrame = frame - this.config.startFrame;
     var endRelativeFrame = this.config.endFrame - frame; 
