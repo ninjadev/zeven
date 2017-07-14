@@ -22,7 +22,7 @@ float inter(float d1, float d2) {
 }
 
 float displace(vec3 p, float d1) {
-    float d2 = 0.07* sin(20.0*p.x)*sin(20.0*p.y)*sin(20.0*p.z);
+        float d2 = 0.07* sin(20.0*p.x)*sin(20.0*p.y)*sin(20.0*p.z - frame / 5.);
     return d1+d2;
 }
 
@@ -176,7 +176,8 @@ vec3 hsl2rgb(float h, float s, float l) {
 
 void main() {
 
-    vec3 eye = vec3(0.0, 8.0*frame/60.0/60.0 * 105.0, 0.0);
+    vec3 eye = vec3(frame/60., frame/60., 0.);
+
     vec3 dir = rayDir(60.0, vUv);
 
     float dist = march(eye, dir, START, END);
