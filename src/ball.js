@@ -9,144 +9,226 @@
 
       this.previousPosition = new THREE.Vector3();
 
+
       this.camera.near = 0.001;
       this.camera.fov = 25;
       this.camera.updateProjectionMatrix();
 
+      this.windmillContainer = new THREE.Object3D();
+      this.windmillContainer.scale.set(2, 2, 2);
+      this.windmillContainer.position.x = -1.06;
+      this.windmillContainer.position.y = 0;
+      this.windmillContainer.position.z = 0.15;
+      this.scene.add(this.windmillContainer);
+
       this.skybox = new THREE.Mesh(
           new THREE.BoxGeometry(50, 50, 50),
           new THREE.MeshBasicMaterial({
-            color: 0x3860a0,
+            color: 0x2b2b87,
             side: THREE.BackSide,
           }));
       this.scene.add(this.skybox);
-
       this.ballRadius = 0.025;
+      this.skybox.position.y = 25 - this.ballRadius;
       this.ball = new THREE.Mesh(
         new THREE.SphereGeometry(this.ballRadius, 64, 64),
-        new THREE.MeshStandardMaterial({
-          metalness: 0.9,
-          roughness: 0.2,
-          map: Loader.loadTexture('res/checkered-skybox.png'),
-          roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+        new THREE.MeshBasicMaterial({
+          color: 0xb00404,
         }));
       this.scene.add(this.ball);
+      this.ball.position.set(
+          1.18,
+          0.143,
+          .5);
+      this.ball.velocity = new THREE.Vector3(0, 0, 0);
+      this.ball.radius = this.ballRadius * 0.7;
 
-      this.scene.fog = new THREE.Fog( 0xffffff, 1, 5000 );
-      this.scene.fog.color.setHSL( 0.6, 0, 1 );
-
-      const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 1);
-      hemiLight.color.setHSL( 0.6, 1, 0.6 );
-      hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-      hemiLight.position.set( 0, 500, 0 );
-      this.scene.add(hemiLight);
-
-      const dirLight = new THREE.DirectionalLight( 0xffffff, 1);
-      dirLight.color.setHSL( 0.1, 1, 0.95 );
-      dirLight.position.set( -1, 1.75, 1 );
-      dirLight.position.multiplyScalar( 50 );
-      this.scene.add(dirLight);
 
       var prefix = 'res/ball/';
 
-
-
-      var loadObject = function(objPath, material, three_object, num_instances) {
+      var loadObject = function(objPath, material, cb) {
         var objLoader = new THREE.OBJLoader();
         Loader.loadAjax(objPath, function(text) {
-          var object = [];
-          for (var i = 0; i < num_instances; i++)
-          {
-            object.push(objLoader.parse(text));
-            object[i].traverse(function(child) {
-              if (child instanceof THREE.Mesh) {
-                  child.material = material;
-              }
-            });
-          }
-          for (var i = 0; i < num_instances; i++)
-          {
-            three_object[i].add(object[i]);
-          }
+          const obj = objLoader.parse(text);
+          obj.traverse(child => {
+            if (child instanceof THREE.Mesh) {
+              child.material = material;
+            }
+          });
+          cb(obj);
         }
         );
       };
 
-      this.path = [];
-      this.path.push(new THREE.Object3D());
       loadObject(prefix + 'path.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
+        new THREE.MeshBasicMaterial({
+          color: 0xe67327,
           side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.path, 1
-      );
-      this.path[0].scale.set(0.03, 0.03, 0.03);
-      this.path[0].position.set(0, 0.06, 0.01);
-      this.path[0].rotation.set(0, Math.PI, 0);
-      this.scene.add(this.path[0]);
+        }), obj => {
+          this.path = obj;
+          this.path.scale.set(0.03, 0.03, 0.03);
+          this.path.position.set(1., 0.06, 0.25);
+          this.path.rotation.set(0, Math.PI / 2 * 1.1, 0);
+          this.scene.add(this.path);
+        });
 
-      this.bumper = [];
-      this.bumper.push(new THREE.Object3D());
+      this.bumpers = [];
       loadObject(prefix + 'bumper.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
+        new THREE.MeshBasicMaterial({
+          color: 0xe67327,
           side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.bumper, 1
-      );
-      this.bumper[0].scale.set(0.02, 0.02, 0.02);
-      this.bumper[0].position.set(0.03, 0, 0);
-      this.scene.add(this.bumper[0]);
+        }), obj => {
+          this.bumpers[0] = obj;
+          this.bumpers[1] = obj.clone();
+          this.bumpers[2] = obj.clone();
+          this.bumpers[1].children[0].material = this.bumpers[1].children[0].material.clone();
+          this.bumpers[2].children[0].material = this.bumpers[2].children[0].material.clone();
+          for(let i = 0; i < 3; i++) {
+            this.bumpers[i].scale.set(0.02, 0.02, 0.02);
+            this.bumpers[i].boom = 0;
+            this.bumpers[i].radius = 0.025;
+            const angle = i / 3 * Math.PI * 2;
+            const distance = 0.1;
+            this.bumpers[i].position.set(
+                distance * Math.sin(angle),
+                0,
+                distance * Math.cos(angle));
+            this.scene.add(this.bumpers[i]);
+          }
+        });
 
-      this.windmill_base = [];
-      this.windmill_base.push(new THREE.Object3D());
       loadObject(prefix + 'windmill_base.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
+        new THREE.MeshBasicMaterial({
+          color: 0xe67327,
           side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.windmill_base, 1
+        }), obj => {
+          this.windmill_base = obj;
+          this.windmill_base.scale.set(0.01, 0.01, 0.01);
+          this.windmillContainer.add(this.windmill_base);
+        }
       );
-      this.windmill_base[0].scale.set(0.01, 0.01, 0.01);
-      this.windmill_base[0].position.set(-0.06, 0, 0.15);
-      this.scene.add(this.windmill_base[0]);
 
-      this.windmill_blades = [];
-      this.windmill_blades.push(new THREE.Object3D());
       loadObject(prefix + 'windmill_blades.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
+        new THREE.MeshBasicMaterial({
+          color: 0xe67327,
           side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.windmill_blades, 1
-      );
-      this.windmill_blades[0].scale.set(0.01, 0.01, 0.01);
-      this.windmill_blades[0].position.set(-0.06, 0.105, 0.15);
+        }), obj => {
+          this.windmill_blades = obj;
+          this.windmill_blades.scale.set(0.01, 0.01, 0.01);
+          this.windmill_blades.position.set(0, 0.105, 0);
+          this.windmillContainer.add(this.windmill_blades);
+        });
 
-      this.scene.add(this.windmill_blades[0]);
     }
 
     update(frame) {
       super.update(frame);
-      this.camera.position.set(0.7, 0.2, 0);
+      demo.nm.nodes.grading.gammaCorrection = true;
+      demo.nm.nodes.bloom.opacity = 0.5;
+      //this.camera.position.x = 0;
+      //this.camera.position.y = 0.5 * (0.8 - 0.75 * smoothstep(.5, 1, (frame - 4525) / (4799 - 4525)) + 2. * easeIn(0, 1, (frame - 4662) / (4799 - 4662)));
 
+      if(frame < 4902) {
+        const step = (frame - 4245) / (4902 - 4245);
+        this.ball.position.x = easeIn(1.18, 0.84, step);
+        this.ball.position.y = lerp(0.143, 0.03, step);
+        this.ball.position.z = easeOut(.5, 0.13, step);
+        this.camera.position.x = Math.cos(frame / 50);
+        this.camera.position.y = 0.3;
+        this.camera.position.z = Math.sin(frame / 50);
+        this.camera.lookAt(this.ball.position);
+      } else if(frame < 4936) {
 
-      this.ball.position.x = 0.05 * Math.sin(frame / 20);
-      this.ball.position.y = 0;
-      this.ball.position.z = 0.05 * Math.cos(frame / 20);
-      this.camera.lookAt(new THREE.Vector3(0, 0.1, 0));
+      }
 
-      this.previousPosition.negate().add(this.ball.position).length();
-      this.ball.rotation.z -= 2 * this.previousPosition.x / this.ballRadius / Math.PI;
-      this.ball.rotation.x += 2 * this.previousPosition.z / this.ballRadius / Math.PI;
-      this.previousPosition.copy(this.ball.position);
+      if(frame == 4902) {
+        const back = 15;
+        this.ball.position.set(-0.0119 + 0.0004 * back, 0, -0.03 * back);
+        const speed = 0.75;
+        this.ball.velocity.set(-0.00004 * speed, 0, 0.03 * speed);
+      }
 
-      this.windmill_blades[0].rotation.set(Math.PI/2 * frame / 100, 0, 0);
+      if(frame == 4936) {
+        this.ball.position.set(-0.0119, 0, -0.00);
+        this.ball.velocity.set(-0.00004, 0, 0.03);
+      }
+      if(frame == 4970) {
+        this.ball.position.set(-0.0119, 0, -0.00);
+        this.ball.velocity.set(-0.00004, 0, 0.03);
+      }
+      if(frame == 4988) {
+        this.ball.position.set(-0.0119, 0, -0.00);
+        this.ball.velocity.set(-0.00004, 0, 0.03);
+      }
+      if(frame >= 4936 && frame < 4970) {
+        this.camera.position.x = 0.4 * Math.cos(4245);
+        this.camera.position.y = 0.4;
+        this.camera.position.z = 0.4 * Math.sin(4245);
+        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+      }
+      if(frame >= 4970 && frame < 4988) {
+        this.camera.position.x = 0.4 * Math.cos(4973);
+        this.camera.position.y = 0.2;
+        this.camera.position.z = 0.4 * Math.sin(4973);
+        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+      }
+      if(frame >= 4988 && frame < 5016) {
+        this.camera.position.x = 0.4 * Math.cos(4988);
+        this.camera.position.y = 0.7;
+        this.camera.position.z = 0.4 * Math.sin(4988);
+        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
+      }
+      if(frame == 5016) {
+        this.ball.position.set(
+            this.windmillContainer.position.x + 0.6,
+            0,
+            this.windmillContainer.position.z);
+        this.ball.velocity.set(-0.025, 0, 0);
+      }
+      if(frame >= 5016 && frame < 5200) {
+        this.camera.position.set(
+          0.4057971617455087,
+          0.7945663960534218,
+          -0.13085577464572953);
+        this.camera.rotation.set(
+          -2.0465180443167004,
+           1.0442813920204983,
+           2.108188437918908);
+      }
+
+      if(this.windmill_blades) {
+        this.windmill_blades.rotation.set(Math.PI/2 * frame / 100, 0, 0);
+      }
+
+      if(this.ball) {
+        this.ball.position.add(this.ball.velocity);
+        this.ball.velocity.multiplyScalar(0.975);
+        for(let i = 0; i < this.bumpers.length; i++) {
+          const bumper = this.bumpers[i];
+          bumper.boom *= 0.9;
+          bumper.position.y = -0.02 * bumper.boom;
+          bumper.children[0].material.color.setRGB(
+            bumper.boom > 0.7 ? 1 : 0.9019607843137255,
+            bumper.boom > 0.7 ? 1 : 0.4470588235294118,
+            bumper.boom > 0.7 ? 1 : 0.15294117647058825);
+          const delta = this.ball.position.clone().add(bumper.position.clone().negate());
+          delta.y = 0;
+          const minimumDistance = this.ball.radius + bumper.radius;
+          const distance = delta.length();
+          if(distance < minimumDistance) {
+            bumper.boom = 1;
+            this.ball.position.add(delta.normalize().multiplyScalar((minimumDistance - distance) * 1.0001));
+            const normal = delta.normalize();
+            this.ball.velocity = this.ball.velocity.clone().add(normal.clone().multiplyScalar(normal.clone().dot(this.ball.velocity) * 2).negate());
+            //this.ball.velocity.negate();
+            if(frame < 4940) {
+              this.ball.velocity.add(normal).multiplyScalar(0.008);
+            } else {
+              this.ball.velocity.add(normal).multiplyScalar(0.02);
+            }
+          }
+        }
+      }
     }
   }
 

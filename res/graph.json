@@ -13,7 +13,7 @@
       "A": "cinema.render",
       "B": "tunnel.render",
       "C": "texty.render",
-      "D": "TempleScene.render",
+      "D": "dweet.render",
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
@@ -110,7 +110,7 @@
     }
   },
   {
-    "id": "image",
+    "id": "fakeheightmap",
     "type": "image",
     "options": {
       "path": "res/Heightmap.png"
@@ -127,7 +127,7 @@
     "id": "panner",
     "type": "panner",
     "connected": {
-      "image": "heightmapNode.texture"
+      "image": "fakeheightmap.render"
     }
   },
   {
@@ -277,5 +277,9 @@
     "options": {
       "shader": "MyMarch"
     }
+  },
+  {
+    "id": "dweet",
+    "type": "dweet"
   }
 ]
