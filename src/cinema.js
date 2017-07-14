@@ -2,6 +2,7 @@
   class cinema extends NIN.THREENode {
     constructor(id) {
       super(id, {
+        camera: 'res/cinema.camera.json',
         outputs: {
           render: new NIN.TextureOutput(),
         },
@@ -10,7 +11,7 @@
         }
       });
 
-      this.cubeCamera = new THREE.CubeCamera(0.01, 100, 2048);
+      this.cubeCamera = new THREE.CubeCamera(0.01, 100, 512);
       this.cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter;
       this.scene.add(this.cubeCamera);
 
@@ -111,12 +112,14 @@
       canvas.getContext('2d').fillRect(0, 0, 1, 1);
       const blackMap = new THREE.Texture(canvas);
 
-      const pianoMaterial = new THREE.MeshStandardMaterial({
+      const pianoMaterial = new THREE.MeshPhysicalMaterial({
         color: 0x111111,  
         envMap: this.cubeCamera.renderTarget.texture,
         roughness: 0.2,
         metalness: 0.01,
         roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+        clearCoat: 1,
+        reflectivity: 1,
       });
 
       this.pianoWrapper = new THREE.Object3D();
@@ -195,7 +198,6 @@
                 item.position.x = -38.4;
                 item.position.y = 34;
             }
-            console.log(item.name, item);
             if(item.name.slice(0, 9) == 'Black_Key') {
               item.material = blackKeyMaterial.clone(); 
               item.castShadow = false;
@@ -279,38 +281,50 @@
             color: 0x222222,
             map: Loader.loadTexture('res/BrownWood_S.jpg'),
             normalMap: Loader.loadTexture('res/BrownWood_N.jpg'),
-            roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
+            //roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
             side: THREE.BackSide,
             metalness: 0,
-            roughness: .5,
+            roughness: 1.,
           }));
       this.walls.material.map.wrapS = THREE.RepeatWrapping;
       this.walls.material.map.wrapT = THREE.RepeatWrapping;
-      this.walls.material.map.repeat.set(8, 8);
+      this.walls.material.map.repeat.set(32, 8);
       this.walls.material.normalMap.wrapS = THREE.RepeatWrapping;
       this.walls.material.normalMap.wrapT = THREE.RepeatWrapping;
       this.walls.material.normalMap.repeat.set(8, 8);
-      this.walls.material.roughnessMap.wrapS = THREE.RepeatWrapping;
-      this.walls.material.roughnessMap.wrapT = THREE.RepeatWrapping;
-      this.walls.material.roughnessMap.repeat.set(4, 4);
       this.walls.receiveShadow = true;
       this.scene.add(this.walls);
       this.walls.position.z = 10 / 2 - 0.01;
       this.walls.position.y = 5 / 2 - 3 / 2 - 0.7;
 
-      this.painting = new THREE.Mesh(
-          new THREE.BoxGeometry(1, 1, 1),
-          new THREE.MeshStandardMaterial({
-            map: Loader.loadTexture('res/nn7preview.png'),
-            roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
-            metalness: 0,
-            roughness: .5,
-          }));
-      this.painting.receiveShadow = true;
-      this.scene.add(this.painting);
-      this.painting.position.x = -5.46;
-      this.painting.position.z = 0.5;
-      this.painting.position.y = -0.5;
+      const previewNames = [
+        'res/checkered-skybox.png', 
+        'res/tunnel-preview.png', 
+        'res/nn7preview.png', 
+        'res/indianrose.jpg', 
+        'res/rock_cliffs.jpg', 
+        'res/gradient.jpg', 
+      ];
+      for(let i = 0; i < previewNames.length; i++) {
+        const painting = new THREE.Mesh(
+            new THREE.BoxGeometry(0.001, 1 / 16, 1 / 9),
+            new THREE.MeshStandardMaterial({
+              color: 0x222222,
+              map: Loader.loadTexture(previewNames[i]),
+              roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
+              metalness: 0,
+              roughness: 1.,
+            }));
+        painting.material.roughnessMap.wrapS = THREE.RepeatWrapping;
+        painting.material.roughnessMap.wrapT = THREE.RepeatWrapping;
+        painting.material.roughnessMap.repeat.set(100, 0.01);
+        painting.scale.set(4, 4, 4);
+        painting.receiveShadow = true;
+        this.scene.add(painting);
+        painting.position.x = -5;
+        painting.position.y = -1.3;
+        painting.position.z = 1.5 + 0.5 * (i - 1);
+      }
 
       this.rectLight = new THREE.RectAreaLight( 0xffffff, 1, 16 / 3, 9 / 3);
       this.rectLight.color.setHex(0xede0a3);
@@ -347,47 +361,87 @@
       this.screen.material.map = this.inputs.image.getValue();
       //this.screen.material.emissiveMap = this.inputs.image.getValue();
       this.screen.material.needsUpdate = true;
-      let step = (frame - 376) / (513 - 376);
-      this.camera.position.x = smoothstep(0, -1.1, step);
-      this.camera.position.y = smoothstep(0, -0.6, step);
-      this.camera.position.z = smoothstep(6.77, 12, step);
-      this.camera.rotation.set(0, 0, 0);
-
-      step = (frame - 650) / (753 - 650);
-      if(step >= 0) {
-        this.camera.position.x = lerp(
-          -3.4202983306191923,
-          -3.2969297516868843,
-          step);
-        this.camera.position.y = lerp(
-          -1.3541237569151234,
-          -1.331814208516113,
-          step);
-        this.camera.position.z = lerp(
-          1.2514192756095541,
-          1.181688445760317,
-          step);
-        this.camera.rotation.set(-0.018991165709276385, 0.5117720844703467, 0.16547044128842525);
-      }
-
-      step = (frame - 685) / (753 - 685);
-      if(step >= 0) {
-        this.camera.position.set(-1.1, -1.2, 4);
-        this.lookAt.copy(this.pianoWrapper.position);
-        this.lookAt.y += 0.65;
-        this.camera.lookAt(this.lookAt);
-      }
-
+      this.camera.fov = 25;
+      if(frame < 650) {
+        const step = (frame - 376) / (513 - 376);
+        this.camera.position.x = smoothstep(0, -1.1, step);
+        this.camera.position.y = smoothstep(0, -0.6, step);
+        this.camera.position.z = smoothstep(6.77, 12, step);
+        this.camera.rotation.set(0, 0, 0);
+      } else if(frame < 796) {
+        const step = (frame - 650) / (796 - 650);
+        this.camera.position.x = lerp(-3.4047676675534095, -3.260913266141462, step);
+        this.camera.position.y = lerp(-1.3492077211211249, -1.3411366515637337, step);
+        this.camera.position.z = lerp(1.2864457553393909, 1.1898702376363435, step);
+        this.camera.rotation.x = lerp(-0.08314122594572174, -0.08314122594572174, step);
+        this.camera.rotation.y = lerp(0.5864066162783125, 0.5864066162783125, step);
+        this.camera.rotation.z = lerp(0.22796222750506834, 0.22796222750506834, step);
       /*
-      this.camera.fov = smoothstep(25, 75, step);
-      this.camera.roll = smoothstep(0, 0.14, step);
+      } else {
+        this.camera.position.x = -1.4052718061799705;
+        this.camera.position.y = -0.8048418341255347;
+        this.camera.position.z = 3.8295201813946953;
+        this.camera.rotation.x = -0.3117281792108799;
+        this.camera.rotation.y = 0.6131675417448342;
+        this.camera.rotation.z = 0.24728802923535803;
+      */
+      } else if(frame < 908) {
+        this.camera.position.set(
+          -3.8095714737047874,
+          -1.462809819298461,
+          1.6090197635679977);
+        this.camera.rotation.set(
+          -0.4330234952074363,
+          -0.7897668671987589,
+          -0.30249985706435634);
+      } else if(frame < 959) {
+          const step = (frame - 908) / (959 - 908);
+          this.camera.position.x = lerp(
+            -2.842442015988314,
+            -3.0775859451207563,
+            step);
+          this.camera.position.y = lerp(
+            -1.4931535644716758,
+            -1.4921105187713266,
+            step);
+          this.camera.position.z = lerp(
+            1.193582336169457,
+            1.3614302479343925,
+            step);
+          this.camera.rotation.set(
+            -0.620390331746024,
+            0.5281023933190914,
+            0.3414093145520857);
+      } else {
+        const step = (frame - 959) / (1233 - 959);
+        this.camera.fov = easeIn(25, 10, step);
+        this.camera.position.x = easeIn( 
+          -0.9507226747412427,
+          -3.5848764172124543,
+          step);
+        this.camera.position.y = easeIn(
+          -0.5131095088905656,
+          -1.5065816818784314,
+          step);
+        this.camera.position.z = easeIn(
+          0.7059477087019609,
+          1.590458901038592,
+          step);
+        this.camera.rotation.x = lerp(
+          -1.9025241872116923 - 0.5 * Math.sin(step * Math.PI),
+          1.1722280429036072,
+          step);
+        this.camera.rotation.y = easeIn(
+          1.0939380478095968,
+          1.4149343017072753,
+          step);
+        this.camera.rotation.z = easeIn(
+          1.8796259625716747,
+          -1.1859792157277678,
+          step);
+      }
       this.camera.updateProjectionMatrix();
 
-      this.lookAt.x = smoothstep(this.camera.position.x, -3.24, step);
-      this.lookAt.y = smoothstep(this.camera.position.y, -1.61, step);
-      this.lookAt.z = smoothstep(0, 1.16, step);
-
-      */
 
       const bar = 48;
       const beat = 12;
@@ -786,6 +840,7 @@
       this.cubeCamera.updateCubeMap(renderer, this.scene);
       this.keygroup.visible = true;
       this.piano.visible = true;
+      const now = performance.now();
       super.render(renderer);
     }
   }
