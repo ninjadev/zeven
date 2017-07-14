@@ -25,6 +25,7 @@
           K: new NIN.TextureInput(),
           L: new NIN.TextureInput(),
           M: new NIN.TextureInput(),
+          N: new NIN.TextureInput(),
         },
         outputs: {
           render: new NIN.TextureOutput(),
@@ -46,6 +47,7 @@
       this.inputs.K.enabled = false;
       this.inputs.L.enabled = false;
       this.inputs.M.enabled = false;
+      this.inputs.N.enabled = false;
 
       let selectedScene;
       if (BEAN < song(8)) {
