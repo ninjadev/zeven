@@ -36,7 +36,8 @@ float sphere(vec3 p, float s) {
 
 float repBox(vec3 p, vec3 c) {
     vec3 q = mod(p, c)-0.5*c;
-    float box = box(q, vec3(0.4, 0.2, 0.5), 0.3);
+    vec3 boxCoord = floor(p / REP);
+    float box = box(q, vec3(0.4, 0.2, 0.5) * mod(frame/20.0 + boxCoord.z/10.0, 1.0), 0.3);
     return displace(p, box);
 }
 
@@ -175,7 +176,7 @@ vec3 hsl2rgb(float h, float s, float l) {
 
 void main() {
 
-    vec3 eye = vec3(0.0, 4.0*frame/60.0/60.0 * 105.0, 1.0*frame/60.0/60.0 * 105.0);
+    vec3 eye = vec3(0.0, 8.0*frame/60.0/60.0 * 105.0, 0.0);
     vec3 dir = rayDir(60.0, vUv);
 
     float dist = march(eye, dir, START, END);
