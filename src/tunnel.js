@@ -105,7 +105,7 @@
       this.scene.add(this.item);
 
       var material = new THREE.MeshStandardMaterial({
-        color: 0x222222,
+        color: 0x0,
         side: THREE.BackSide,
         emissiveMap: this.canvasTexture,
         emissive: 0xffffff,
@@ -116,10 +116,12 @@
       this.scene.add(this.cylinder);
       //this.cylinder.scale.set(0.7, 0.7, 0.7);
 
+      /*
       var light = new THREE.PointLight(0xffffff, 1, 100);
       light.position.set(50, 50, 50);
       this.light = light;
       this.scene.add(light);
+      */
 
       this.camera.position.z = 50;
 
@@ -137,7 +139,7 @@
 
     drawCanvas() {
       this.ctx.globalCompositeOperation = 'source-over';
-      this.ctx.fillStyle = '#111';
+      this.ctx.fillStyle = '#222';
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       this.ctx.strokeStyle = 'white';
       this.ctx.fillStyle = 'white';
@@ -232,7 +234,13 @@
       //this.camera.fov = easeOut(85, 25, ((frame - 1233) / 60 / 60 * 105 * 2) % 16);
       this.camera.position.z = +20 -20 * ((frame - 1233) / 60 / 60 * 105 / 4 | 0);
       this.camera.position.z += -(frame - 1233) / 20;
+      if(frame == 1234) {
+        frame = 1233;
+        BEAT = true;
+        BEAN = 432;
+      }
       demo.nm.nodes.bloom.opacity = easeOut(5, .5, ((frame - 1233) / 60 / 60 * 105) % 4);
+
       if(frame >= 2295) {
         demo.nm.nodes.bloom.opacity += easeOut(.25, 0, (frame - 2295) / 60);
       }
@@ -277,7 +285,7 @@
       this.item.material.emissiveIntensity = this.throb * this.throb;
       this.pointLight.intensity = 0.05 * this.throb * this.throb;
 
-      this.light.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
+      //this.light.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z);
     }
 
     render(renderer) {
