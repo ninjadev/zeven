@@ -21,7 +21,7 @@ float inter(float d1, float d2) {
 }
 
 float displace(vec3 p, float d1) {
-    float d2 = 2.0* sin(20.0*p.x)*sin(20.0*p.y)*sin(20.0*p.z);
+    float d2 = 0.07* sin(20.0*p.x)*sin(20.0*p.y)*sin(20.0*p.z);
     return d1+d2;
 }
 
@@ -148,7 +148,7 @@ void main() {
 
     vec3 eye = vec3(0.0, 1.0*frame/100.0, 30.0*frame/2000.0);
     vec3 dir = rayDir(60.0, vUv);
-    
+
     float dist = march(eye, dir, START, END);
 
     if (dist >= END-EPSILON) {
