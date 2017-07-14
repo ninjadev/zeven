@@ -4,12 +4,14 @@
       super(id, {
         camera: options.camera,
         outputs: {
-          render: new NIN.TextureOutput()
+          render: new NIN.TextureOutput(),
+          sunpos: new NIN.Output(),
         },
         inputs: {
           mntngeom: new NIN.Input()
         }
       });
+
       //TODO: get from input
       this.mntnWidth = 512;
       this.mntnHeight = 512;
@@ -71,6 +73,16 @@
       this.camera.position.y = -70;
       this.camera.position.z = 90;
       this.camera.rotation.x = -3.14/8;
+    }
+
+    projectPoint(x, y, z) {
+      var p = new THREE.Vector3(x, y, z);
+      var vector = p.project(this.camera);
+
+      vector.x = (vector.x + 1) / (2 * 16 * GU);
+      vector.y = -(vector.y - 1) / (2 * 9 * GU);
+
+      return vector;
     }
 
     update(frame) {
@@ -144,8 +156,15 @@
         this.camera.rotation.x = -Math.PI/8 + 0.1;
 
       }
+
+      var sunPos = this.projectPoint(5000.0, 2660.0, -5000.0);
+
+      if(this.outputs.sunpos){
+        this.outputs.sunpos.setValue(sunPos);
+      }
     }
   }
+
 
   global.mntn = mntn;
 })(this);
