@@ -17,7 +17,7 @@
       "E": "map.render",
       "F": "terminator.render",
       "G": "ball.render",
-      "H": "twistershades.render",
+      "H": "spinningCube.render",
       "I": "KaleidroScope.render",
       "J": "TorusScene.render",
       "K": "TempleScene.render"
@@ -246,6 +246,10 @@
   {
     "id": "heightmapNode",
     "type": "heightmapNode"
+  },
+  {
+    "id": "spinningCube",
+    "type": "spinningCube"
   },
   {
     "id": "grading",
