@@ -162,6 +162,10 @@
       }
 
     update(frame) {
+      if(frame > 6660){
+        
+        return;
+      }
       super.update(frame);
       this.floorCube.needsUpdate = true;
       this.throb *= 0.94;
@@ -195,32 +199,32 @@
         this.camera.lookAt(ProgressiveCameraTarget);
 
       }
-      else if (BEAN > 2160 && BEAN < 2204){
-        this.camera.position.x = this.sidewayPosition.x; 
-        this.camera.position.y = this.sidewayPosition.y; 
-        this.camera.position.z = this.sidewayPosition.z; 
+      else if (BEAN > 2160 && BEAN < 2208){
+        this.camera.position.x = this.sidewayPosition.x;
+        this.camera.position.y = this.sidewayPosition.y;
+        this.camera.position.z = this.sidewayPosition.z;
         this.camera.lookAt(this.sidewayView);
       }
-      else if (BEAN >2204 && BEAN <2260){
-       this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));  
-      
+      else if (BEAN >2208 && BEAN <2256){
+        this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));
+
       }
-      else if (BEAN > 2304 && BEAN <2313){
-      
-        this.camera.position.x = this.upwardPosition.x; 
-        this.camera.position.y = this.upwardPosition.y; 
-        this.camera.position.z = this.upwardPosition.z; 
+      else if (BEAN > 2304 && BEAN <2312){
+
+        this.camera.position.x = this.upwardPosition.x;
+        this.camera.position.y = this.upwardPosition.y;
+        this.camera.position.z = this.upwardPosition.z;
         this.camera.lookAt(this.upwardView);
-      
+
       }
 
-      else if (BEAN > 2313 && BEAN < 2322){
-      
-        this.camera.position.x = this.sidewayPosition.x; 
-        this.camera.position.y = this.sidewayPosition.y; 
-        this.camera.position.z = this.sidewayPosition.z; 
+      else if (BEAN > 2312 && BEAN < 2324){
+
+        this.camera.position.x = this.sidewayPosition.x;
+        this.camera.position.y = this.sidewayPosition.y;
+        this.camera.position.z = this.sidewayPosition.z;
         this.camera.lookAt(this.sidewayView);
-      
+
       }
       else{
         // Final position, should do some panning or some stuff at this point
