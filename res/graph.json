@@ -23,7 +23,7 @@
       "K": "KaleidroScope.render",
       "L": "TorusScene.render",
       "M": "MyMarch.render",
-      "N": "alfNode.render"
+      "N": "fisheye.render"
     }
   },
   {
@@ -283,12 +283,21 @@
     "type": "dweet"
   },
   {
-<<<<<<< b5d3d6c24d9f4888dfb2d6a8df1cd3b9be8a1961
     "id": "NeonSevenNode",
     "type": "neonSevenNode"
-=======
+  },
+  {
     "id": "alfNode",
     "type": "alfNode"
->>>>>>> Add seven.png and draw it
+  },
+  {
+    "id": "fisheye",
+    "type": "fisheyeNode",
+    "options": {
+      "shader": "fisheye"
+    },
+    "connected": {
+      "tDiffuse": "alfNode.render"
+    }
   }
 ]

@@ -13,10 +13,8 @@
       this.output = new THREE.VideoTexture(this.canvas);
       this.output.minFilter = THREE.LinearFilter;
       this.output.magFilter = THREE.LinearFilter;
-      this.img = Loader.loadTexture('res/seven.png');
-      console.log(this.img.image);
-
-      this.base_y = (9/2)-1.5; // GU = 1/9 height
+      this.seven = Loader.loadTexture('res/seven.png');
+      this.lemon = Loader.loadTexture('res/lemon.png');
     }
 
     update(frame) {
@@ -27,9 +25,17 @@
       this.ctx.save();
       this.ctx.scale(GU, GU);
 
-      this.ctx.drawImage(this.img.image, 2, this.base_y, 3, 3);
-      this.ctx.drawImage(this.img.image, 6.5, this.base_y, 3, 3);
-      this.ctx.drawImage(this.img.image, 11, this.base_y, 3, 3);
+      this.base_y = (frame/4)
+
+      // wheel one
+
+      this.ctx.drawImage(this.seven.image, 2, this.base_y % 14.8-3, 3, 3);
+      this.ctx.drawImage(this.seven.image, 6.5, this.base_y % 14.8-3, 3, 3);
+      this.ctx.drawImage(this.seven.image, 11, this.base_y % 12.5-3, 3, 3);
+
+      this.ctx.drawImage(this.lemon.image, 2, this.base_y % 22-3, 3, 3);
+      this.ctx.drawImage(this.lemon.image, 6.5, this.base_y % 9.3-3, 3, 3);
+      this.ctx.drawImage(this.lemon.image, 11, this.base_y % 14.3-3, 3, 3);
       this.ctx.restore();
     }
 
