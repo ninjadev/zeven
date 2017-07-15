@@ -22,7 +22,8 @@
       "J": "dweet.render",
       "K": "KaleidroScope.render",
       "L": "TorusScene.render",
-      "M": "MyMarch.render"
+      "M": "MyMarch.render",
+      "N": "fisheye.render"
     }
   },
   {
@@ -284,5 +285,19 @@
   {
     "id": "NeonSevenNode",
     "type": "neonSevenNode"
+  },
+  {
+    "id": "alfNode",
+    "type": "alfNode"
+  },
+  {
+    "id": "fisheye",
+    "type": "fisheyeNode",
+    "options": {
+      "shader": "fisheye"
+    },
+    "connected": {
+      "tDiffuse": "alfNode.render"
+    }
   }
 ]
