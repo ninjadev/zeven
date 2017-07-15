@@ -476,9 +476,9 @@
         this.torus.scale.set(scale, scale, scale);
         this.greets.scale.set(scale, scale, scale);
 
-        var positionX = 4 * Math.sin(frame / 100);
-        var positionY = 3;
-        var positionZ = 4 *  Math.cos(frame / 100);
+        var positionX = 0;
+        var positionY = 0;
+        var positionZ = 0;
         this.torus.position.set(positionX, positionY, positionZ);
         this.greets.position.set(positionX, positionY, positionZ);
 
