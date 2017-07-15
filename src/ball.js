@@ -61,18 +61,6 @@
         );
       };
 
-      loadObject(prefix + 'path.obj',
-        new THREE.MeshBasicMaterial({
-          color: 0xe67327,
-          side: THREE.DoubleSide,
-        }), obj => {
-          this.path = obj;
-          this.path.scale.set(0.03, 0.03, 0.03);
-          this.path.position.set(1., 0.06, 0.25);
-          this.path.rotation.set(0, Math.PI / 2 * 1.1, 0);
-          this.scene.add(this.path);
-        });
-
       this.bumpers = [];
       loadObject(prefix + 'bumper.obj',
         new THREE.MeshBasicMaterial({
@@ -154,7 +142,6 @@
       if (BEAN < 35 * 12 * 4 + 12) {
         this.track.visible = true;
         this.windmillContainer.visible = false;
-        if (this.path) this.path.visible = false;
         for (const bumper of this.bumpers) {
           bumper.visible = false;
         }
@@ -201,7 +188,6 @@
       } else {
         this.track.visible = false;
         this.windmillContainer.visible = true;
-        if (this.path) this.path.visible = true;
         for (const bumper of this.bumpers) {
           bumper.visible = true;
         }
