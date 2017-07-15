@@ -254,14 +254,64 @@
     update(frame) {
       super.update(frame);
 
+      var start_cut1 = 8916;
+      var start_cut2 = 9226;
+      var mode = 0;
+      var amount = 1;
+
+      if (frame < start_cut2) {
+        var progression = (frame - start_cut1) / (start_cut2 - start_cut1);
+        var scale = 0.1 + 0.9 * progression;
+        this.torus.scale.set(scale, scale, scale);
+        this.greets.scale.set(scale, scale, scale);
+
+        var positionX = 0;
+        var positionY = 40;
+        var positionZ = 0;
+        this.torus.position.set(positionX, positionY, positionZ);
+        this.greets.position.set(positionX, positionY, positionZ);
+
+        this.torus.rotation.x = Math.PI;
+        this.greets.rotation.x = Math.PI;
+
+        var cameraPositionX = 0;
+        var cameraPositionY = 45;
+        var cameraPositionZ = 5;
+        this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+
+        mode = 0;
+        amount = -Math.cos(progression * Math.PI );
+
+        this.camera.lookAt(this.torus.position);
+      } else {
+        var scale = 1;
+        this.torus.scale.set(scale, scale, scale);
+        this.greets.scale.set(scale, scale, scale);
+
+        var positionX = 4 * Math.sin(frame / 100);
+        var positionY = 3;
+        var positionZ = 4 *  Math.cos(frame / 100);
+        this.torus.position.set(positionX, positionY, positionZ);
+        this.greets.position.set(positionX, positionY, positionZ);
+
+        var cameraPositionX = 14 * Math.sin(frame / 100);
+        var cameraPositionY = 5;
+        var cameraPositionZ = 14 *  Math.cos(frame / 100);
+        this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+
+        this.camera.lookAt(this.torus.position);
+
+        mode = 1;
+        amount = Math.cos(progression * Math.PI * 2);
+      }
+
+
+
       const beanOffset = 48 * 8;
 
       //demo.nm.nodes.add.opacity = 1;
 
-      this.camera.position.x = 20 * Math.sin( frame / 100);
-      this.camera.position.y = 20 * Math.sin( frame / 90);
-      this.camera.position.z = 20 * Math.sin( frame / 60);
-      this.camera.lookAt(new THREE.Vector3(0,0,0));
+
       var subsection_center_vect = new THREE.Vector3();
       var subsection_surface_vect = new THREE.Vector3();
 
@@ -281,8 +331,8 @@
           this.torus_geometry.vertices[i * this.subsections + j].y = subsection_center_vect.y + subsection_surface_vect.y;
           this.torus_geometry.vertices[i * this.subsections + j].z = subsection_center_vect.z * this.center_tunnel_radi + subsection_surface_vect.z;
 
-          if (frame < FRAME_FOR_BEAN(1780 + beanOffset)) {
-            subsection_surface_vect.multiplyScalar((1 + Math.sin(frame / 2.5 + i * 1) / 3) * 1);
+          if (mode == 0) {
+            subsection_surface_vect.multiplyScalar((1 + Math.sin(frame / 2.5 + i * 1) / 3) * amount);
           } else {
             subsection_surface_vect.multiplyScalar((1 + Math.sin((frame / 2.5 + i * 0.8)) / 5) * (1 - 0.8 * Math.sin((frame + i) / this.sections * Math.PI * 2) ));
           }
