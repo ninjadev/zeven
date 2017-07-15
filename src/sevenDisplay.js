@@ -28,8 +28,9 @@
 
       const arrows = 30;
       for(var i = 1; i < arrows; i++) {
-        const x = -16/9*Math.cos(i + frame/1000)*2 + 16/2;
-        const y = -16/9*Math.sin(i + frame/1000)*1.9 + 9/2;
+        const odd = i % 2 == 0;
+        const x = -16/9*Math.cos(i + frame/500)*2 + 16/2;
+        const y = -16/9*Math.sin(i + frame/500)*1.9 + 9/2;
 
         let rot = Math.atan((y-(9/2))/(x-(16/2)));
         rot += ((x>16/2) ? -90 : 90)*Math.PI/180;
@@ -46,8 +47,10 @@
       this.ctx.fillStyle = '#BE9B75';
       this.ctx.textAlign = 'center';
       this.ctx.textBaseline = 'middle';
-      this.ctx.font = '4px sans-serif';
-      this.ctx.fillText('7', 16 / 2, 9 / 2 + 0.5);
+      const fontSize = smoothstep(5, 7, (frame-5480)/200);
+      this.ctx.font = `${fontSize}px sans-serif`;
+      console.log(this.ctx.font);
+      this.ctx.fillText('7', 16 / 2, 9 / 2);
 
       this.ctx.restore();
 
