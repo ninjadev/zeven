@@ -25,7 +25,8 @@
       "M": "ending.render",
       "N": "fisheye.render",
       "O": "DragonBall.render",
-      "P": "sevenDisplay.render"
+      "P": "sevenDisplay.render",
+      "Q": "MyMarch.render"
     }
   },
   {
@@ -307,7 +308,7 @@
     "id": "ending",
     "type": "endingNode",
     "connected": {
-      "tDiffuse": "MyMarch.render"
+      "tDiffuse": "ninEnd.render"
     },
     "options": {
       "shader": "ending"
@@ -323,5 +324,9 @@
     "options": {
       "shader": "DragonBall"
     }
+  },
+  {
+    "id": "ninEnd",
+    "type": "ninEnd"
   }
 ]
