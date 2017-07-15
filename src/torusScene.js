@@ -9,7 +9,14 @@
       
       this.camera.position.z = 20;
 
+        this.camx = 30;
+        this.camy = 5;
+        this.camz = 30;
+        this.camr = 0;
+        this.camyr = 0;
+
       this.throb = 0;
+      this.camran = new Random('moordi');
 
       var light = new THREE.PointLight(0xffffff, 1, 0, 2);
       light.position.set(10, 10, 10);
@@ -475,9 +482,24 @@
         this.torus.position.set(positionX, positionY, positionZ);
         this.greets.position.set(positionX, positionY, positionZ);
 
-        var cameraPositionX = 30 * Math.sin(frame / 100);
-        var cameraPositionY = 5;
-        var cameraPositionZ = 30 *  Math.cos(frame / 100);
+        if((BEAT && BEAN % 48 == 0) ||
+            (BEAT && BEAN == 3504 + 8) ||
+            (BEAT && BEAN == 3504 + 8 + 8) ||
+            (BEAT && BEAN == 3552) ||
+            (BEAT && BEAN == 3552 + 8) ||
+            (BEAT && BEAN == 3552 + 8 + 8) ||
+            (BEAT && BEAN == 3552 + 8 + 8 + 8) ||
+            (BEAT && BEAN == 3552 + 8 + 8 + 8 + 8)) {
+          this.camx = 20 + this.camran() * 60;
+          this.camy = -2 + this.camran() * 30;
+          this.camz = 20 + this.camran() * 60;
+          this.camr = this.camran() * Math.PI * 2;
+          this.camyr = this.camran() * Math.PI * 2;
+        }
+
+        var cameraPositionX = this.camx * Math.sin(frame / 100 + this.camr);
+        var cameraPositionY = this.camy + 10 * Math.sin(frame / 200 + this.camyr);
+        var cameraPositionZ = this.camz *  Math.cos(frame / 100 + this.camr);
         this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
 
         this.camera.lookAt(this.torus.position);

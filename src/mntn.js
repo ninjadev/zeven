@@ -152,6 +152,11 @@
 
       this.outputs.sunpos.setValue(sunPos);
     }
+
+    warmup(renderer) {
+      this.update(3556);
+      this.render(renderer);
+    }
   }
 
 
