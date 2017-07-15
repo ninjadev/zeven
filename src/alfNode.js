@@ -26,17 +26,37 @@
       this.end_bean = song(39); // Smaller than this
 
       this.wheel_one = {
-        speed: 0,
-        offset: -4,
+        images: [
+          this.images[0],
+          this.images[1],
+          this.images[2],
+          this.images[4],
+          this.images[5],
+          this.images[3]
+
+        ]
       }
       this.wheel_two = {
-        speed: 0.1,
+        images: [
+          this.images[3],
+          this.images[5],
+          this.images[2],
+          this.images[1],
+          this.images[4],
+          this.images[0]
+        ]
       }
 
       this.wheel_three = {
-        speed: 0.1,
+        images: [
+          this.images[4],
+          this.images[3],
+          this.images[2],
+          this.images[5],
+          this.images[1],
+          this.images[0]
+        ]
       }
-      this.speedModifier = 0;
     }
 
     update(frame) {
@@ -46,28 +66,22 @@
       this.ctx.save();
       this.ctx.scale(GU, GU);
 
-      this.base_y = (frame/4)
-
       const relativeFrame = frame - 5074;
-      const mixer = (relativeFrame) / 150;
-      const speedModifier = lerp(1, 0.1, mixer);
-
-      let from_absolute = relativeFrame / Math.log(relativeFrame); // -4, Max this.images.length*4
 
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = elasticOut(0, 95, 1, relativeFrame/120);
-        this.ctx.drawImage(this.images[i].image, 2, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+        let offset = elasticOut(0, 95, 1, relativeFrame/130);
+        this.ctx.drawImage(this.wheel_one.images[i].image, 2, (offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
       //wheel to
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = elasticOut(0, 23, 1, relativeFrame/80);
-        this.ctx.drawImage(this.images[i].image, 6.5, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+        let offset = elasticOut(0, 23, 1, relativeFrame/115);
+        this.ctx.drawImage(this.wheel_two.images[i].image, 6.5, (offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = elasticOut(0, 71, 1, relativeFrame/100);
-        this.ctx.drawImage(this.images[i].image, 11, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+        let offset = elasticOut(0, 71, 1, relativeFrame/100);
+        this.ctx.drawImage(this.wheel_three.images[i].image, 11, (offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
       this.ctx.restore();
