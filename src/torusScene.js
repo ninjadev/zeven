@@ -20,6 +20,17 @@
       light2.physicallyCorrectLights = true;
       this.scene.add(light2);
 
+      var light3 = new THREE.PointLight(0xffffff, 1, 0, 2);
+      light3.position.set(10, 50, 10);
+      light3.physicallyCorrectLights = true;
+      this.scene.add(light3);
+
+      var light4 = new THREE.PointLight(0xffffff, 1, 0, 2);
+      light4.position.set(-10, 30, -10);
+      light4.physicallyCorrectLights = true;
+      this.scene.add(light4);
+
+
       var waterNormals = Loader.loadTexture('res/waternormals.jpg');
       waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
       this.water = new THREE.Water(this.renderer, this.camera, this.scene, {
@@ -183,7 +194,7 @@
       this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 6), 0.1, 16, 100 ),
                            new THREE.MeshBasicMaterial({ color: 0x444454 }));
       this.ring1.position.y = 1 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
+      this.ring1.rotation.x = Math.PI/2;  
       this.scene.add(this.ring1);
 
     }
@@ -313,13 +324,39 @@
       demo.nm.nodes.bloom.opacity = 0.5;
 
       var start_cut1 = 8916;
-      var start_cut2 = 9226;
+      var start_cut2 = 9161;
       var mode = 0;
       var amount = 1;
 
+      var growth_start = 8919;
+      var growth_end = 8933;
+
+      var ring_timing1 = 8991;
+      var ring_timing2 = 9032;
+      var ring_timing3 = 9042;
+      var ring_timing4 = 9046;
+      var ring_timing5 = 9062;
+      var ring_timing6 = 9082;
+      var ring_timing7 = 9106;
+
+      var ring_setting_start = start_cut2;
+      var ring_setting_end   = 9209;
+
       if (frame < start_cut2) {
         var progression = (frame - start_cut1) / (start_cut2 - start_cut1);
-        var scale = 0.1 + 0.9 * progression;
+        
+        var growth_progression;
+        if (frame < growth_start) {
+          growth_progression = 0;
+        } else if (frame < growth_end) {
+          growth_progression = (frame - growth_start) / (growth_end - growth_start);
+        } else {
+          growth_progression = 1;
+        }
+
+        var scale = Math.sin(growth_progression * 4 * Math.PI / 3 + 0.5) - 0.5 + growth_progression * 2.3;
+
+
         this.torus.scale.set(scale, scale, scale);
         this.greets.scale.set(scale, scale, scale);
 
@@ -334,11 +371,11 @@
 
         var cameraPositionX = 0;
         var cameraPositionY = 45;
-        var cameraPositionZ = 5;
+        var cameraPositionZ = 9;
         this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
 
         mode = 0;
-        amount = -Math.cos(progression * Math.PI );
+        amount = 0;
 
         this.camera.lookAt(this.torus.position);
       } else {
@@ -382,7 +419,7 @@
                                                           Math.cos(j * Math.PI * 2 / this.subsections),
                                                           subsection_center_vect.z * Math.sin(j * Math.PI * 2 / this.subsections)
                                                          );
-          var intensity = 0.5 + Math.sin(3 * Math.PI * 2 * (i + j  * (0.5 + 0.5 * Math.sin(frame/ 100)) )/ this.sections) / 2;
+          var intensity = 0.5 + Math.sin(3 * Math.PI * 2 * (i + j  * (0.5 + 0.5 * Math.sin((frame + FRAME_FOR_BEAN(0.5))/ FRAME_FOR_BEAN(4))) )/ this.sections) / 2;
           subsection_surface_vect.multiplyScalar(this.tunnel_radi * (0.5 + intensity / 1.5));
           // Add the new point of torus.
           this.torus_geometry.vertices[i * this.subsections + j].x = subsection_center_vect.x * this.center_tunnel_radi + subsection_surface_vect.x;
