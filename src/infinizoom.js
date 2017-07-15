@@ -14,6 +14,7 @@
 
             this.output.minFilter = THREE.LinearFilter;
             this.output.magFilter = THREE.LinearFilter;
+            this.throb = 0;
 
             function leftPad(input, length, str) {
                 if (input.length >= length) {
@@ -36,9 +37,14 @@
         }
 
         update(frame) {
+          this.throb *= 0.9;
+          if(BEAT && BEAN % 24 == 12) {
+            this.throb = 1;
+          }
+
             const relativeFrame = frame - 2330 + 30;
             demo.nm.nodes.grading.noiseAmount = 0.08;
-            demo.nm.nodes.bloom.opacity = 0.3;
+            demo.nm.nodes.bloom.opacity = 0.3 + this.throb * 0.5;
             demo.nm.nodes.grading.amount = 1;
             demo.nm.nodes.grading.gammaCorrection = true;
             super.update(frame);
