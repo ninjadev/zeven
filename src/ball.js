@@ -225,7 +225,7 @@
           this.ball.velocity.set(-0.00004 * speed, 0, 0.03 * speed);
         }
 
-        if(frame <= 4937) {
+        if(frame == 4936) {
           this.ball.position.set(-0.0119, 0, -0.00);
           this.ball.velocity.set(-0.00004, 0, 0.03);
         }
@@ -237,7 +237,7 @@
           this.ball.position.set(-0.0119, 0, -0.00);
           this.ball.velocity.set(-0.00004, 0, 0.03);
         }
-        if(frame >= 4936 && frame < 4970) {
+        if (frame < 4970) {
           this.camera.position.x = 0.4 * Math.cos(4245);
           this.camera.position.y = 0.4;
           this.camera.position.z = 0.4 * Math.sin(4245);
