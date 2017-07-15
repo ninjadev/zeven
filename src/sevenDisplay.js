@@ -18,6 +18,12 @@
     update(frame) {
       super.update(frame);
 
+      demo.nm.nodes.bloom.opacity = 1.5;
+      demo.nm.nodes.grading.amount = 1.0;
+      demo.nm.nodes.grading.gammaCorrection = true;
+      demo.nm.nodes.grading.noiseAmount = 0.37;
+
+
       // This clears the canvas
       this.canvas.width += 0;
 
