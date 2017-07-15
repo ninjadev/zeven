@@ -20,6 +20,49 @@
       light2.physicallyCorrectLights = true;
       this.scene.add(light2);
 
+      var waterNormals = Loader.loadTexture('res/waternormals.jpg');
+      waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
+      this.water = new THREE.Water(this.renderer, this.camera, this.scene, {
+        textureWidth: 512, 
+        textureHeight: 512,
+        alpha:  1.0,
+        waterNormals: waterNormals,
+        sunDirection: light.position.normalize(),
+        sunColor: 0xffffff,
+        waterColor: 0x001e0f,
+        distortionScale: 50.0
+      });
+      var waterMesh = new THREE.Mesh(
+          new THREE.PlaneBufferGeometry(7777, 7777, 10, 10),
+          this.water.material);
+      waterMesh.add(this.water);
+      waterMesh.rotation.x = - Math.PI * 0.5;
+      this.scene.add(waterMesh);
+      waterMesh.position.y = - 16;
+      this.waterMesh = waterMesh;
+
+      //Skybox
+      var materialArray = [];
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/1.bmp' ) })); //right
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/4.bmp' ) })); //left
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/3.bmp' ) })); //top
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/6.bmp' ) })); //bottom
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/5.bmp' ) }));
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/2.bmp' ) }));
+
+      for (var i = 0; i < 6; i++) {
+        materialArray[i].side = THREE.BackSide;
+      }
+      var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
+
+      var skyboxMesh  = new THREE.Mesh( 
+          new THREE.BoxGeometry( 7777, 7777, 7777 ),
+          skyboxMaterial );
+
+      this.skybox = skyboxMesh;
+      this.scene.add(this.skybox);
+
+
       var ambientLight = new THREE.AmbientLight(0x111111);
       this.scene.add(ambientLight);
 
@@ -71,20 +114,16 @@
           }
         });
       };
-      loadObject(prefix + 'base.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x373737,
-          side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.base, 1);
-      loadObject(prefix + 'lamp.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x373737,
-          side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.lamp, 7);
+      let concreteMaterial = new THREE.MeshStandardMaterial({
+        color: 0x373737,
+        side: THREE.DoubleSide,
+        roughness: 1,
+        roughnessMap: Loader.loadTexture('res/cliff_rocks.jpg'),
+        metalness: 0,
+        map: Loader.loadTexture('res/concrete.jpg'),
+      });
+      loadObject(prefix + 'base.obj', concreteMaterial, this.base, 1);
+      loadObject(prefix + 'lamp.obj', concreteMaterial, this.lamp, 7);
 
       this.scene.add(this.base[0]);
 
@@ -262,6 +301,17 @@
     update(frame) {
       super.update(frame);
 
+      this.water.material.uniforms.time.value = frame / 60;
+      //this.water.sunColor.setRGB(this.light.intensity, this.light.intensity, this.light.intensity);
+
+      if(BEAN < 3312) {
+        this.skybox.visible = false;
+      } else {
+        this.skybox.visible = true;
+      }
+
+      demo.nm.nodes.bloom.opacity = 0.5;
+
       var start_cut1 = 8916;
       var start_cut2 = 9226;
       var mode = 0;
@@ -302,9 +352,9 @@
         this.torus.position.set(positionX, positionY, positionZ);
         this.greets.position.set(positionX, positionY, positionZ);
 
-        var cameraPositionX = 14 * Math.sin(frame / 100);
+        var cameraPositionX = 30 * Math.sin(frame / 100);
         var cameraPositionY = 5;
-        var cameraPositionZ = 14 *  Math.cos(frame / 100);
+        var cameraPositionZ = 30 *  Math.cos(frame / 100);
         this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
 
         this.camera.lookAt(this.torus.position);
@@ -383,6 +433,21 @@
       this.greet_geometry.colorsNeedUpdate = true;
       this.greet_geometry.groupsNeedsUpdate = true;
       this.greet_geometry.normalsNeedsUpdate = true;
+    }
+
+    render(renderer) {
+      this.waterMesh.visible = false;
+      if(BEAN >= 3312) {
+        this.waterMesh.visible = true;
+        this.water.renderer = renderer;
+        this.water.render();
+      }
+      super.render(renderer);
+    }
+
+    warmup(renderer) {
+      this.update(10257);
+      this.render(renderer);
     }
   }
 
