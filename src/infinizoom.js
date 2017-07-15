@@ -63,6 +63,8 @@
 
             let zoomLevel = relativeFrame / 30;
 
+            zoomLevel -= easeOut(10,0, frame - 2845) / (2879 - 2845));
+
             for (let i = 0; i < this.textures.length; i++) {
                 let texture = this.textures[i];
                 let scaleFactor = Math.pow(0.5, i) * Math.pow(2, zoomLevel);

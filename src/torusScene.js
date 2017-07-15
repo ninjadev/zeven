@@ -1,6 +1,6 @@
 (function(global) {
   class torusScene extends NIN.THREENode {
-    constructor(id, options) {
+    constructor(id) {
       super(id, {
         outputs: {
           render: new NIN.TextureOutput()
@@ -9,16 +9,18 @@
       
       this.camera.position.z = 20;
 
-      var light = new THREE.PointLight(0xffffff, 1, 100);
+      var light = new THREE.PointLight(0xffffff, 1, 0, 2);
       light.position.set(10, 10, 10);
+      light.physicallyCorrectLights = true;
       this.scene.add(light);
 
 
-      var light2 = new THREE.PointLight(0xffffff, 1, 100);
+      var light2 = new THREE.PointLight(0xffffff, 1, 0, 2);
       light2.position.set(-10, -10, -10);
+      light2.physicallyCorrectLights = true;
       this.scene.add(light2);
 
-      var ambientLight = new THREE.AmbientLight(0xFFFFFF);
+      var ambientLight = new THREE.AmbientLight(0x111111);
       this.scene.add(ambientLight);
 
       this.center_tunnel_radi = 3;
@@ -63,7 +65,7 @@
               }
             });
           }
-          for (var i = 0; i < num_instances; i++)
+          for (i = 0; i < num_instances; i++)
           {
             three_object[i].add(object[i]);
           }
@@ -71,14 +73,14 @@
       };
       loadObject(prefix + 'base.obj',
         new THREE.MeshStandardMaterial({
-          color: 0x444454,
+          color: 0x373737,
           side: THREE.DoubleSide,
           roughness: 1
         }),
         this.base, 1);
       loadObject(prefix + 'lamp.obj',
         new THREE.MeshStandardMaterial({
-          color: 0x444454,
+          color: 0x373737,
           side: THREE.DoubleSide,
           roughness: 1
         }),
@@ -165,18 +167,21 @@
           subsection_surface_vect.multiplyScalar(tunnel_radi);
 
           // Add the new point.
-          vertices.push(new THREE.Vector3(subsection_center_vect.x * center_tunnel_radi + subsection_surface_vect.x,
-                                          subsection_center_vect.y + subsection_surface_vect.y,
-                                          subsection_center_vect.z * center_tunnel_radi + subsection_surface_vect.z,
-                                          ));
+          vertices.push(
+              new THREE.Vector3(
+                subsection_center_vect.x * center_tunnel_radi +
+                  subsection_surface_vect.x,
+                subsection_center_vect.y + subsection_surface_vect.y,
+                subsection_center_vect.z * center_tunnel_radi +
+                subsection_surface_vect.z));
           geometry.vertices.push(vertices[vertices.length - 1]);
 
           this.uv_map_vertices.push(new THREE.Vector2(i / sections, j / subsections));
         }
       }
 
-      for (var i = 0; i < sections; i++) {
-        for (var j = 0; j < subsections; j++) { 
+      for (i = 0; i < sections; i++) {
+        for (j = 0; j < subsections; j++) { 
           // Add faces to the geometry
           var x1 = i * sections + j;
           var y1 = i * sections + ((j + 1) % (subsections));
@@ -217,10 +222,13 @@
           subsection_surface_vect.multiplyScalar(tunnel_radi);
 
           // Add the new point.
-          vertices.push(new THREE.Vector3(subsection_center_vect.x * center_tunnel_radi + subsection_surface_vect.x,
-                                          subsection_center_vect.y + subsection_surface_vect.y,
-                                          subsection_center_vect.z * center_tunnel_radi + subsection_surface_vect.z,
-                                          ));
+          vertices.push(
+              new THREE.Vector3(
+                subsection_center_vect.x * center_tunnel_radi +
+                  subsection_surface_vect.x,
+                subsection_center_vect.y + subsection_surface_vect.y,
+                subsection_center_vect.z * center_tunnel_radi +
+                  subsection_surface_vect.z));
           geometry.vertices.push(vertices[vertices.length - 1]);
 
           this.uv_map_vertices2.push(new THREE.Vector2(i / sections, j / subsections));
