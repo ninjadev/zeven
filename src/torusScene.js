@@ -327,6 +327,15 @@
       this.water.material.uniforms.time.value = frame / 60;
       //this.water.sunColor.setRGB(this.light.intensity, this.light.intensity, this.light.intensity);
 
+
+      var ring_timing1 = FRAME_FOR_BEAN(3214);
+      var ring_timing2 = FRAME_FOR_BEAN(3222);
+      var ring_timing3 = FRAME_FOR_BEAN(3230);
+      var ring_timing4 = FRAME_FOR_BEAN(3238);
+      var ring_timing5 = FRAME_FOR_BEAN(3248);
+      var ring_timing6 = FRAME_FOR_BEAN(3252);
+      var ring_timing7 = FRAME_FOR_BEAN(3262);
+
       this.ring1.throb *= 0.8;
       this.ring2.throb *= 0.8;
       this.ring3.throb *= 0.8;
@@ -335,7 +344,15 @@
       this.ring6.throb *= 0.8;
       this.ring7.throb *= 0.8;
       if(BEAN < 3312) {
-        if(BEAT & BEAN % 12 == 0) {
+        if(BEAT & BEAN % 12 == 0 ||
+          // not sure if these works...
+          BEAN == BEAN_FOR_FRAME(ring_timing1) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing2) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing3) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing4) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing5) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing6) ||
+          BEAN == BEAN_FOR_FRAME(ring_timing7)) {
           this.ring1.throb = 1;
           this.ring2.throb = 1;
           this.ring3.throb = 1;
@@ -354,8 +371,6 @@
         this.ring7.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 6 * Math.PI * 2 / 7);
       }
 
-
-
       this.throb *= 0.9;
       if(BEAT & BEAN % 12 == 0) {
         this.throb = 0.5;
@@ -369,25 +384,15 @@
       this.ring6.material.emissiveIntensity = this.ring6.throb;
       this.ring7.material.emissiveIntensity = this.ring7.throb;
 
-
-
       demo.nm.nodes.bloom.opacity = 0.5 + this.throb;
 
       var start_cut1 = 8916;
-      var start_cut2 = 9161;
+      var start_cut2 = FRAME_FOR_BEAN(3312);
       var mode = 0;
       var amount = 1;
 
       var growth_start = 8919;
       var growth_end = 8933;
-
-      var ring_timing1 = 8991;
-      var ring_timing2 = 9032;
-      var ring_timing3 = 9042;
-      var ring_timing4 = 9046;
-      var ring_timing5 = 9062;
-      var ring_timing6 = 9082;
-      var ring_timing7 = 9106;
 
       var ring_setting_start = start_cut2;
       var ring_setting_end   = 9209;
@@ -411,7 +416,6 @@
         }
 
         var scale = Math.sin(growth_progression * 4 * Math.PI / 3 + 0.5) - 0.5 + growth_progression * 2.3;
-
 
         this.torus.scale.set(scale, scale, scale);
         this.greets.scale.set(scale, scale, scale);
@@ -481,28 +485,28 @@
         mode = 1;
         amount = Math.cos(progression * Math.PI * 2);
 
-      var height_difference = -0.4;
-      this.ring1.position.y = 6 * height_difference;
-      this.ring1.rotation.set(Math.PI/2, 0, 0);
-      this.ring1.throb = 0;
-      this.ring2.position.y = 5 * height_difference;
-      this.ring2.rotation.set(Math.PI/2, 0, 0);
-      this.ring2.throb = 0;
-      this.ring3.position.y = 4 * height_difference;
-      this.ring3.rotation.set(Math.PI/2, 0, 0);
-      this.ring3.throb = 0;
-      this.ring4.position.y = 3 * height_difference;
-      this.ring4.rotation.set(Math.PI/2, 0, 0);
-      this.ring4.throb = 0;
-      this.ring5.position.y = 2 * height_difference;
-      this.ring5.rotation.set(Math.PI/2, 0, 0);
-      this.ring5.throb = 0;
-      this.ring6.position.y = 1 * height_difference;
-      this.ring6.rotation.set(Math.PI/2, 0, 0);
-      this.ring6.throb = 0;
-      this.ring7.position.y = 0 * height_difference;
-      this.ring7.rotation.set(Math.PI/2, 0, 0);
-      this.ring7.throb = 0;
+        var height_difference = -0.4;
+        this.ring1.position.y = 6 * height_difference;
+        this.ring1.rotation.set(Math.PI/2, 0, 0);
+        this.ring1.throb = 0;
+        this.ring2.position.y = 5 * height_difference;
+        this.ring2.rotation.set(Math.PI/2, 0, 0);
+        this.ring2.throb = 0;
+        this.ring3.position.y = 4 * height_difference;
+        this.ring3.rotation.set(Math.PI/2, 0, 0);
+        this.ring3.throb = 0;
+        this.ring4.position.y = 3 * height_difference;
+        this.ring4.rotation.set(Math.PI/2, 0, 0);
+        this.ring4.throb = 0;
+        this.ring5.position.y = 2 * height_difference;
+        this.ring5.rotation.set(Math.PI/2, 0, 0);
+        this.ring5.throb = 0;
+        this.ring6.position.y = 1 * height_difference;
+        this.ring6.rotation.set(Math.PI/2, 0, 0);
+        this.ring6.throb = 0;
+        this.ring7.position.y = 0 * height_difference;
+        this.ring7.rotation.set(Math.PI/2, 0, 0);
+        this.ring7.throb = 0;
       }
 
 
@@ -510,7 +514,6 @@
       const beanOffset = 48 * 8;
 
       //demo.nm.nodes.add.opacity = 1;
-
 
       var subsection_center_vect = new THREE.Vector3();
       var subsection_surface_vect = new THREE.Vector3();
@@ -576,10 +579,10 @@
       this.greet_geometry.groupsNeedsUpdate = true;
       this.greet_geometry.normalsNeedsUpdate = true;
     }
-
+ 
     render(renderer) {
       this.waterMesh.visible = false;
-      if(BEAN >= BEAN_FOR_FRAME(9161)) {
+      if(BEAN >= 3312) {
         this.waterMesh.visible = true;
         this.water.renderer = renderer;
         this.water.render();
