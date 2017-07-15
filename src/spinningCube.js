@@ -186,7 +186,7 @@
         var ProgressiveCameraTarget = new THREE.Vector3(
           smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.x, this.lampyLookingDownCameraPosition.cameraLookAtPoint.x, progression),
           smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.y, this.lampyLookingDownCameraPosition.cameraLookAtPoint.y, progression),
-          smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.z, this.lampyLookingDownCameraPosition.cameraLookAtPoint.z, progression),
+          smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.z, this.lampyLookingDownCameraPosition.cameraLookAtPoint.z, progression)
           );
         this.camera.lookAt(ProgressiveCameraTarget);
 
