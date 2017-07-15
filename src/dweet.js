@@ -56,7 +56,7 @@
       this.ctx.fillStyle = '#020916';
       this.ctx.fillRect(0, 0, 16 * GU, 9 * GU);
 
-      demo.nm.nodes.bloom.opacity = .1;
+      demo.nm.nodes.bloom.opacity = .2;
       demo.nm.nodes.grading.gammaCorrection = true;
 
       this.ctx.textBaseline = 'middle';
@@ -194,7 +194,11 @@
         }
       } else {
         let i, j;
-        for(i=9;i--;)for(j=9;j--;)x.beginPath(),x.arc(i*250+S(t*i)*99, j*99+C(t*j)*99,50,0,7),x.fillStyle=R(S(t*j)*999,0,99),x.fill()
+        for(i=9;i--;)for(j=9;j--;)x.beginPath(),x.arc(i*250+S(t*i)*99, j*99+C(t*j)*99,50,0,7),x.fillStyle=R(S(t*j)*999,0,99),x.fill();
+        x.fillStyle = 'white';
+        x.strokeStyle = '#020916';
+        x.strokeText('And all of you!', 1920 / 2, 1080 / 2);
+        x.fillText('And all of you!', 1920 / 2, 1080 / 2);
       }
 
       this.ctx.restore();
