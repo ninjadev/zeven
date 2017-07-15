@@ -11,6 +11,7 @@
       this.lampModel = new THREE.Object3D();
       this.otherLamp = new THREE.Object3D();
 
+      this.throb = 0;
       var loadObject = function (objPath, material, three_object) {
         var objLoader = new THREE.OBJLoader();
         Loader.loadAjax(objPath, function(text) {
@@ -161,10 +162,21 @@
       }
 
     update(frame) {
+      if(frame > 6660){
+        // todo dim light
+        return;
+      }
       super.update(frame);
-      this.floorCube.needsUpdate = true;
-      demo.nm.nodes.bloom.opacity = 0.66;
 
+      this.floorCube.needsUpdate = true;
+      this.throb *= 0.94;
+        if(BEAT && BEAN % 24 == 12) {
+          this.throb = 1;
+      }
+      demo.nm.nodes.grading.amount = 1.0;
+      demo.nm.nodes.grading.gammaCorrection = true;
+      demo.nm.nodes.grading.noiseAmount = 0.08;
+      demo.nm.nodes.bloom.opacity =  this.throb * 0.5;
       this.spotLightInside.position.x = 0.3 * Math.sin( Math.PI *2 * BEAN/36) - 0.2;
 
       if(BEAN < this.lampyInitCameraPosition.lastBean){
@@ -191,32 +203,33 @@
         this.camera.lookAt(ProgressiveCameraTarget);
 
       }
-      else if (BEAN > 2160 && BEAN < 2204){
-        this.camera.position.x = this.sidewayPosition.x; 
-        this.camera.position.y = this.sidewayPosition.y; 
-        this.camera.position.z = this.sidewayPosition.z; 
+      else if (BEAN > 2160 && BEAN < 2208){
+        this.camera.position.x = this.sidewayPosition.x;
+        this.camera.position.y = this.sidewayPosition.y;
+        this.camera.position.z = this.sidewayPosition.z;
         this.camera.lookAt(this.sidewayView);
       }
-      else if (BEAN >2204 && BEAN <2260){
-       this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));  
-      
+      else if (BEAN >2208 && BEAN <2256){
+        this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));
+        // This should in theory be better, but we couldn't make it work:
+        // this.lampModel.rotation.y = Math.sin(frame/(100*smoothstep(0.,BEAN, 1.0)));
       }
-      else if (BEAN > 2304 && BEAN <2313){
-      
-        this.camera.position.x = this.upwardPosition.x; 
-        this.camera.position.y = this.upwardPosition.y; 
-        this.camera.position.z = this.upwardPosition.z; 
+      else if (BEAN > 2304 && BEAN <2312){
+
+        this.camera.position.x = this.upwardPosition.x;
+        this.camera.position.y = this.upwardPosition.y;
+        this.camera.position.z = this.upwardPosition.z;
         this.camera.lookAt(this.upwardView);
-      
+
       }
 
-      else if (BEAN > 2313 && BEAN < 2322){
-      
-        this.camera.position.x = this.sidewayPosition.x; 
-        this.camera.position.y = this.sidewayPosition.y; 
-        this.camera.position.z = this.sidewayPosition.z; 
+      else if (BEAN > 2312 && BEAN < 2324){
+
+        this.camera.position.x = this.sidewayPosition.x;
+        this.camera.position.y = this.sidewayPosition.y;
+        this.camera.position.z = this.sidewayPosition.z;
         this.camera.lookAt(this.sidewayView);
-      
+
       }
       else{
         // Final position, should do some panning or some stuff at this point
