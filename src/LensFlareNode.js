@@ -16,6 +16,7 @@
       this.uniforms.sunX.value = Math.sin(frame/40)/2 + .5;
       this.uniforms.sunY.value = Math.cos(frame/40)/2 + .5;
       this.uniforms.amount.value = Math.sin(frame/80)/3 + .5;;
+      this.uniforms.amount.value = 0;
     }
   }
 
