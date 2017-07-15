@@ -15,10 +15,16 @@
       this.output.magFilter = THREE.LinearFilter;
     }
 
+    warmup(renderer) {
+      this.update(989);
+      this.render(renderer);
+    }
+
     update(frame) {
       super.update(frame);
       this.canvas.width += 0;
       demo.nm.nodes.bloom.opacity = .5;
+      demo.nm.nodes.grading.noiseAmount = .08;
 
       this.frame = frame;
 

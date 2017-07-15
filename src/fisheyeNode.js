@@ -1,17 +1,17 @@
 (function(global) {
-  class twistershadesNode extends NIN.ShaderNode {
+  class fisheyeNode extends NIN.ShaderNode {
     constructor(id, options) {
       options.inputs = {
-        tDiffuse: new NIN.TextureInput(),
+        tDiffuse: new NIN.TextureInput()
       };
       super(id, options);
     }
 
     update(frame) {
-      this.uniforms.frame.value = frame;
       this.uniforms.tDiffuse.value = this.inputs.tDiffuse.getValue();
+      this.uniforms.frame.value = frame;
     }
   }
 
-  global.twistershadesNode = twistershadesNode;
+  global.fisheyeNode = fisheyeNode;
 })(this);
