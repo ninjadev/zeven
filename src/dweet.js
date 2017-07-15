@@ -165,7 +165,7 @@
         if(BEAN < 2592 + 12 + 12 + 4) {
           A = [
             'truck',
-            'rohtie',
+            'Shanta',
             'T-101',
             'solskogen crew',
           ];
