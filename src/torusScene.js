@@ -1,6 +1,6 @@
 (function(global) {
   class torusScene extends NIN.THREENode {
-    constructor(id, options) {
+    constructor(id) {
       super(id, {
         outputs: {
           render: new NIN.TextureOutput()
@@ -9,16 +9,63 @@
       
       this.camera.position.z = 20;
 
-      var light = new THREE.PointLight(0xffffff, 1, 100);
+      var light = new THREE.PointLight(0xffffff, 1, 0, 2);
       light.position.set(10, 10, 10);
+      light.physicallyCorrectLights = true;
       this.scene.add(light);
 
 
-      var light2 = new THREE.PointLight(0xffffff, 1, 100);
+      var light2 = new THREE.PointLight(0xffffff, 1, 0, 2);
       light2.position.set(-10, -10, -10);
+      light2.physicallyCorrectLights = true;
       this.scene.add(light2);
 
-      var ambientLight = new THREE.AmbientLight(0xFFFFFF);
+      var waterNormals = Loader.loadTexture('res/waternormals.jpg');
+      waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping; 
+      this.water = new THREE.Water(this.renderer, this.camera, this.scene, {
+        textureWidth: 512, 
+        textureHeight: 512,
+        alpha:  1.0,
+        waterNormals: waterNormals,
+        sunDirection: light.position.normalize(),
+        sunColor: 0xffffff,
+        waterColor: 0x001e0f,
+        distortionScale: 50.0
+      });
+      var waterMesh = new THREE.Mesh(
+          new THREE.PlaneBufferGeometry(7777, 7777, 10, 10),
+          this.water.material);
+      waterMesh.add(this.water);
+      waterMesh.rotation.x = - Math.PI * 0.5;
+      this.scene.add(waterMesh);
+      waterMesh.position.y = - 16;
+      this.waterMesh = waterMesh;
+
+      //Skybox
+      var materialArray = [];
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/1.jpg' ) })); //right
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/4.jpg' ) })); //left
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/3.jpg' ) })); //top
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/6.jpg' ) })); //bottom
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/5.jpg' ) }));
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/2.jpg' ) }));
+
+      for (var i = 0; i < 6; i++) {
+        materialArray[i].side = THREE.BackSide;
+        let color = 0.6;
+        materialArray[i].color.setRGB(color, color, color);
+      }
+      var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
+
+      var skyboxMesh  = new THREE.Mesh( 
+          new THREE.BoxGeometry( 7777, 7777, 7777 ),
+          skyboxMaterial );
+
+      this.skybox = skyboxMesh;
+      this.scene.add(this.skybox);
+
+
+      var ambientLight = new THREE.AmbientLight(0x111111);
       this.scene.add(ambientLight);
 
       this.center_tunnel_radi = 3;
@@ -63,26 +110,22 @@
               }
             });
           }
-          for (var i = 0; i < num_instances; i++)
+          for (i = 0; i < num_instances; i++)
           {
             three_object[i].add(object[i]);
           }
         });
       };
-      loadObject(prefix + 'base.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
-          side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.base, 1);
-      loadObject(prefix + 'lamp.obj',
-        new THREE.MeshStandardMaterial({
-          color: 0x444454,
-          side: THREE.DoubleSide,
-          roughness: 1
-        }),
-        this.lamp, 7);
+      let concreteMaterial = new THREE.MeshStandardMaterial({
+        color: 0x373737,
+        side: THREE.DoubleSide,
+        roughness: 1,
+        roughnessMap: Loader.loadTexture('res/cliff_rocks.jpg'),
+        metalness: 0,
+        map: Loader.loadTexture('res/concrete.jpg'),
+      });
+      loadObject(prefix + 'base.obj', concreteMaterial, this.base, 1);
+      loadObject(prefix + 'lamp.obj', concreteMaterial, this.lamp, 7);
 
       this.scene.add(this.base[0]);
 
@@ -165,18 +208,21 @@
           subsection_surface_vect.multiplyScalar(tunnel_radi);
 
           // Add the new point.
-          vertices.push(new THREE.Vector3(subsection_center_vect.x * center_tunnel_radi + subsection_surface_vect.x,
-                                          subsection_center_vect.y + subsection_surface_vect.y,
-                                          subsection_center_vect.z * center_tunnel_radi + subsection_surface_vect.z,
-                                          ));
+          vertices.push(
+              new THREE.Vector3(
+                subsection_center_vect.x * center_tunnel_radi +
+                  subsection_surface_vect.x,
+                subsection_center_vect.y + subsection_surface_vect.y,
+                subsection_center_vect.z * center_tunnel_radi +
+                subsection_surface_vect.z));
           geometry.vertices.push(vertices[vertices.length - 1]);
 
           this.uv_map_vertices.push(new THREE.Vector2(i / sections, j / subsections));
         }
       }
 
-      for (var i = 0; i < sections; i++) {
-        for (var j = 0; j < subsections; j++) { 
+      for (i = 0; i < sections; i++) {
+        for (j = 0; j < subsections; j++) { 
           // Add faces to the geometry
           var x1 = i * sections + j;
           var y1 = i * sections + ((j + 1) % (subsections));
@@ -217,10 +263,13 @@
           subsection_surface_vect.multiplyScalar(tunnel_radi);
 
           // Add the new point.
-          vertices.push(new THREE.Vector3(subsection_center_vect.x * center_tunnel_radi + subsection_surface_vect.x,
-                                          subsection_center_vect.y + subsection_surface_vect.y,
-                                          subsection_center_vect.z * center_tunnel_radi + subsection_surface_vect.z,
-                                          ));
+          vertices.push(
+              new THREE.Vector3(
+                subsection_center_vect.x * center_tunnel_radi +
+                  subsection_surface_vect.x,
+                subsection_center_vect.y + subsection_surface_vect.y,
+                subsection_center_vect.z * center_tunnel_radi +
+                  subsection_surface_vect.z));
           geometry.vertices.push(vertices[vertices.length - 1]);
 
           this.uv_map_vertices2.push(new THREE.Vector2(i / sections, j / subsections));
@@ -254,14 +303,75 @@
     update(frame) {
       super.update(frame);
 
+      this.water.material.uniforms.time.value = frame / 60;
+      //this.water.sunColor.setRGB(this.light.intensity, this.light.intensity, this.light.intensity);
+
+      if(BEAN < 3312) {
+        this.skybox.visible = false;
+      } else {
+        this.skybox.visible = true;
+      }
+
+      demo.nm.nodes.bloom.opacity = 0.5;
+
+      var start_cut1 = 8916;
+      var start_cut2 = 9226;
+      var mode = 0;
+      var amount = 1;
+
+      if (frame < start_cut2) {
+        var progression = (frame - start_cut1) / (start_cut2 - start_cut1);
+        var scale = 0.1 + 0.9 * progression;
+        this.torus.scale.set(scale, scale, scale);
+        this.greets.scale.set(scale, scale, scale);
+
+        var positionX = 0;
+        var positionY = 40;
+        var positionZ = 0;
+        this.torus.position.set(positionX, positionY, positionZ);
+        this.greets.position.set(positionX, positionY, positionZ);
+
+        this.torus.rotation.x = Math.PI;
+        this.greets.rotation.x = Math.PI;
+
+        var cameraPositionX = 0;
+        var cameraPositionY = 45;
+        var cameraPositionZ = 5;
+        this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+
+        mode = 0;
+        amount = -Math.cos(progression * Math.PI );
+
+        this.camera.lookAt(this.torus.position);
+      } else {
+        var scale = 1;
+        this.torus.scale.set(scale, scale, scale);
+        this.greets.scale.set(scale, scale, scale);
+
+        var positionX = 4 * Math.sin(frame / 100);
+        var positionY = 3;
+        var positionZ = 4 *  Math.cos(frame / 100);
+        this.torus.position.set(positionX, positionY, positionZ);
+        this.greets.position.set(positionX, positionY, positionZ);
+
+        var cameraPositionX = 30 * Math.sin(frame / 100);
+        var cameraPositionY = 5;
+        var cameraPositionZ = 30 *  Math.cos(frame / 100);
+        this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+
+        this.camera.lookAt(this.torus.position);
+
+        mode = 1;
+        amount = Math.cos(progression * Math.PI * 2);
+      }
+
+
+
       const beanOffset = 48 * 8;
 
       //demo.nm.nodes.add.opacity = 1;
 
-      this.camera.position.x = 20 * Math.sin( frame / 100);
-      this.camera.position.y = 20 * Math.sin( frame / 90);
-      this.camera.position.z = 20 * Math.sin( frame / 60);
-      this.camera.lookAt(new THREE.Vector3(0,0,0));
+
       var subsection_center_vect = new THREE.Vector3();
       var subsection_surface_vect = new THREE.Vector3();
 
@@ -281,8 +391,8 @@
           this.torus_geometry.vertices[i * this.subsections + j].y = subsection_center_vect.y + subsection_surface_vect.y;
           this.torus_geometry.vertices[i * this.subsections + j].z = subsection_center_vect.z * this.center_tunnel_radi + subsection_surface_vect.z;
 
-          if (frame < FRAME_FOR_BEAN(1780 + beanOffset)) {
-            subsection_surface_vect.multiplyScalar((1 + Math.sin(frame / 2.5 + i * 1) / 3) * 1);
+          if (mode == 0) {
+            subsection_surface_vect.multiplyScalar((1 + Math.sin(frame / 2.5 + i * 1) / 3) * amount);
           } else {
             subsection_surface_vect.multiplyScalar((1 + Math.sin((frame / 2.5 + i * 0.8)) / 5) * (1 - 0.8 * Math.sin((frame + i) / this.sections * Math.PI * 2) ));
           }
@@ -325,6 +435,21 @@
       this.greet_geometry.colorsNeedUpdate = true;
       this.greet_geometry.groupsNeedsUpdate = true;
       this.greet_geometry.normalsNeedsUpdate = true;
+    }
+
+    render(renderer) {
+      this.waterMesh.visible = false;
+      if(BEAN >= 3312) {
+        this.waterMesh.visible = true;
+        this.water.renderer = renderer;
+        this.water.render();
+      }
+      super.render(renderer);
+    }
+
+    warmup(renderer) {
+      this.update(10257);
+      this.render(renderer);
     }
   }
 

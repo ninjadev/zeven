@@ -291,19 +291,14 @@
           new THREE.BoxGeometry(10, 5, 10),
           new THREE.MeshStandardMaterial({
             color: 0x111111,
-            map: Loader.loadTexture('res/BrownWood_S.jpg'),
-            normalMap: Loader.loadTexture('res/BrownWood_N.jpg'),
-            //roughnessMap: Loader.loadTexture('res/BrownWood_S.jpg'),
+            map: Loader.loadTexture('res/woodwall.jpg'),
             side: THREE.BackSide,
             metalness: 0,
-            roughness: 1.,
+            roughness: 1,
           }));
       this.walls.material.map.wrapS = THREE.RepeatWrapping;
       this.walls.material.map.wrapT = THREE.RepeatWrapping;
       this.walls.material.map.repeat.set(32, 8);
-      this.walls.material.normalMap.wrapS = THREE.RepeatWrapping;
-      this.walls.material.normalMap.wrapT = THREE.RepeatWrapping;
-      this.walls.material.normalMap.repeat.set(8, 8);
       this.walls.receiveShadow = true;
       this.scene.add(this.walls);
       this.walls.position.z = 10 / 2 - 0.01;
@@ -346,7 +341,7 @@
       this.pointLight.physicallyCorrectLights = true;
       this.scene.add(this.pointLight);
 
-      this.scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+      this.scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 
       this.topLight = new THREE.DirectionalLight();
       this.topLight.position.set(0, 10, -1);
@@ -356,8 +351,6 @@
       this.topLight.intensity = 0.1;
       this.scene.add(this.topLight);
       this.scene.add(this.backLight);
-      /*
-      */
     }
 
     update(frame) {

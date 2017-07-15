@@ -25,22 +25,69 @@
                     ).substr(0, (length - input.length)) + input;
             }
 
-            this.frames = [];
-            for (let i = 0; i <= 1; i++) {
-                this.frames[i] = Loader.loadTexture(`res/dream/${leftPad(i.toString(), 4, '0')}.png`);
+            this.imageDimension = 256;
+            this.textures = [];
+            this.zoomFactor = 2;
+            let numLoaded = 0;
+            let numImages = 32;
+
+            let cb = function () {
+                numLoaded++;
+                if (numLoaded === numImages + 1) {
+                    allImagesLoaded();
+                }
+            };
+
+            this.radialBlurTexture = Loader.loadTexture(`res/dream/blur.png`, cb);
+
+            function allImagesLoaded() {
+                console.log('all dream images loaded')
+            }
+
+            for (let i = 0; i < numImages; i++) {
+                this.textures[i] = Loader.loadTexture(`res/dream/${leftPad(i.toString(), 4, '0')}.png`, cb);
             }
         }
 
         update(frame) {
+            const relativeFrame = frame - 2330 + 30;
+            demo.nm.nodes.grading.noiseAmount = 0.08;
             demo.nm.nodes.bloom.opacity = 0.3;
-            demo.nm.nodes.grading.amount = 0;
-            demo.nm.nodes.grading.gammaCorrection = 0;
+            demo.nm.nodes.grading.amount = 1;
+            demo.nm.nodes.grading.gammaCorrection = true;
             super.update(frame);
             this.canvas.width += 0;
+            this.ctx.save();
+            this.ctx.scale(GU, GU);
 
             this.frame = frame;
 
-            this.ctx.drawImage(this.frames[0].image, 20, 20);
+            let zoomLevel = relativeFrame / 30;
+
+            zoomLevel += easeOut(0,10, (frame - 2845) / (2879 - 2845));
+            let rotation = frame / 100 + easeOut(0, Math.PI, (frame - 2570) / (2605 - 2570));
+
+            for (let i = 0; i < this.textures.length; i++) {
+                let texture = this.textures[i];
+                let scaleFactor = Math.pow(0.5, i) * Math.pow(2, zoomLevel);
+                if (scaleFactor > 12) {
+                    // TODO: very large, fade out and then don't draw
+                } else {
+                    let dimension = 9 * scaleFactor;
+                    // TODO: if very small, don't draw image. remember fade.
+                    this.ctx.save();
+                    this.ctx.translate(19 / 2, 9 / 2);
+                    this.ctx.rotate(rotation);
+                    this.ctx.drawImage(
+                        texture.image,
+                        -dimension / 2, -dimension / 2,
+                        dimension,
+                        dimension
+                    )
+                    this.ctx.restore();
+                }
+            }
+            this.ctx.restore();
         }
 
         resize() {
