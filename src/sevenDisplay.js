@@ -30,6 +30,10 @@
       this.ctx.save();
       this.ctx.scale(GU, GU);
 
+      // set background color
+      this.ctx.fillStyle = '#000001';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
       const colors = ['red', 'blue', 'yellow', 'purple'];
 
       const arrows = 30;
