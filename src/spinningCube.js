@@ -125,14 +125,15 @@
       this.lampyInitCameraPosition = {
         "firstFrame": 5620,
         "lastFrame": 5800,
-        "cameraLocation": [-2.16,-0.37,-0.84],
-        "cameraLookAtPoint": [0.38,0.16,-0.28]
+        "lastBean": 2028,
+        "cameraLocation": new THREE.Vector3(-2.16,-0.37,-0.84),
+        "cameraLookAtPoint": new THREE.Vector3(0.38,0.16,-0.28)
       };
       this.lampyLookingDownCameraPosition = {
         "firstFrame": 5800,
         "lastFrame": 0,
-        "cameraLocation": [3.64,5.95,-3.99],
-        "cameraLookAtPoint": [0.86,-1.5,-0.4]
+        "cameraLocation": new THREE.Vector3(3.64,5.95,-3.99),
+        "cameraLookAtPoint": new THREE.Vector3(0.86,-1.5,-0.4)
       }
     }
 
@@ -149,6 +150,39 @@
       demo.nm.nodes.bloom.opacity = 0.66;
 
       this.spotLightInside.position.x = 0.3 * Math.sin( Math.PI *2 * BEAN/36) - 0.2;
+
+      if(BEAN < this.lampyInitCameraPosition.lastBean){
+        // debugger;
+        this.camera.position.x = this.lampyInitCameraPosition.cameraLocation.x;
+        this.camera.position.y = this.lampyInitCameraPosition.cameraLocation.y;
+        this.camera.position.z = this.lampyInitCameraPosition.cameraLocation.z;
+        this.camera.lookAt(this.lampyInitCameraPosition.cameraLookAtPoint);
+      }
+      else if(BEAN < this.lampyInitCameraPosition.lastBean + 36){
+        //ToDo transition
+        var progression = (BEAN - this.lampyInitCameraPosition.lastBean)/(36);
+
+        // Give camera new position
+        this.camera.position.x = smoothstep(this.lampyInitCameraPosition.cameraLocation.x, this.lampyLookingDownCameraPosition.cameraLocation.x, progression);
+        this.camera.position.y = smoothstep(this.lampyInitCameraPosition.cameraLocation.y, this.lampyLookingDownCameraPosition.cameraLocation.y, progression);
+        this.camera.position.z = smoothstep(this.lampyInitCameraPosition.cameraLocation.z, this.lampyLookingDownCameraPosition.cameraLocation.z, progression);
+
+        // Fix camera orientation:
+        var ProgressiveCameraTarget = new THREE.Vector3(
+          smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.x, this.lampyLookingDownCameraPosition.cameraLookAtPoint.x, progression),
+          smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.y, this.lampyLookingDownCameraPosition.cameraLookAtPoint.y, progression),
+          smoothstep(this.lampyInitCameraPosition.cameraLookAtPoint.z, this.lampyLookingDownCameraPosition.cameraLookAtPoint.z, progression),
+          );
+        this.camera.lookAt(ProgressiveCameraTarget);
+
+      }
+      else{
+        // Final position, should do some panning or some stuff at this point
+        this.camera.position.x = this.lampyLookingDownCameraPosition.cameraLocation.x;
+        this.camera.position.y = this.lampyLookingDownCameraPosition.cameraLocation.y;
+        this.camera.position.z = this.lampyLookingDownCameraPosition.cameraLocation.z;
+        this.camera.lookAt(this.lampyLookingDownCameraPosition.cameraLookAtPoint);
+      }
       // debugger;
 /*
       this.camera.position.x = 20 * Math.sin( frame / 100);
