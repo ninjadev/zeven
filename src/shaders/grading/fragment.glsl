@@ -1,5 +1,6 @@
 uniform float frame;
 uniform float gammaCorrection;
+uniform float noiseAmount;
 uniform sampler2D tDiffuse;
 uniform sampler2D lookup;
 
@@ -42,7 +43,7 @@ void main() {
 
     vec4 gradedColor = sampleAs3DTexture(lookup, originalColor.rgb, 16.);
     float noise = rand(vUv + vec2(frame / 100., 0.324324));
-    vec3 color = gradedColor.rgb + (noise - 0.5) * 0.08;
+    vec3 color = gradedColor.rgb + (noise - 0.5) * noiseAmount;
     color *= vignette(vUv);
     color = min(vec3(1.), color);
     color = max(vec3(0.), color);

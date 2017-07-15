@@ -2,5 +2,6 @@
     "tDiffuse": { "type": "t", "value": null },
     "lookup": { "type": "t", "value": null },
     "frame": { "type": "f", "value": 0.0 },
-    "gammaCorrection": { "type": "f", "value": 0.0 }
+    "gammaCorrection": { "type": "f", "value": 0.0 },
+    "noiseAmount": { "type": "f", "value": 0.0 }
 }
