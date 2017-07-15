@@ -199,6 +199,10 @@
       if(BEAT && BEAN % 24 == 12) {
         this.snareThrob = 1;
       }
+      
+      if(frame == 1233 || frame == 1234) {
+        this.throb = 1;  
+      }
 
       if(BEAT) {
         switch((BEAN - 48) % 96) {
