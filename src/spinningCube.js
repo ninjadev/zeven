@@ -135,6 +135,18 @@
         "cameraLocation": new THREE.Vector3(3.64,5.95,-3.99),
         "cameraLookAtPoint": new THREE.Vector3(0.86,-1.5,-0.4)
       }
+      var xDistance = this.lampyLookingDownCameraPosition.cameraLocation.x - this.lampyLookingDownCameraPosition.cameraLookAtPoint.x;
+      var yDistance = this.lampyLookingDownCameraPosition.cameraLocation.x - this.lampyLookingDownCameraPosition.cameraLookAtPoint.x;
+      var zDistance = this.lampyLookingDownCameraPosition.cameraLocation.x - this.lampyLookingDownCameraPosition.cameraLookAtPoint.x;
+      var lookingDownRadius = Math.sqrt(
+        (xDistance*xDistance) + (yDistance * yDistance) + (zDistance *zDistance)
+      );
+
+      this.lampyLookingDownCameraPosition.radius = lookingDownRadius;
+
+      this.lampyLookingDownCameraPosition.height = this.lampyLookingDownCameraPosition.cameraLocation.y - this.lampyLookingDownCameraPosition.cameraLookAtPoint.y;
+
+      this.lampyLookingDownCameraPosition.yRadius = Math.sqrt((this.lampyLookingDownCameraPosition.radius * this.lampyLookingDownCameraPosition.radius) - (this.lampyLookingDownCameraPosition.height * this.lampyLookingDownCameraPosition.height));
     }
 
     render(renderer){
@@ -158,9 +170,8 @@
         this.camera.position.z = this.lampyInitCameraPosition.cameraLocation.z;
         this.camera.lookAt(this.lampyInitCameraPosition.cameraLookAtPoint);
       }
-      else if(BEAN < this.lampyInitCameraPosition.lastBean + 36){
-        //ToDo transition
-        var progression = (BEAN - this.lampyInitCameraPosition.lastBean)/(36);
+      else if(BEAN < this.lampyInitCameraPosition.lastBean + 48){
+        var progression = (BEAN - this.lampyInitCameraPosition.lastBean)/(48);
 
         // Give camera new position
         this.camera.position.x = smoothstep(this.lampyInitCameraPosition.cameraLocation.x, this.lampyLookingDownCameraPosition.cameraLocation.x, progression);
@@ -181,6 +192,8 @@
         this.camera.position.x = this.lampyLookingDownCameraPosition.cameraLocation.x;
         this.camera.position.y = this.lampyLookingDownCameraPosition.cameraLocation.y;
         this.camera.position.z = this.lampyLookingDownCameraPosition.cameraLocation.z;
+
+        // Always look at center point while we're circling:
         this.camera.lookAt(this.lampyLookingDownCameraPosition.cameraLookAtPoint);
       }
       // debugger;
