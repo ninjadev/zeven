@@ -109,9 +109,9 @@
         //this.camera.lookAt(this.lampyLookingDownCameraPosition.cameraLookAtPoint)
         // debugger;
         var finaleTrembleLookAtPoint = new THREE.Vector3(
-            this.lampyLookingDownCameraPosition.cameraLookAtPoint.x * 0.1 * Math.sin(frame)
+            this.lampyLookingDownCameraPosition.cameraLookAtPoint.x
           , this.lampyLookingDownCameraPosition.cameraLookAtPoint.y
-          , this.lampyLookingDownCameraPosition.cameraLookAtPoint.z * -0.1 * Math.sin(frame)
+          , this.lampyLookingDownCameraPosition.cameraLookAtPoint.z * -0.1 * Math.sin(frame) - 0.5
         );
         this.camera.lookAt(finaleTrembleLookAtPoint);
         return;
