@@ -23,7 +23,8 @@
       "K": "KaleidroScope.render",
       "L": "TorusScene.render",
       "M": "MyMarch.render",
-      "N": "fisheye.render"
+      "N": "fisheye.render",
+      "O": "DragonBall.render"
     }
   },
   {
@@ -298,6 +299,13 @@
     },
     "connected": {
       "tDiffuse": "alfNode.render"
+    }
+  },
+  {
+    "id": "DragonBall",
+    "type": "DragonBallNode",
+    "options": {
+      "shader": "DragonBall"
     }
   }
 ]
