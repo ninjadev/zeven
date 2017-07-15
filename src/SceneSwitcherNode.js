@@ -27,6 +27,7 @@
           M: new NIN.TextureInput(),
           N: new NIN.TextureInput(),
           O: new NIN.TextureInput(),
+          P: new NIN.TextureInput(),
         },
         outputs: {
           render: new NIN.TextureOutput(),
@@ -50,6 +51,7 @@
       this.inputs.M.enabled = false;
       this.inputs.N.enabled = false;
       this.inputs.O.enabled = false;
+      this.inputs.P.enabled = false;
 
       let selectedScene;
       if (BEAN < song(8)) {
@@ -72,8 +74,10 @@
         selectedScene = this.inputs.G;
       } else if (BEAN < song(37)) {
         selectedScene = this.inputs.N;
-      } else if (BEAN < song(40)) {
+      } else if (BEAN < song(39)) {
         selectedScene = this.inputs.O;
+      } else if (BEAN < song(40)) {
+        selectedScene = this.inputs.P;
       } else if (BEAN < song(48)) {
         selectedScene = this.inputs.I;
       } else if (BEAN < song(56)) {
