@@ -50,7 +50,7 @@
       this.scene.add(skyboxMesh);
 
       var shaderMat = new THREE.ShaderMaterial(SHADERS['PerlinMntn']).clone();
-      var tCliff  = new THREE.TextureLoader().load('project/res/rock_cliffs.jpg');
+      var tCliff  = Loader.loadTexture('res/rock_cliffs.jpg');
       tCliff.wrapS = THREE.RepeatWrapping;
       tCliff.wrapT = THREE.RepeatWrapping;
 
