@@ -122,6 +122,18 @@
       // this.secondColoredSpotlight.position.z = 0.628 * Math.cos(1024/59) + 0.5;
       // this.cube.rotation.x = Math.sin(frame / 10);
       // this.cube.rotation.y = Math.cos(frame / 10);
+      this.lampyInitCameraPosition = {
+        "firstFrame": 5620,
+        "lastFrame": 5800,
+        "cameraLocation": [-2.16,-0.37,-0.84],
+        "cameraLookAtPoint": [0.38,0.16,-0.28]
+      };
+      this.lampyLookingDownCameraPosition = {
+        "firstFrame": 5800,
+        "lastFrame": 0,
+        "cameraLocation": [3.64,5.95,-3.99],
+        "cameraLookAtPoint": [0.86,-1.5,-0.4]
+      }
     }
 
     render(renderer){
@@ -142,9 +154,10 @@
       this.camera.position.x = 20 * Math.sin( frame / 100);
       this.camera.position.y = 20 * Math.abs(Math.sin( frame / 90));
       this.camera.position.z = 20 * Math.sin( frame / 60);
-      this.camera.lookAt(new THREE.Vector3(0,0,0));
+      this.camera.lookAt(new THREE.Vector3(0.86,-1.5,-0.4));
+      //this.camera.lookAt(new THREE.Vector3(0,0,0));
 
-
+/*
       // this.lampModel.rotation.x = Math.cos(frame / 20);
       // Math.PI/5 ~ 0.628
       this.spotLightInside.position.x = 0.9 * Math.sin(frame/50);
