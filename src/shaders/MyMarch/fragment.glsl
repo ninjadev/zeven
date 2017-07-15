@@ -177,10 +177,26 @@ vec3 hsl2rgb(float h, float s, float l) {
 
 void main() {
 
-    vec3 eye = vec3(frame/60., 0.0 , 0.0);
+    vec3 eye = vec3(10.0*frame/60.0, 0.0 , 0.0);
+    float f60 = frame/60.0;
 
-    if (BEAN == 3600.0) {
-        eye = vec3(0.0, 8.*frame/60., 0.0);
+    if (BEAN >= 3648.0) {
+        eye = vec3(0.0, 20.0*f60, 0.0);
+    }
+    if (BEAN >= 3696.0) {
+        eye = vec3(-20.0*f60, -20.0*f60,  0.0);
+    }
+    if (BEAN >= 3744.0) {
+        eye = vec3(20.0*f60, -20.0*f60, 0.0);
+    }
+    if (BEAN >= 3744.0 + 8.0) {
+        eye = vec3(-20.0*f60, -20.0*f60, 0.0);
+    }
+    if (BEAN >= 3744.0 + 16.0) {
+        eye = vec3(-20.0*f60, 20.0*f60, 0.0);
+    }
+    if (BEAN >= 3744.0 + 22.0) {
+        eye = vec3(0.0, 20.0*f60, 0.0);
     }
 
     vec3 dir = rayDir(60.0, vUv);
