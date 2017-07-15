@@ -9,6 +9,8 @@
       
       this.camera.position.z = 20;
 
+      this.throb = 0;
+
       var light = new THREE.PointLight(0xffffff, 1, 0, 2);
       light.position.set(10, 10, 10);
       light.physicallyCorrectLights = true;
@@ -157,44 +159,52 @@
       var multiplyer = 1.1;
       var height_difference = -0.4;
 
+      const ringMaterial = new THREE.MeshStandardMaterial({
+        color: 0,
+        metalness: 1,
+        roughness: 0.2,
+        roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
+        emissive: 0xffffff,
+        emissiveIntensity: 1,
+      });
       this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam, 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring1.position.y = 6 * height_difference;
       this.ring1.rotation.x = Math.PI/2;
       this.scene.add(this.ring1);
 
       this.ring2 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 1), 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring2.position.y = 5 * height_difference;
       this.ring2.rotation.x = Math.PI/2;
       this.scene.add(this.ring2);
 
       this.ring3 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 2), 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring3.position.y = 4 * height_difference;
       this.ring3.rotation.x = Math.PI/2;
       this.scene.add(this.ring3);
 
       this.ring4 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 3), 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring4.position.y = 3 * height_difference;
       this.ring4.rotation.x = Math.PI/2;
       this.scene.add(this.ring4);
 
       this.ring5 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 4), 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring5.position.y = 2 * height_difference;
       this.ring5.rotation.x = Math.PI/2;
       this.scene.add(this.ring5);
 
       this.ring6 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 5), 0.1, 16, 100 ),
-                                 new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                                 ringMaterial.clone());
       this.ring6.position.y = 1 * height_difference;
       this.ring6.rotation.x = Math.PI/2;
       this.scene.add(this.ring6);
 
       this.ring7 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 6), 0.1, 16, 100 ),
-                           new THREE.MeshBasicMaterial({ color: 0x444454 }));
+                           ringMaterial.clone());
       this.ring7.position.y = 1 * height_difference;
       this.ring7.rotation.x = Math.PI/2;  
       this.scene.add(this.ring7);
@@ -317,7 +327,51 @@
       this.water.material.uniforms.time.value = frame / 60;
       //this.water.sunColor.setRGB(this.light.intensity, this.light.intensity, this.light.intensity);
 
+      this.ring1.throb *= 0.8;
+      this.ring2.throb *= 0.8;
+      this.ring3.throb *= 0.8;
+      this.ring4.throb *= 0.8;
+      this.ring5.throb *= 0.8;
+      this.ring6.throb *= 0.8;
+      this.ring7.throb *= 0.8;
+      if(BEAN < 3312) {
+        if(BEAT & BEAN % 12 == 0) {
+          this.ring1.throb = 1;
+          this.ring2.throb = 1;
+          this.ring3.throb = 1;
+          this.ring4.throb = 1;
+          this.ring5.throb = 1;
+          this.ring6.throb = 1;
+          this.ring7.throb = 1;
+        }
+      } else {
+        this.ring1.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105  + 0);
+        this.ring2.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105  / 2 + Math.PI * 2 / 7);
+        this.ring3.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 2 * Math.PI * 2 / 7);
+        this.ring4.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 3 * Math.PI * 2 / 7);
+        this.ring5.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 4 * Math.PI * 2 / 7);
+        this.ring6.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 5 * Math.PI * 2 / 7);
+        this.ring7.throb = 0.5 + 0.5 * Math.sin(Math.PI * 2 * frame / 60 / 60 * 105 / 2  + 6 * Math.PI * 2 / 7);
+      }
 
+
+
+      this.throb *= 0.9;
+      if(BEAT & BEAN % 12 == 0) {
+        this.throb = 0.5;
+      }
+
+      this.ring1.material.emissiveIntensity = this.ring1.throb;
+      this.ring2.material.emissiveIntensity = this.ring2.throb;
+      this.ring3.material.emissiveIntensity = this.ring3.throb;
+      this.ring4.material.emissiveIntensity = this.ring4.throb;
+      this.ring5.material.emissiveIntensity = this.ring5.throb;
+      this.ring6.material.emissiveIntensity = this.ring6.throb;
+      this.ring7.material.emissiveIntensity = this.ring7.throb;
+
+
+
+      demo.nm.nodes.bloom.opacity = 0.5 + this.throb;
 
       var start_cut1 = 8916;
       var start_cut2 = 9161;
@@ -343,8 +397,6 @@
       } else {
         this.skybox.visible = true;
       }
-
-      demo.nm.nodes.bloom.opacity = 0.5;
 
       if (frame < start_cut2) {
         var progression = (frame - start_cut1) / (start_cut2 - start_cut1);
@@ -432,19 +484,25 @@
       var height_difference = -0.4;
       this.ring1.position.y = 6 * height_difference;
       this.ring1.rotation.set(Math.PI/2, 0, 0);
+      this.ring1.throb = 0;
       this.ring2.position.y = 5 * height_difference;
       this.ring2.rotation.set(Math.PI/2, 0, 0);
+      this.ring2.throb = 0;
       this.ring3.position.y = 4 * height_difference;
       this.ring3.rotation.set(Math.PI/2, 0, 0);
+      this.ring3.throb = 0;
       this.ring4.position.y = 3 * height_difference;
       this.ring4.rotation.set(Math.PI/2, 0, 0);
+      this.ring4.throb = 0;
       this.ring5.position.y = 2 * height_difference;
       this.ring5.rotation.set(Math.PI/2, 0, 0);
+      this.ring5.throb = 0;
       this.ring6.position.y = 1 * height_difference;
       this.ring6.rotation.set(Math.PI/2, 0, 0);
+      this.ring6.throb = 0;
       this.ring7.position.y = 0 * height_difference;
       this.ring7.rotation.set(Math.PI/2, 0, 0);
-
+      this.ring7.throb = 0;
       }
 
 
