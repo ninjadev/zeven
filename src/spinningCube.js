@@ -122,6 +122,10 @@
       // this.secondColoredSpotlight.position.z = 0.628 * Math.cos(1024/59) + 0.5;
       // this.cube.rotation.x = Math.sin(frame / 10);
       // this.cube.rotation.y = Math.cos(frame / 10);
+      this.sidewayPosition = new THREE.Vector3(1.96,-0.56,-2.18);
+      this.sidewayView = new THREE.Vector3(0.65,-1.5,-1.32);
+      this.upwardPosition = new THREE.Vector3(-4.66, -0.5, 3.25);
+      this.upwardView = new THREE.Vector3(4.35, 0.14, 0);
       this.lampyInitCameraPosition = {
         "firstFrame": 5620,
         "lastFrame": 5800,
@@ -186,6 +190,33 @@
           );
         this.camera.lookAt(ProgressiveCameraTarget);
 
+      }
+      else if (BEAN > 2160 && BEAN < 2204){
+        this.camera.position.x = this.sidewayPosition.x; 
+        this.camera.position.y = this.sidewayPosition.y; 
+        this.camera.position.z = this.sidewayPosition.z; 
+        this.camera.lookAt(this.sidewayView);
+      }
+      else if (BEAN >2204 && BEAN <2260){
+       this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));  
+      
+      }
+      else if (BEAN > 2304 && BEAN <2313){
+      
+        this.camera.position.x = this.upwardPosition.x; 
+        this.camera.position.y = this.upwardPosition.y; 
+        this.camera.position.z = this.upwardPosition.z; 
+        this.camera.lookAt(this.upwardView);
+      
+      }
+
+      else if (BEAN > 2313 && BEAN < 2322){
+      
+        this.camera.position.x = this.sidewayPosition.x; 
+        this.camera.position.y = this.sidewayPosition.y; 
+        this.camera.position.z = this.sidewayPosition.z; 
+        this.camera.lookAt(this.sidewayView);
+      
       }
       else{
         // Final position, should do some panning or some stuff at this point
