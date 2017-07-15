@@ -161,23 +161,6 @@
     }
   },
   {
-    "id": "cartoontwister",
-    "type": "cartoontwisterNode",
-    "options": {
-      "shader": "cartoontwister"
-    }
-  },
-  {
-    "id": "twistershades",
-    "type": "twistershadesNode",
-    "options": {
-      "shader": "twistershades"
-    },
-    "connected": {
-      "tDiffuse": "cartoontwister.render"
-    }
-  },
-  {
     "id": "IntroNode",
     "type": "introNode"
   },
