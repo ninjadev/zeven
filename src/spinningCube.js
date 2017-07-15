@@ -9,6 +9,7 @@
 
 
       this.lampModel = new THREE.Object3D();
+      this.otherLamp = new THREE.Object3D();
 
       var loadObject = function (objPath, material, three_object) {
         var objLoader = new THREE.OBJLoader();
@@ -30,6 +31,12 @@
 
       loadObject('res/lamp/lamp.obj', bestMaterial, this.lampModel );
       this.scene.add( this.lampModel );
+
+
+
+      loadObject('res/lamp/lamp.obj', bestMaterial, this.otherLamp );
+      this.scene.add( this.otherLamp );
+      this.otherLamp.position.set(-2,0,-0.5)
 
 
       var floorMat = new THREE.MeshStandardMaterial( {
