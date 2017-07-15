@@ -8,8 +8,6 @@
         }
       });
 
-      console.log("Mountain time!");
-
       //Support for different resolution on heightmap than mesh
       this.mntnWidth = 512;
       this.mntnHeight = 512;
@@ -23,7 +21,6 @@
       var startAmpl = 1300.0;
       var noiseLevels = 8;
 
-      console.log("Generate height map");
       /////////////
       // Generate height map for the mountains
       ////////////
@@ -76,7 +73,6 @@
 
       this.outputs.texture.setValue(heightTexture);
 
-      console.log("Elevate geometry");
       /////////////////
       // Elevate the geometry
       ////////////////
@@ -98,7 +94,6 @@
 
 
       this.outputs.mntngeom.setValue(mntnGeom);
-      console.log('heightmap done');
     }
   }
 

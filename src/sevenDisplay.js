@@ -49,7 +49,6 @@
       this.ctx.textBaseline = 'middle';
       const fontSize = smoothstep(5, 7, (frame-5480)/200);
       this.ctx.font = `${fontSize}px sans-serif`;
-      console.log(this.ctx.font);
       this.ctx.fillText('7', 16 / 2, 9 / 2);
 
       this.ctx.restore();
