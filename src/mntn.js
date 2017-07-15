@@ -151,7 +151,6 @@
       sunPos.y = sunPos.y * 9 * GU;
 
       this.outputs.sunpos.setValue(sunPos);
-      console.log(sunPos);
     }
   }
 

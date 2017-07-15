@@ -2,7 +2,6 @@
   class MyMarchNode extends NIN.ShaderNode {
     constructor(id, options) {
       super(id, options);
-      console.log("maaarch");
       this.throb = 0;
     }
 
