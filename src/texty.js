@@ -101,6 +101,14 @@
     update(frame) {
       this.frame = frame;
       this.uniforms.opacity.value = 1;
+
+      this.inputs.imageA.enabled = false;
+      this.inputs.imageB.enabled = false;
+      if(BEAN < 816) {
+        this.inputs.imageA.enabled = true;
+      } else {
+        this.inputs.imageB.enabled = true;
+      }
       this.uniforms.A.value = BEAN < 816 ? this.inputs.imageA.getValue() : this.inputs.imageB.getValue();
       this.uniforms.B.value = this.canvasTexture;
     }

@@ -43,15 +43,17 @@
 
       //Skybox
       var materialArray = [];
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/1.bmp' ) })); //right
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/4.bmp' ) })); //left
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/3.bmp' ) })); //top
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/6.bmp' ) })); //bottom
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/5.bmp' ) }));
-      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/2.bmp' ) }));
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/1.jpg' ) })); //right
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/4.jpg' ) })); //left
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/3.jpg' ) })); //top
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/6.jpg' ) })); //bottom
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/5.jpg' ) }));
+      materialArray.push(new THREE.MeshBasicMaterial( { map: Loader.loadTexture( 'res/skyboxsun25deg/2.jpg' ) }));
 
       for (var i = 0; i < 6; i++) {
         materialArray[i].side = THREE.BackSide;
+        let color = 0.6;
+        materialArray[i].color.setRGB(color, color, color);
       }
       var skyboxMaterial = new THREE.MeshFaceMaterial( materialArray );
 

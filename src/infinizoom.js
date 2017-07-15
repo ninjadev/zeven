@@ -51,6 +51,7 @@
 
         update(frame) {
             const relativeFrame = frame - 2330 + 30;
+            demo.nm.nodes.grading.noiseAmount = 0.08;
             demo.nm.nodes.bloom.opacity = 0.3;
             demo.nm.nodes.grading.amount = 1;
             demo.nm.nodes.grading.gammaCorrection = true;
@@ -64,6 +65,7 @@
             let zoomLevel = relativeFrame / 30;
 
             zoomLevel += easeOut(0,10, (frame - 2845) / (2879 - 2845));
+            let rotation = frame / 100 + easeOut(0, Math.PI, (frame - 2570) / (2605 - 2570));
 
             for (let i = 0; i < this.textures.length; i++) {
                 let texture = this.textures[i];
@@ -73,13 +75,16 @@
                 } else {
                     let dimension = 9 * scaleFactor;
                     // TODO: if very small, don't draw image. remember fade.
+                    this.ctx.save();
+                    this.ctx.translate(19 / 2, 9 / 2);
+                    this.ctx.rotate(rotation);
                     this.ctx.drawImage(
                         texture.image,
-                        19 / 2 - dimension / 2,
-                        9 / 2 - dimension / 2,
+                        -dimension / 2, -dimension / 2,
                         dimension,
                         dimension
                     )
+                    this.ctx.restore();
                 }
             }
             this.ctx.restore();

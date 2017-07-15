@@ -8,6 +8,7 @@
       });
 
       this.previousPosition = new THREE.Vector3();
+      this.bloomThrob = 0;
 
 
       this.camera.near = 0.001;
@@ -134,8 +135,19 @@
 
     update(frame) {
       super.update(frame);
+      if(BEAN < 1776) {
+        demo.nm.nodes.grading.noiseAmount = 0.3;
+      } else {
+        demo.nm.nodes.grading.noiseAmount = 0.08;
+      }
+
+      this.bloomThrob *= 0.9;
+      if(BEAT && BEAN == 1776) {
+        this.bloomThrob = 1;
+      }
+
       demo.nm.nodes.grading.gammaCorrection = true;
-      demo.nm.nodes.bloom.opacity = 0.5;
+      demo.nm.nodes.bloom.opacity = 0.5 + this.bloomThrob;
       //this.camera.position.x = 0;
       //this.camera.position.y = 0.5 * (0.8 - 0.75 * smoothstep(.5, 1, (frame - 4525) / (4799 - 4525)) + 2. * easeIn(0, 1, (frame - 4662) / (4799 - 4662)));
 
