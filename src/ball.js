@@ -162,9 +162,13 @@
           const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
           const t = (frame - startFrame) / (FRAME_FOR_BEAN(33 * 12 * 4 + 12) - startFrame);
 
+          const acceleration = 1;
+          const speed = acceleration * t;
+          const y = speed * t;
+
           this.ball.position.set(
             0,
-            2.525 - t * 0.5,
+            3.025 - y,
             0.35
           );
 
