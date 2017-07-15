@@ -24,6 +24,7 @@
       "L": "TorusScene.render",
       "M": "ending.render",
       "N": "fisheye.render",
+      "O": "DragonBall.render",
       "P": "sevenDisplay.render"
     }
   },
@@ -314,5 +315,12 @@
   {
     "id": "sevenDisplay",
     "type": "sevenDisplay"
+  },
+  {
+    "id": "DragonBall",
+    "type": "DragonBallNode",
+    "options": {
+      "shader": "DragonBall"
+    }
   }
 ]
