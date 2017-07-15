@@ -50,12 +50,14 @@
         }
 
         update(frame) {
-            const relativeFrame = frame - 2570;
+            const relativeFrame = frame - 2330 + 30;
             demo.nm.nodes.bloom.opacity = 0.3;
-            demo.nm.nodes.grading.amount = 0;
-            demo.nm.nodes.grading.gammaCorrection = 0;
+            demo.nm.nodes.grading.amount = 1;
+            demo.nm.nodes.grading.gammaCorrection = true;
             super.update(frame);
             this.canvas.width += 0;
+            this.ctx.save();
+            this.ctx.scale(GU, GU);
 
             this.frame = frame;
 
@@ -67,17 +69,18 @@
                 if (scaleFactor > 12) {
                     // TODO: very large, fade out and then don't draw
                 } else {
-                    let dimension = 9 * GU * scaleFactor;
+                    let dimension = 9 * scaleFactor;
                     // TODO: if very small, don't draw image. remember fade.
                     this.ctx.drawImage(
                         texture.image,
-                        8 * GU - dimension / 2,
-                        4.5 * GU - dimension / 2,
+                        19 / 2 - dimension / 2,
+                        9 / 2 - dimension / 2,
                         dimension,
                         dimension
                     )
                 }
             }
+            this.ctx.restore();
         }
 
         resize() {
