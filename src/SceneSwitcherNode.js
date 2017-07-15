@@ -66,7 +66,7 @@
         selectedScene = this.inputs.F;
       } else if (BEAN < song(34, 1)) {
         selectedScene = this.inputs.G;
-      } else if (BEAN < song(35)) {
+      } else if (BEAN < song(34, 2.7)) {
         selectedScene = this.inputs.H;
       } else if (BEAN < song(36)) {
         selectedScene = this.inputs.G;
