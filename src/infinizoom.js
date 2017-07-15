@@ -44,7 +44,7 @@
 
             const relativeFrame = frame - 2330 + 30;
             demo.nm.nodes.grading.noiseAmount = 0.08;
-            demo.nm.nodes.bloom.opacity = 0.3 + this.throb * 0.5;
+            demo.nm.nodes.bloom.opacity =  this.throb * 0.5;
             demo.nm.nodes.grading.amount = 1;
             demo.nm.nodes.grading.gammaCorrection = true;
             super.update(frame);
