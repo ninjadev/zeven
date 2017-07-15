@@ -18,11 +18,21 @@
     update(frame) {
       super.update(frame);
 
+      demo.nm.nodes.bloom.opacity = 1.5;
+      demo.nm.nodes.grading.amount = 1.0;
+      demo.nm.nodes.grading.gammaCorrection = true;
+      demo.nm.nodes.grading.noiseAmount = 0.37;
+
+
       // This clears the canvas
       this.canvas.width += 0;
 
       this.ctx.save();
       this.ctx.scale(GU, GU);
+
+      // set background color
+      this.ctx.fillStyle = '#000001';
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
       const colors = ['red', 'blue', 'yellow', 'purple'];
 
