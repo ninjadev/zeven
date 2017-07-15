@@ -154,6 +154,7 @@
       if (BEAN < 35 * 12 * 4 + 12) {
         this.track.visible = true;
         this.windmillContainer.visible = false;
+        if (this.path) this.path.visible = false;
         for (const bumper of this.bumpers) {
           bumper.visible = false;
         }
@@ -205,6 +206,7 @@
       } else {
         this.track.visible = false;
         this.windmillContainer.visible = true;
+        if (this.path) this.path.visible = true;
         for (const bumper of this.bumpers) {
           bumper.visible = true;
         }
@@ -228,7 +230,7 @@
           this.ball.velocity.set(-0.00004 * speed, 0, 0.03 * speed);
         }
 
-        if(frame == 4936) {
+        if(frame <= 4937) {
           this.ball.position.set(-0.0119, 0, -0.00);
           this.ball.velocity.set(-0.00004, 0, 0.03);
         }
