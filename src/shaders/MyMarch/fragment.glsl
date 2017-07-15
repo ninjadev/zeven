@@ -26,7 +26,7 @@ float displace(vec3 p, float d1) {
     return d1+d2;
 }
 
-float box(vec3 p, vec3 b, float r) {
+float boxy(vec3 p, vec3 b, float r) {
     return length(max(abs(p)-b, 0.0)) - r;
 }
 
@@ -37,7 +37,7 @@ float sphere(vec3 p, float s) {
 float repBox(vec3 p, vec3 c) {
     vec3 q = mod(p, c)-0.5*c;
     vec3 boxCoord = floor(p / REP);
-    float box = box(q, vec3(0.4, 0.2, 0.5) * mod(frame/20.0 + boxCoord.z/10.0, 1.0), 0.3);
+    float box = boxy(q, vec3(0.4, 0.2, 0.5) * mod(frame/20.0 + boxCoord.z/10.0, 1.0), 0.3);
     return displace(p, box);
 }
 
