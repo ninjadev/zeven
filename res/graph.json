@@ -18,7 +18,7 @@
       "F": "terminator.render",
       "G": "ball.render",
       "H": "NeonSevenNode.render",
-      "I": "spinningCube.render",
+      "I": "flip.render",
       "J": "dweet.render",
       "K": "KaleidroScope.render",
       "L": "TorusScene.render",
@@ -328,5 +328,15 @@
   {
     "id": "ninEnd",
     "type": "ninEnd"
+  },
+  {
+    "id": "flip",
+    "type": "flipNode",
+    "options": {
+      "shader": "flip"
+    },
+    "connected": {
+      "image": "spinningCube.render"
+    }
   }
 ]
