@@ -23,7 +23,8 @@
       "K": "KaleidroScope.render",
       "L": "TorusScene.render",
       "M": "ending.render",
-      "N": "fisheye.render"
+      "N": "fisheye.render",
+      "P": "sevenDisplay.render"
     }
   },
   {
@@ -309,5 +310,9 @@
     "options": {
       "shader": "ending"
     }
+  },
+  {
+    "id": "sevenDisplay",
+    "type": "sevenDisplay"
   }
 ]
