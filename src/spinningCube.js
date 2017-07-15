@@ -11,6 +11,7 @@
       this.lampModel = new THREE.Object3D();
       this.otherLamp = new THREE.Object3D();
 
+      this.throb = 0;
       var loadObject = function (objPath, material, three_object) {
         var objLoader = new THREE.OBJLoader();
         Loader.loadAjax(objPath, function(text) {
@@ -163,8 +164,11 @@
     update(frame) {
       super.update(frame);
       this.floorCube.needsUpdate = true;
-      demo.nm.nodes.bloom.opacity = 0.66;
-
+      this.throb *= 0.94;
+        if(BEAT && BEAN % 24 == 12) {
+          this.throb = 1;
+      }
+      demo.nm.nodes.bloom.opacity =  this.throb * 0.5;
       this.spotLightInside.position.x = 0.3 * Math.sin( Math.PI *2 * BEAN/36) - 0.2;
 
       if(BEAN < this.lampyInitCameraPosition.lastBean){
