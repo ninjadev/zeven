@@ -63,7 +63,7 @@
 
             let zoomLevel = relativeFrame / 30;
 
-            zoomLevel -= easeOut(10,0, frame - 2845) / (2879 - 2845));
+            zoomLevel += easeOut(0,10, (frame - 2845) / (2879 - 2845));
 
             for (let i = 0; i < this.textures.length; i++) {
                 let texture = this.textures[i];
