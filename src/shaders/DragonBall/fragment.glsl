@@ -135,7 +135,7 @@ float applyScales(vec3 p, float d) {
 }
 
 vec3 calcBodyPoints(float i) {
-    return vec3(i * 10., cos(i) * 5. - 1.5 + i * 3. + 3., sin(i + iGlobalTime * .25) * 5. + 3.);
+    return vec3(i * 10., cos(i) * 5. - 1.5 + i * 3. + 3., sin(i + iGlobalTime * 2.) * 5. + 3.);
 }
 
 float shenronBody(vec3 p) {
@@ -143,7 +143,7 @@ float shenronBody(vec3 p) {
 
     p.x -= 20.;
 
-    d = rmin(d, capsule(p, vec3(0., 0., 0.), calcBodyPoints(0.), 6.25), 2.);
+    d = rmin(d, capsule(p, vec3(-9., 2., 0.), calcBodyPoints(0.), 6.25), 2.);
 
     for (float i=1.; i<5.; i+=1.) {
         d = rmin(d, capsule(p, calcBodyPoints(i - 1.), calcBodyPoints(i), 6.25), 2.);
@@ -282,6 +282,11 @@ vec3 calcMainBall(){
     return vec3(-25. + iGlobalTime * 15., -2.5, 0.);
 }
 
+float bg(vec3 p) {
+    //return 1.;
+    return min(p.z + 25.5, -p.x + 80.5);
+}
+
 float map(vec3 p, bool isBalls) {
     float d = length(p);
 
@@ -293,8 +298,10 @@ float map(vec3 p, bool isBalls) {
     d = min(d, shenronTeeth(p));
     d = min(d, shenronTeethUnder(p));
 
-    // d = min(d, kintoun(p));
+    //d = min(d, kintoun(p));
     d = applyScales(p, d);
+
+    d = min(d, bg(p));
 
     if (isBalls) {
         d = min(d, length(p - calcMainBall()) - 2.5);
@@ -421,6 +428,10 @@ vec3 render(vec2 q, vec3 cameraPosition, vec3 rayDirection, bool isBalls) {
         col += renderMaterial(p, normal, material, isBalls, vec3(20.0, 15.0, 55.0), 50.);
         col += renderMaterial(p, normal, material, isBalls, vec3(-15.0, -15.0, 55.0), 100.);
         col /= 3.;
+
+        if (isSameDistance(map(p, isBalls), bg(p))) {
+            col = vec3(0.025, 0.025, cos(q.y * 2.) * 0.5 - 0.25);
+        }
     }
 
     return col;
@@ -432,7 +443,7 @@ void main() {
     p = 2. * p - 1.;
     p.x *= 16. / 9.;
 
-    vec3 cameraPosition = vec3(0.0, 0. + sin(iGlobalTime), 30.0);
+    vec3 cameraPosition = vec3(0.0, 0. + sin(iGlobalTime) * 1.5, 30.0);
     vec3 rayDirection = normalize(vec3(p, -1.0));
 
     float b = 1.25 + sin(iGlobalTime) * 0.5;
@@ -441,7 +452,7 @@ void main() {
     cameraPosition.zy *= rotate(b);
 
     float a = PI * 1.5 + sin(iGlobalTime);
-    a = -PI * 0.25;
+    a = -PI * 0.25 + sin(iGlobalTime) * 0.1;
     rayDirection.xz *= rotate(a);
     cameraPosition.xz *= rotate(a);
 
