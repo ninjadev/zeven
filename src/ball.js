@@ -154,6 +154,7 @@
       if (BEAN < 35 * 12 * 4 + 12) {
         this.track.visible = true;
         this.windmillContainer.visible = false;
+        if (this.path) this.path.visible = false;
         for (const bumper of this.bumpers) {
           bumper.visible = false;
         }
@@ -161,24 +162,16 @@
           const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
           const t = (frame - startFrame) / (FRAME_FOR_BEAN(33 * 12 * 4 + 12) - startFrame);
 
+          const acceleration = 1;
+          const speed = acceleration * t;
+          const y = speed * t;
+
           this.ball.position.set(
             0,
-            2.525 - t * 0.5,
+            3.025 - y,
             0.35
           );
 
-          if (!this.camera.isOverriddenByFlyControls) {
-            this.camera.position.set(
-              0.5 - t * 0.5,
-              2.7 + t * 0.5,
-              0.75
-            );
-            this.camera.lookAt(new THREE.Vector3(
-              0,
-              2.525 - t * 0.5,
-              0.1
-            ));
-          }
         } else {
           const startFrame = FRAME_FOR_BEAN(33 * 12 * 4 + 12);
           const t = (frame - startFrame) / 60;
@@ -188,23 +181,27 @@
             2.025 - t * 0.2,
             Math.cos(t * 2) * 0.35
           );
+        }
 
-          if (!this.camera.isOverriddenByFlyControls) {
-            this.camera.position.set(
-              0 - t * 0.25,
-              3.2 - t * 0.15,
-              0.75
-            );
-            this.camera.lookAt(new THREE.Vector3(
-              Math.sin(t * 2) * 0.1,
-              2.025 - t * 0.2,
-              Math.cos(t * 2) * 0.1
-            ));
-          }
+        if (!this.camera.isOverriddenByFlyControls) {
+          const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
+          const t = (frame - startFrame) / (FRAME_FOR_BEAN(33 * 12 * 4 + 12) - startFrame);
+
+          this.camera.position.set(
+            - t * 0.15,
+            3.1 - t * 0.1,
+            1.2 - t * 0.1
+          );
+          this.camera.lookAt(new THREE.Vector3(
+            0,
+            2.025 - t * 0.08,
+            0.1
+          ));
         }
       } else {
         this.track.visible = false;
         this.windmillContainer.visible = true;
+        if (this.path) this.path.visible = true;
         for (const bumper of this.bumpers) {
           bumper.visible = true;
         }
@@ -240,7 +237,7 @@
           this.ball.position.set(-0.0119, 0, -0.00);
           this.ball.velocity.set(-0.00004, 0, 0.03);
         }
-        if(frame >= 4936 && frame < 4970) {
+        if (frame < 4970) {
           this.camera.position.x = 0.4 * Math.cos(4245);
           this.camera.position.y = 0.4;
           this.camera.position.z = 0.4 * Math.sin(4245);

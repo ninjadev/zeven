@@ -88,75 +88,38 @@
     update(frame) {
       super.update(frame);
       demo.nm.nodes.bloom.opacity = 0.1;
-      //this.camera.fov = easeOut(25, 118.2, (frame - 4008 + 12) / 24);
+      demo.nm.nodes.grading.noiseAmount = 0.08;
+      this.camera.fov = easeOut(25, 118.2, (frame - 4008 + 12) / 24);
       this.camera.updateProjectionMatrix();
 
       if(!this.initialized && this.inputs.mntngeom.getValue()){
-        console.log("mntn init ");
         this.delayedInit();
         this.initialized = true;
-        console.log("mntn initialized");
       }
       if(!this.initialized){
         return;
       }
 
 
-      //Temp hack to play with quad camera dynamics. Refactor incomming
-      var maxSpeed = 160/ 3.6; //m/s
-      var maxAccel = 90; // m/s^2  (Realistic for an aggressive quad. Should be between 2-12g
-
-      var dragCoeff = maxAccel/(maxSpeed*maxSpeed);
-
-      var accel = function(speed){return Math.max(maxAccel - (dragCoeff * speed * speed),0);};
-
-      var camz = 950;
-      var camx = 300;
-      var x = Math.round(this.mntnWidth * (camx + 0.5*this.mntnSizeX)/ this.mntnSizeX);
-      var y = Math.round(this.mntnHeight * (camz + 0.5*this.mntnSizeY) / this.mntnSizeY);
-
-
-      var startX = camx;
-      var startY = 650.0;//this.heightmap[y-1][x-1]+4;
-      var startZ = camz;
-      if(frame < 3453){ // still
-        this.camera.position.x = startX;
-        this.camera.position.y = startY;
-        this.camera.position.z = startZ;
-        this.camera.dx = 0;
-        this.camera.dy = 0;
-        this.camera.dz = 0;
-        this.camera.rotation.x = 0.1;
-      }else if(frame < 3463){ //up
-        this.camera.dy += accel(this.camera.dy) / 60;
-        this.camera.position.y += this.camera.dy / 60;
-        this.camera.rotation.x = 0.1;
-      }else if(frame < 3473) { //fly forward
-        this.camera.dz -= accel(this.camera.dz) / 60;
-
-        this.camera.position.y += this.camera.dy / 60;
-        this.camera.position.z += this.camera.dz / 60;
-
-        this.camera.rotation.x -= Math.PI/40;
-
-      }else if(frame < 3650) { //fly forward
-        this.camera.dy -= 9.8 / 60; //Let's fall down
-        this.camera.position.y += this.camera.dy / 60;
-
-        this.camera.dz -= accel(this.camera.dz) / 60;
-        this.camera.position.z += this.camera.dz / 60;
-
-        this.camera.rotation.x = -Math.PI/4 + 0.1;
-
-      }else { //fly up again!
-        this.camera.dy += accel(this.camera.dy) / 60;
-        this.camera.position.y += this.camera.dy / 60;
-
-        this.camera.dz -= accel(this.camera.dz) / 60;
-        this.camera.position.z += this.camera.dz / 60;
-
-        this.camera.rotation.x = -Math.PI/8 + 0.1;
-
+      if(BEAN < 1248) {
+        const step = (frame - 3428) / (3565 - 3428);
+        this.camera.position.x = lerp(700, 700, step);
+        this.camera.position.y = smoothstep(1000, 1000, step);
+        this.camera.position.z = lerp(700, 400, step);
+        this.camera.rotation.set(-3.14 / 8, 0, 0);
+      } else if (BEAN < 1248 + 48 + 48) {
+        const step = (frame - 3565) / (3839 - 3565);
+        this.camera.rotation.set(0, 0, 0);
+        this.camera.position.x = easeOut(800, 780, step);
+        this.camera.position.y = easeIn(950, 980, step);
+        this.camera.position.z = lerp(500, -300, step);
+        this.camera.rotation.set(-3.14 / 16, 0, 0);
+      } else if (BEAN < 1248 + 48 + 48 + 48 + 48 + 48) {
+        const step = (frame - 3839) / (4250 - 3839);
+        this.camera.position.x = easeOut(0, -180, step);
+        this.camera.position.y = lerp(0, 280, step) + easeIn(870, 1080 - 280, step);
+        this.camera.position.z = lerp(-800, -400, step);
+        this.camera.rotation.set(0, Math.PI / 2, 0);
       }
 
       var sunPos = this.projectPoint(5000.0, 2660.0, -5000.0);
