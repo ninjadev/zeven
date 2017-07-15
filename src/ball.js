@@ -168,18 +168,6 @@
             0.35
           );
 
-          if (!this.camera.isOverriddenByFlyControls) {
-            this.camera.position.set(
-              0.5 - t * 0.5,
-              2.7 + t * 0.5,
-              0.75
-            );
-            this.camera.lookAt(new THREE.Vector3(
-              0,
-              2.525 - t * 0.5,
-              0.1
-            ));
-          }
         } else {
           const startFrame = FRAME_FOR_BEAN(33 * 12 * 4 + 12);
           const t = (frame - startFrame) / 60;
@@ -189,19 +177,22 @@
             2.025 - t * 0.2,
             Math.cos(t * 2) * 0.35
           );
+        }
 
-          if (!this.camera.isOverriddenByFlyControls) {
-            this.camera.position.set(
-              0 - t * 0.25,
-              3.2 - t * 0.15,
-              0.75
-            );
-            this.camera.lookAt(new THREE.Vector3(
-              Math.sin(t * 2) * 0.1,
-              2.025 - t * 0.2,
-              Math.cos(t * 2) * 0.1
-            ));
-          }
+        if (!this.camera.isOverriddenByFlyControls) {
+          const startFrame = FRAME_FOR_BEAN(33 * 12 * 4);
+          const t = (frame - startFrame) / (FRAME_FOR_BEAN(33 * 12 * 4 + 12) - startFrame);
+
+          this.camera.position.set(
+            - t * 0.15,
+            3.1 - t * 0.1,
+            1.2 - t * 0.1
+          );
+          this.camera.lookAt(new THREE.Vector3(
+            0,
+            2.025 - t * 0.08,
+            0.1
+          ));
         }
       } else {
         this.track.visible = false;
