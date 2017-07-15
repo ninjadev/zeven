@@ -16,7 +16,8 @@
         this.camyr = 0;
 
       this.throb = 0;
-      this.camran = new Random('moordi');
+      //this.camran = new Random('moordi2');
+      this.camran = new Random('moordi4');
 
       var light = new THREE.PointLight(0xffffff, 1, 0, 2);
       light.position.set(10, 10, 10);
@@ -491,7 +492,7 @@
             (BEAT && BEAN == 3552 + 8 + 8 + 8) ||
             (BEAT && BEAN == 3552 + 8 + 8 + 8 + 8)) {
           this.camx = 20 + this.camran() * 60;
-          this.camy = -2 + this.camran() * 30;
+          this.camy = 2 + this.camran() * 30;
           this.camz = 20 + this.camran() * 60;
           this.camr = this.camran() * Math.PI * 2;
           this.camyr = this.camran() * Math.PI * 2;
