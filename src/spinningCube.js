@@ -163,15 +163,19 @@
 
     update(frame) {
       if(frame > 6660){
-        
+        // todo dim light
         return;
       }
       super.update(frame);
+
       this.floorCube.needsUpdate = true;
       this.throb *= 0.94;
         if(BEAT && BEAN % 24 == 12) {
           this.throb = 1;
       }
+      demo.nm.nodes.grading.amount = 1.0;
+      demo.nm.nodes.grading.gammaCorrection = true;
+      demo.nm.nodes.grading.noiseAmount = 0.08;
       demo.nm.nodes.bloom.opacity =  this.throb * 0.5;
       this.spotLightInside.position.x = 0.3 * Math.sin( Math.PI *2 * BEAN/36) - 0.2;
 
@@ -206,8 +210,7 @@
         this.camera.lookAt(this.sidewayView);
       }
       else if (BEAN >2208 && BEAN <2256){
-        this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));
-
+       this.lampModel.rotation.y = Math.sin(frame/(20*smoothstep(0.,BEAN, 1.0));
       }
       else if (BEAN > 2304 && BEAN <2312){
 
