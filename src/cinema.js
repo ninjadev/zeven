@@ -304,12 +304,12 @@
       this.walls.position.y = 5 / 2 - 3 / 2 - 0.7;
 
       const previewNames = [
-        'res/checkered-skybox.png', 
-        'res/tunnel-preview.png', 
-        'res/nn7preview.png', 
-        'res/indianrose.jpg', 
-        'res/rock_cliffs.jpg', 
-        'res/gradient.jpg', 
+        'res/checkered-skybox.png',
+        'res/tunnel-preview.jpg',
+        'res/nn7preview.png',
+        'res/indianrose.jpg',
+        'res/rock_cliffs.jpg',
+        'res/gradient.jpg',
       ];
       for(let i = 0; i < previewNames.length; i++) {
         const map = Loader.loadTexture(previewNames[i]);
