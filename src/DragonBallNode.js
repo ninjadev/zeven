@@ -15,6 +15,11 @@
       demo.nm.nodes.grading.gammaCorrection = 0.;
 
     }
+
+    warmup(renderer) {
+      this.update(2000);
+      this.render(renderer);
+    }
   }
 
   global.DragonBallNode = DragonBallNode;
