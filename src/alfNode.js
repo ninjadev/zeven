@@ -55,18 +55,18 @@
       let from_absolute = relativeFrame / Math.log(relativeFrame); // -4, Max this.images.length*4
 
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = easeOut(0, 95, relativeFrame/130);
+        this.wheel_one.offset = elasticOut(0, 95, 1, relativeFrame/120);
         this.ctx.drawImage(this.images[i].image, 2, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
       //wheel to
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = easeOut(0, 23, relativeFrame/90);
+        this.wheel_one.offset = elasticOut(0, 23, 1, relativeFrame/80);
         this.ctx.drawImage(this.images[i].image, 6.5, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
       for (let i = 0; i < this.images.length; i++) {
-        this.wheel_one.offset = easeOut(0, 71, relativeFrame/110);
+        this.wheel_one.offset = elasticOut(0, 71, 1, relativeFrame/100);
         this.ctx.drawImage(this.images[i].image, 11, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
       }
 
