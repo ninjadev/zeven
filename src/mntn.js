@@ -19,6 +19,8 @@
       this.mntnSizeY = 2000;
 
       this.initialized = false;
+
+      this.throb = 0;
     }
 
     render(renderer) {
@@ -87,8 +89,6 @@
 
     update(frame) {
       super.update(frame);
-      demo.nm.nodes.bloom.opacity = 0.1;
-      demo.nm.nodes.grading.noiseAmount = 0.08;
       this.camera.fov = easeOut(25, 118.2, (frame - 4008 + 12) / 24);
       this.camera.updateProjectionMatrix();
 

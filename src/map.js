@@ -15,6 +15,8 @@
         }
       });
 
+      this.throb = 0;
+
 
       var light = new THREE.PointLight(0xffffff, 1, 100);
       light.position.set(50, 50, 50);
@@ -201,22 +203,94 @@
       this.ctx.restore();
       this.ctx.restore();
       this.texture.needsUpdate = true;
+      this.rotationState = 0;
     }
 
     update(frame) {
       super.update(frame);
+
+      this.throb *= 0.9;
+      if(frame == 2879 || frame == 2880) {
+        this.throb = 1;
+        this.rotationState = 0;
+      }
+
+
+      demo.nm.nodes.bloom.opacity = .5 + 3 * this.throb;
+      demo.nm.nodes.grading.noiseAmount = 0.2;
+
+      let rotation = frame / 100
+      let distance = easeIn(0.55, 0.2, (frame - 2879) / (3428 - 2879));
+      if(BEAN  < 1104) {
+        if(BEAT) {
+          switch((BEAN - 48) % 96) {
+            case 0:
+            case 9:
+            case 18:
+            case 27:
+            case 36:
+            case 42:
+            case 48:
+            case 57:
+            case 66:
+            case 84:
+            this.throb = 0.5;
+          }
+        }
+      } else {
+        if(BEAT && BEAN % 24 == 12) {
+          this.throb = 0.5;
+        }
+        if(BEAT) {
+          switch((BEAN - 48) % 96) {
+            case 0:
+            case 9:
+            case 18:
+            case 27:
+            case 36:
+            case 42:
+            case 48:
+            case 57:
+            case 66:
+            case 84:
+              this.rotationState += 0.2;
+          }
+        }
+      }
+
+      rotation += this.rotationState;
+
+      if(BEAN > 1075) {
+        distance -= 0.3;
+      }
+      if(BEAN > 1084) {
+        distance += 0.3;
+      }
+      if(BEAN > 1092) {
+        rotation += 1;
+      }
+      if(BEAN > 1092 + 6) {
+        rotation += 1;
+      }
+      if(BEAN > 1092 + 6 + 2) {
+        rotation += 1;
+      }
+      if(BEAN > 1092 + 6 + 4) {
+        rotation += 1;
+      }
+
+      distance -= smoothstep(0, 0.1, (frame - 3393) / (3428 - 3393));
+      demo.nm.nodes.grading.noiseAmount += smoothstep(0, 2., (frame - 3393) / (3428 - 3393));
 
       for(let i = 0; i < 6; i++) {
         this.mountainPlanes[i].material.map = this.inputs['T' + i].getValue();
         this.mountainPlanes[i].material.needsUpdate = true;
       }
 
-      this.camera.position.x = 0.75 * Math.sin(frame / 1000);
-      this.camera.position.z = 0.75 * Math.cos(frame / 1000);
-      this.camera.position.y = 0.75;
+      this.camera.position.x = distance * Math.sin(rotation);
+      this.camera.position.z = distance * Math.cos(rotation);
+      this.camera.position.y = distance;
       this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-      demo.nm.nodes.bloom.opacity = .5; 
 
     }
 
