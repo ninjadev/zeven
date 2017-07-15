@@ -13,10 +13,19 @@
       this.texture.minFilter = THREE.LinearFilter;
       this.texture.magFilter = THREE.LinearFilter;
       this.resize();
+      this.throb = 0;
     }
 
     update(frame) {
-      demo.nm.nodes.bloom.opacity = 0.3;
+      this.throb *= 0.97;
+      if(frame == 3428 || frame == 3429) {
+        this.throb = 1;
+      }
+      if(BEAT && BEAN % 24 == 12) {
+        this.throb = 0.3;
+      }
+      demo.nm.nodes.bloom.opacity = 0.1 + 3 * this.throb;
+      demo.nm.nodes.grading.noiseAmount = 0.08;
       this.frame = frame;
       this.uniforms.frame.value = frame;
     }
