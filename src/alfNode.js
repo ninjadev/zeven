@@ -13,13 +13,34 @@
       this.output = new THREE.VideoTexture(this.canvas);
       this.output.minFilter = THREE.LinearFilter;
       this.output.magFilter = THREE.LinearFilter;
-      this.seven = Loader.loadTexture('res/seven.png');
-      this.lemon = Loader.loadTexture('res/lemon.png');
+      this.images = [
+        Loader.loadTexture('res/slots/lemon.png'),
+        Loader.loadTexture('res/slots/nin.png'),
+        Loader.loadTexture('res/slots/seven.png'),
+        Loader.loadTexture('res/slots/cherry.png'),
+        Loader.loadTexture('res/slots/watermelon.png'),
+        Loader.loadTexture('res/slots/bell.png')
+      ]
+
+      this.start_bean = song(37); // Bigger than this one
+      this.end_bean = song(39); // Smaller than this
+
+      this.wheel_one = {
+        speed: 0,
+        offset: -4,
+      }
+      this.wheel_two = {
+        speed: 0.1,
+      }
+
+      this.wheel_three = {
+        speed: 0.1,
+      }
+      this.speedModifier = 0;
     }
 
     update(frame) {
       super.update(frame);
-
       // This clears the canvas
       this.canvas.width += 0;
       this.ctx.save();
@@ -27,15 +48,28 @@
 
       this.base_y = (frame/4)
 
-      // wheel one
+      const relativeFrame = frame - 5074;
+      const mixer = (relativeFrame) / 150;
+      const speedModifier = lerp(1, 0.1, mixer);
 
-      this.ctx.drawImage(this.seven.image, 2, this.base_y % 14.8-3, 3, 3);
-      this.ctx.drawImage(this.seven.image, 6.5, this.base_y % 14.8-3, 3, 3);
-      this.ctx.drawImage(this.seven.image, 11, this.base_y % 12.5-3, 3, 3);
+      let from_absolute = relativeFrame / Math.log(relativeFrame); // -4, Max this.images.length*4
 
-      this.ctx.drawImage(this.lemon.image, 2, this.base_y % 22-3, 3, 3);
-      this.ctx.drawImage(this.lemon.image, 6.5, this.base_y % 9.3-3, 3, 3);
-      this.ctx.drawImage(this.lemon.image, 11, this.base_y % 14.3-3, 3, 3);
+      for (let i = 0; i < this.images.length; i++) {
+        this.wheel_one.offset = easeOut(0, 95, relativeFrame/130);
+        this.ctx.drawImage(this.images[i].image, 2, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+      }
+
+      //wheel to
+      for (let i = 0; i < this.images.length; i++) {
+        this.wheel_one.offset = easeOut(0, 23, relativeFrame/90);
+        this.ctx.drawImage(this.images[i].image, 6.5, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+      }
+
+      for (let i = 0; i < this.images.length; i++) {
+        this.wheel_one.offset = easeOut(0, 71, relativeFrame/110);
+        this.ctx.drawImage(this.images[i].image, 11, (this.wheel_one.offset+i*4)%(4*this.images.length)-4, 3, 3);
+      }
+
       this.ctx.restore();
     }
 
