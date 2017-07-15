@@ -210,7 +210,7 @@ void main() {
 
     vec3 p = eye + dir * dist;
     vec3 boxCoord = floor(p / REP);
-    vec3 color = vec3(0., 0., 1.);
+    vec3 color = vec3(.2, .2, .5);
 
     float radius = mod((frame - 9265.), 100.0) * 0.2;
     vec3 rgb = hsl2rgb(mod(frame/20.0 + boxCoord.z/10.0, 1.0), 0.5, 0.5);
