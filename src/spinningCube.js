@@ -27,7 +27,7 @@
         });
       };
 
-      var bestMaterial = new THREE.MeshPhysicalMaterial({ color: 0x000fff, shading: THREE.SmoothShading });
+      var bestMaterial = new THREE.MeshPhysicalMaterial({ color: 0x1d2026, shading: THREE.SmoothShading });
 
       loadObject('res/lamp/nin.obj', bestMaterial, this.lampModel );
       this.scene.add( this.lampModel );
@@ -73,6 +73,12 @@
 
       // The light that casts shadow.
       this.spotLightInside = new THREE.SpotLight( 0xFF8A17 ); // Spicy mustard
+      this.spotLightInside.add(
+        new THREE.Mesh(
+          new THREE.SphereGeometry(0.1,0.1,0.1),
+          new THREE.MeshBasicMaterial({color: 0xffffff})
+        )
+      );
       this.spotLightInside.castShadow = true;
       this.spotLightInside.position.set(0,0.79,0);
       this.spotLightInside.shadow.mapSize.width = 1024;
@@ -128,6 +134,7 @@
     update(frame) {
       super.update(frame);
       this.floorCube.needsUpdate = true;
+      demo.nm.nodes.bloom.opacity = 0.66;
 
       this.spotLightInside.position.x = 0.3 * Math.sin( Math.PI *2 * BEAN/36) - 0.2;
       // debugger;
