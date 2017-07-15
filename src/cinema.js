@@ -2,7 +2,6 @@
   class cinema extends NIN.THREENode {
     constructor(id) {
       super(id, {
-        camera: 'res/cinema.camera.json',
         outputs: {
           render: new NIN.TextureOutput(),
         },
