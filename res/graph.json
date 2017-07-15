@@ -266,7 +266,8 @@
       "shader": "LensFlare"
     },
     "connected": {
-      "image": "mntn.render"
+      "image": "mntn.render",
+      "sunpos": "mntn.sunpos"
     }
   },
   {

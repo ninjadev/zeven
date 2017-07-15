@@ -13,10 +13,15 @@
       this.uniforms.frame.value = frame;
       this.uniforms.tDiffuse.value = this.inputs.image.getValue();
 
-      this.uniforms.sunX.value = Math.sin(frame/40)/2 + .5;
-      this.uniforms.sunY.value = Math.cos(frame/40)/2 + .5;
-      this.uniforms.amount.value = Math.sin(frame/80)/3 + .5;;
-      this.uniforms.amount.value = 0;
+      if(this.inputs.sunpos.getValue()){
+        var sunpos = this.inputs.sunpos.getValue();
+        this.uniforms.sunX.value = sunpos.x;
+        this.uniforms.sunY.value = sunpos.y;
+      }else{
+        this.uniforms.sunX.value = 0.0;
+        this.uniforms.sunY.value = 0.0;
+        this.uniforms.amount.value = .0;
+      }
     }
   }
 
