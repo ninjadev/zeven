@@ -26,10 +26,6 @@
     }
   },
   {
-    "id": "TempleScene",
-    "type": "templeScene"
-  },
-  {
     "id": "TorusScene",
     "type": "torusScene"
   },
@@ -222,7 +218,7 @@
     "type": "texty",
     "connected": {
       "imageA": "tunnel.render",
-      "imageB": "TempleScene.render"
+      "imageB": "InfiniZoom.render"
     }
   },
   {
