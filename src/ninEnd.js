@@ -54,6 +54,7 @@
     }
 
     update(frame) {
+      demo.nm.nodes.bloom.opacity = 0.6;
       this.frame = frame;
       var startBEAN = 78 * 12 * 4;
       var startFrame = FRAME_FOR_BEAN(startBEAN);
