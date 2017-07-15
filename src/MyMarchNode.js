@@ -8,6 +8,7 @@
 
     update(frame) {
       this.uniforms.frame.value = frame;
+      this.uniforms.BEAN.value = BEAN;
       this.throb *= 0.95;
       if (BEAT && BEAN % 12 == 0) {
         this.throb = 1;

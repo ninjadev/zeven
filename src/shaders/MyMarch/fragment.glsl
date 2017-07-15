@@ -1,4 +1,5 @@
 uniform float frame;
+uniform float BEAN;
 uniform sampler2D tDiffuse;
 
 varying vec2 vUv;
@@ -176,7 +177,11 @@ vec3 hsl2rgb(float h, float s, float l) {
 
 void main() {
 
-    vec3 eye = vec3(frame/60., 8.*frame/60., 0.);
+    vec3 eye = vec3(frame/60., 0.0 , 0.0);
+
+    if (BEAN == 3600.0) {
+        eye = vec3(0.0, 8.*frame/60., 0.0);
+    }
 
     vec3 dir = rayDir(60.0, vUv);
 
