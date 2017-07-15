@@ -133,7 +133,7 @@
         color: 0x373737,
         side: THREE.DoubleSide,
         roughness: 1,
-        roughnessMap: Loader.loadTexture('res/cliff_rocks.jpg'),
+        roughnessMap: Loader.loadTexture('res/rock_cliffs.jpg'),
         metalness: 0,
         map: Loader.loadTexture('res/concrete.jpg'),
       });
