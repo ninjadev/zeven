@@ -54,7 +54,7 @@ void main() {
 
 
     //Sun light
-    vec3 sunDir = normalize(vec3(5.0, 2.66, -5.0));
+    vec3 sunDir = normalize(vec3(0.0, 2.66, 7.071));
     //vec3 sunColor = vec3(1.64,1.27,0.99); //iq
     vec3 sunColor = 5.64 * vec3(1.0, 0.98823, 0.9058); //skymap data
     float sunIntensity = clamp( dot(sunDir, normal), 0.0, 1.0);

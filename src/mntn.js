@@ -5,7 +5,7 @@
         camera: options.camera,
         outputs: {
           render: new NIN.TextureOutput(),
-          sunpos: new NIN.Output(),
+          sunpos: new NIN.Output()
         },
         inputs: {
           mntngeom: new NIN.Input()
@@ -47,6 +47,7 @@
           new THREE.BoxGeometry( 7777, 7777, 7777 ),
           skyboxMaterial );
 
+      skyboxMesh.rotation.y = - Math.PI / 2. - Math.PI / 4.0 ;
       this.scene.add(skyboxMesh);
 
       var shaderMat = new THREE.ShaderMaterial(SHADERS['PerlinMntn']).clone();
@@ -102,12 +103,18 @@
 
 
       if(BEAN < 1248) {
+        if(demo.nm.nodes.LensFlare)
+          demo.nm.nodes.LensFlare.uniforms.amount.value = .0;
+
         const step = (frame - 3428) / (3565 - 3428);
         this.camera.position.x = lerp(700, 700, step);
         this.camera.position.y = smoothstep(1000, 1000, step);
         this.camera.position.z = lerp(700, 400, step);
         this.camera.rotation.set(-3.14 / 8, 0, 0);
       } else if (BEAN < 1248 + 48 + 48) {
+        if(demo.nm.nodes.LensFlare)
+          demo.nm.nodes.LensFlare.uniforms.amount.value = .0;
+
         const step = (frame - 3565) / (3839 - 3565);
         this.camera.rotation.set(0, 0, 0);
         this.camera.position.x = easeOut(800, 780, step);
@@ -116,17 +123,35 @@
         this.camera.rotation.set(-3.14 / 16, 0, 0);
       } else if (BEAN < 1248 + 48 + 48 + 48 + 48 + 48) {
         const step = (frame - 3839) / (4250 - 3839);
+        const lensStep = (frame - 3839) / (3877 - 3839);
+        const lensStepDim = (frame - 3897) / (3910 - 3897);
+        const lensStep2 = (frame - 3996) / (4015 - 3996);
+
+        if(demo.nm.nodes.LensFlare)
+        {
+          if(frame < 3897){
+            demo.nm.nodes.LensFlare.uniforms.amount.value = easeOut(0.0, 0.8, lensStep);
+          }else if(frame < 3996){
+            demo.nm.nodes.LensFlare.uniforms.amount.value = easeOut(0.8, 0.45, lensStep);
+          }else{
+            demo.nm.nodes.LensFlare.uniforms.amount.value = easeOut(0.45, 0.2, lensStep);
+          }
+        }
+
         this.camera.position.x = easeOut(0, -180, step);
         this.camera.position.y = lerp(0, 280, step) + easeIn(870, 1080 - 280, step);
         this.camera.position.z = lerp(-800, -400, step);
-        this.camera.rotation.set(0, Math.PI / 2, 0);
+        this.camera.rotation.x = 0.0;
+        this.camera.rotation.y = lerp(Math.PI, Math.PI / 2.0, step);
+        this.camera.rotation.z = 0.0;
       }
 
-      var sunPos = this.projectPoint(5000.0, 2660.0, -5000.0);
+      var sunPos = this.projectPoint(0.0, 716.0 , 7071.1);
+      sunPos.x = sunPos.x * 16 * GU;
+      sunPos.y = sunPos.y * 9 * GU;
 
-      if(this.outputs.sunpos){
-        this.outputs.sunpos.setValue(sunPos);
-      }
+      this.outputs.sunpos.setValue(sunPos);
+      console.log(sunPos);
     }
   }
 

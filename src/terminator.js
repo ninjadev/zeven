@@ -82,6 +82,7 @@
       this.uniforms.tDiffuse.value = this.inputs.image.getValue();
       this.uniforms.overlay.value = this.texture;
       this.uniforms.amount.value = easeOut(0, 1, (this.frame - 4008 + 12) / 24);
+
       super.render(renderer);
     }
 
