@@ -163,41 +163,41 @@
       this.ring1.rotation.x = Math.PI/2;
       this.scene.add(this.ring1);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 1), 0.1, 16, 100 ),
+      this.ring2 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 1), 0.1, 16, 100 ),
                                  new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 5 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
-      this.scene.add(this.ring1);
+      this.ring2.position.y = 5 * height_difference;
+      this.ring2.rotation.x = Math.PI/2;
+      this.scene.add(this.ring2);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 2), 0.1, 16, 100 ),
+      this.ring3 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 2), 0.1, 16, 100 ),
                                  new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 4 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
-      this.scene.add(this.ring1);
+      this.ring3.position.y = 4 * height_difference;
+      this.ring3.rotation.x = Math.PI/2;
+      this.scene.add(this.ring3);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 3), 0.1, 16, 100 ),
+      this.ring4 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 3), 0.1, 16, 100 ),
                                  new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 3 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
-      this.scene.add(this.ring1);
+      this.ring4.position.y = 3 * height_difference;
+      this.ring4.rotation.x = Math.PI/2;
+      this.scene.add(this.ring4);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 4), 0.1, 16, 100 ),
+      this.ring5 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 4), 0.1, 16, 100 ),
                                  new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 2 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
-      this.scene.add(this.ring1);
+      this.ring5.position.y = 2 * height_difference;
+      this.ring5.rotation.x = Math.PI/2;
+      this.scene.add(this.ring5);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 5), 0.1, 16, 100 ),
+      this.ring6 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 5), 0.1, 16, 100 ),
                                  new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 1 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;
-      this.scene.add(this.ring1);
+      this.ring6.position.y = 1 * height_difference;
+      this.ring6.rotation.x = Math.PI/2;
+      this.scene.add(this.ring6);
 
-      this.ring1 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 6), 0.1, 16, 100 ),
+      this.ring7 = new THREE.Mesh(new THREE.TorusGeometry( ring_diam * Math.pow(multiplyer, 6), 0.1, 16, 100 ),
                            new THREE.MeshBasicMaterial({ color: 0x444454 }));
-      this.ring1.position.y = 1 * height_difference;
-      this.ring1.rotation.x = Math.PI/2;  
-      this.scene.add(this.ring1);
+      this.ring7.position.y = 1 * height_difference;
+      this.ring7.rotation.x = Math.PI/2;  
+      this.scene.add(this.ring7);
 
     }
 
@@ -317,13 +317,7 @@
       this.water.material.uniforms.time.value = frame / 60;
       //this.water.sunColor.setRGB(this.light.intensity, this.light.intensity, this.light.intensity);
 
-      if(BEAN < 3312) {
-        this.skybox.visible = false;
-      } else {
-        this.skybox.visible = true;
-      }
 
-      demo.nm.nodes.bloom.opacity = 0.5;
 
       var start_cut1 = 8916;
       var start_cut2 = 9161;
@@ -343,6 +337,14 @@
 
       var ring_setting_start = start_cut2;
       var ring_setting_end   = 9209;
+
+      if(frame < start_cut2) {
+        this.skybox.visible = false;
+      } else {
+        this.skybox.visible = true;
+      }
+
+      demo.nm.nodes.bloom.opacity = 0.5;
 
       if (frame < start_cut2) {
         var progression = (frame - start_cut1) / (start_cut2 - start_cut1);
@@ -373,13 +375,39 @@
 
         var cameraPositionX = 0;
         var cameraPositionY = 45;
-        var cameraPositionZ = 9;
+        var cameraPositionZ = 9 + easeOut(0, 15, (frame - ring_timing1) / 150);
         this.camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
 
         mode = 0;
         amount = 0;
 
         this.camera.lookAt(this.torus.position);
+
+        this.ring1.position.y = 40 + easeIn(22, 0, (frame - ring_timing1 + 10) / FRAME_FOR_BEAN(8));
+        this.ring2.position.y = 40 + easeIn(22, 0, (frame - ring_timing2 + 6) / FRAME_FOR_BEAN(8));
+        this.ring3.position.y = 40 + easeIn(22, 0, (frame - ring_timing3 + 6) / FRAME_FOR_BEAN(8));
+        this.ring4.position.y = 40 + easeIn(22, 0, (frame - ring_timing4 + 6) / FRAME_FOR_BEAN(8));
+        this.ring5.position.y = 40 + easeIn(22, 0, (frame - ring_timing5 + 10) / FRAME_FOR_BEAN(8));
+        this.ring6.position.y = 40 + easeIn(22, 0, (frame - ring_timing6 + 10) / FRAME_FOR_BEAN(8));
+        this.ring7.position.y = 40 + easeIn(22, 0, (frame - ring_timing7 + 10) / FRAME_FOR_BEAN(8));
+
+        this.ring1.rotation.x = frame / 20;
+
+        this.ring2.rotation.y = frame / 20;
+        
+        this.ring3.rotation.x = frame / 20;
+        this.ring3.rotation.y = frame / 20;
+
+        this.ring4.rotation.x = frame / 30;
+        this.ring4.rotation.y = frame / 20;
+        
+        this.ring5.rotation.x = frame / 25;
+        this.ring5.rotation.x = frame / 10;
+
+        this.ring6.rotation.x = -frame / 15;
+        this.ring6.rotation.y = frame / 20;
+        
+        this.ring7.rotation.y = frame / 30;
       } else {
         var scale = 1;
         this.torus.scale.set(scale, scale, scale);
@@ -400,6 +428,23 @@
 
         mode = 1;
         amount = Math.cos(progression * Math.PI * 2);
+
+      var height_difference = -0.4;
+      this.ring1.position.y = 6 * height_difference;
+      this.ring1.rotation.set(Math.PI/2, 0, 0);
+      this.ring2.position.y = 5 * height_difference;
+      this.ring2.rotation.set(Math.PI/2, 0, 0);
+      this.ring3.position.y = 4 * height_difference;
+      this.ring3.rotation.set(Math.PI/2, 0, 0);
+      this.ring4.position.y = 3 * height_difference;
+      this.ring4.rotation.set(Math.PI/2, 0, 0);
+      this.ring5.position.y = 2 * height_difference;
+      this.ring5.rotation.set(Math.PI/2, 0, 0);
+      this.ring6.position.y = 1 * height_difference;
+      this.ring6.rotation.set(Math.PI/2, 0, 0);
+      this.ring7.position.y = 0 * height_difference;
+      this.ring7.rotation.set(Math.PI/2, 0, 0);
+
       }
 
 
@@ -476,7 +521,7 @@
 
     render(renderer) {
       this.waterMesh.visible = false;
-      if(BEAN >= 3312) {
+      if(BEAN >= BEAN_FOR_FRAME(9161)) {
         this.waterMesh.visible = true;
         this.water.renderer = renderer;
         this.water.render();
