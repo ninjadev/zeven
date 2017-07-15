@@ -210,7 +210,9 @@
         this.camera.lookAt(this.sidewayView);
       }
       else if (BEAN >2208 && BEAN <2256){
-       this.lampModel.rotation.y = Math.sin(frame/(20*smoothstep(0.,BEAN, 1.0));
+        this.lampModel.rotation.y = Math.sin(frame/(20*((BEAN % 2205))));
+        // This should in theory be better, but we couldn't make it work:
+        // this.lampModel.rotation.y = Math.sin(frame/(100*smoothstep(0.,BEAN, 1.0)));
       }
       else if (BEAN > 2304 && BEAN <2312){
 
