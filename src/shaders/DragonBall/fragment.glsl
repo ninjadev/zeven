@@ -99,7 +99,7 @@ float capsule (vec3 p, vec3 a, vec3 b, float r) {
 }
 
 float star(vec3 p) {
-    p.xz *= rotate(iGlobalTime);
+    p.xz *= rotate(iGlobalTime * 5.);
 
     float d = length(p) - cos(atan(p.x, p.y) * 5.) * 0.4;
     d = mix(d, length(p) - 0.5, 0.8);
@@ -111,8 +111,8 @@ float star(vec3 p) {
 float ballStars(vec3 p, float maxBalls) {
     float d = p.y + 200.;
 
-    for (float i=0.; i<maxBalls; i+=1.) {
-        d = min(d, star(p - vec3(sin(i + maxBalls) * 1.5, tan(i + maxBalls + 1.25) * 0.5, cos(i + maxBalls + 0.5) * 1.5)));
+    for (float i=0.; i<7.; i+=1.) {
+        d = min(d, star(p - vec3(sin(i + maxBalls) * 1.5, tan(i + maxBalls + 1.25) * 0.5, cos(i + maxBalls + 0.5) * 1.5) * 0.45));
     }
 
     return d;
@@ -135,7 +135,7 @@ float applyScales(vec3 p, float d) {
 }
 
 vec3 calcBodyPoints(float i) {
-    return vec3(i * 8., cos(i) * 5. - 1.5 + i * 3. + 3., sin(i) * 5. + 3.);
+    return vec3(i * 10., cos(i) * 5. - 1.5 + i * 3. + 3., sin(i + iGlobalTime * .25) * 5. + 3.);
 }
 
 float shenronBody(vec3 p) {
@@ -143,16 +143,20 @@ float shenronBody(vec3 p) {
 
     p.x -= 20.;
 
-    for (float i=0.; i<10.; i+=1.) {
+    d = rmin(d, capsule(p, vec3(0., 0., 0.), calcBodyPoints(0.), 6.25), 2.);
+
+    for (float i=1.; i<5.; i+=1.) {
         d = rmin(d, capsule(p, calcBodyPoints(i - 1.), calcBodyPoints(i), 6.25), 2.);
     }
+
+    d = rmin(d, capsule(p, calcBodyPoints(5.), vec3(1500., 500., 0.), 6.25), 2.);
 
     return d;
 }
 
 float shenronEyes(vec3 p) {
     p.z = abs(p.z);
-    return length(p * vec3(1.5, 1.75, 1.) - vec3(-2., 7., 4.)) - 1.5;
+    return length(p * vec3(1.5, 1.75 - sin(iGlobalTime) * 0.05, 1.) - vec3(-2., 7., 4.)) - 1.5;
 }
 
 float shenronHead(vec3 p) {
@@ -165,11 +169,11 @@ float shenronHead(vec3 p) {
     p.z = abs(p.z);
 
     d = rmin(d, capsule(p, vec3(0., 0., 4.), vec3(-10., 0., 1.5), 2.), 3.);
-    d = rmin(d, capsule(p, vec3(0., 0., 6.), vec3(-5., 0., 1.5), 2.), 1.);
-    d = rmin(d, capsule(p, vec3(2., 6., 6.), vec3(-2., 5., 1.5), 1.), 3.);
+    // d = rmin(d, capsule(p, vec3(0., 0., 6.), vec3(-5., 0., 1.5), 2.), 1.);
+    d = rmin(d, capsule(p, vec3(2., 6. + sin(iGlobalTime) * 1.5, 6.), vec3(-2., 5. + sin(iGlobalTime) * 0.5, 1.5), 1.), 3.);
     d = rmin(d, capsule(p, vec3(5., 6., 5.), vec3(10., 10., 6.5), 2.), 4.);
     d = rmaxbevel(d, -(length(p * vec3(1., 1.75, 1.) - vec3(-2., 7., 4.)) - 0.5), 2.);
-    d = max(d, -(length(p - vec3(-14., 1.75, 2.)) - 1.));
+    d = max(d, -(length(p - vec3(-14., 1.75, 2.)) - 1. - sin(iGlobalTime) * 0.05));
 
     d = max(d, -p.y);
 
@@ -180,7 +184,7 @@ float shenronHead(vec3 p) {
 }
 
 float shenronHeadUnder(vec3 p) {
-    float offset = mix(0., 8.5, abs(sin(iGlobalTime * 2.)));
+    float offset = mix(0., 8.5, abs(sin(iGlobalTime * 1. - 0.5)));
 
     float d = capsule(p, vec3(10., -1., 0.), vec3(-12. - offset * 0.2, -10. + offset, 0.), 0.01 * p.x * 13.);
 
@@ -204,9 +208,9 @@ float shenronHorns(vec3 p) {
 float shenronStache(vec3 p) {
     p.z = abs(p.z);
 
-    p.y += sin(p.z * 0.25 + PI) * 2.;
+    p.y += sin(p.z * 0.25 + PI + sin(iGlobalTime) * 0.25) * 2.;
 
-    float d = capsule(p, vec3(-13., -1., 3.), vec3(30., -5., 50.), 0.1);
+    float d = capsule(p, vec3(-13., -1., 3.), vec3(20., -5., 50.), 0.1);
 
     return d * 0.8;
 }
@@ -257,7 +261,7 @@ float shenronTeeth(vec3 p) {
 
 float shenronTeethUnder(vec3 p) {
     p.y -= -3.5;
-    p.yx *= rotate(PI * mix(0.35, 0.55, abs(sin(iGlobalTime * 2.))));
+    p.yx *= rotate(PI * mix(0.35, 0.55, abs(sin(iGlobalTime * 1. - 0.5))));
     return shenronTeeth(p);
 }
 
@@ -274,8 +278,12 @@ float kintoun(vec3 p) {
     return d;
 }
 
+vec3 calcMainBall(){
+    return vec3(-25. + iGlobalTime * 15., -2.5, 0.);
+}
+
 float map(vec3 p, bool isBalls) {
-    float d = p.y + 200.;
+    float d = length(p);
 
     d = min(d, shenronHead(p));
     d = rmin(d, shenronHeadUnder(p), 1.);
@@ -288,10 +296,12 @@ float map(vec3 p, bool isBalls) {
     // d = min(d, kintoun(p));
     d = applyScales(p, d);
 
-
-
-
-    // if ()
+    if (isBalls) {
+        d = min(d, length(p - calcMainBall()) - 2.5);
+    }
+    else {
+        d = min(d, ballStars(p - calcMainBall(), 7.));
+    }
 
 
     // if (isBalls) {
@@ -422,7 +432,7 @@ void main() {
     p = 2. * p - 1.;
     p.x *= 16. / 9.;
 
-    vec3 cameraPosition = vec3(0.0, 0., 30.0);
+    vec3 cameraPosition = vec3(0.0, 0. + sin(iGlobalTime), 30.0);
     vec3 rayDirection = normalize(vec3(p, -1.0));
 
     float b = 1.25 + sin(iGlobalTime) * 0.5;
@@ -438,7 +448,7 @@ void main() {
     vec3 col;
 
     col = render(p, cameraPosition, rayDirection, false);
-    col += render(p, cameraPosition, rayDirection, true) * 1.;
+    col += render(p, cameraPosition, rayDirection, true);
 
     col *= 1.95;
 
