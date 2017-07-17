@@ -25,7 +25,7 @@
       // Generate height map for the mountains
       ////////////
 
-      var noise = NIN.ImprovedNoise().noise;
+      var noise = ImprovedNoise().noise;
 
       var minH = 1000;
       var maxH = 0;
